@@ -7,7 +7,7 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     address VARCHAR(255), 
-    balance INT DEFAULT 0
+    balance DECIMAL(12,2) DEFAULT 0
 );
 
 CREATE TABLE Products (
@@ -69,5 +69,5 @@ CREATE TABLE Orders (
     quantity INT NOT NULL,
     date_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     fulfilled BOOL NOT NULL,
-    unit_price_at_time_of_payment INT NOT NULL
+    unit_price_at_time_of_payment DECIMAL(12,2) NOT NULL
 );
