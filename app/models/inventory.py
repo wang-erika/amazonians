@@ -9,9 +9,9 @@ class Inventory:
 
     # get a single inventory tuple
     @staticmethod
-    def get(pid, sid):
+    def get(sid, pid):
         rows = app.db.execute('''
-SELECT pid, sid, quantity
+SELECT sid, pid, quantity
 FROM Inventory
 WHERE pid = :pid AND sid = :sid
 ''',
@@ -20,10 +20,11 @@ WHERE pid = :pid AND sid = :sid
         return Inventory(*(rows[0])) if rows else None
 
     # get tuples associated with a product id
+    # TODO should prob join with Products to get product info once Havish finishes that
     @staticmethod
     def get_by_pid(pid):
         rows = app.db.execute('''
-SELECT sid, pid, count
+SELECT sid, pid, quantity
 FROM Inventory
 WHERE pid = :pid
 ''',
