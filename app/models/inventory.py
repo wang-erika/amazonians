@@ -2,32 +2,41 @@ from flask import current_app as app
 
 
 class Inventory:
-    """
-    This is just a TEMPLATE for Inventory, you should change this by adding or 
-        replacing new columns, etc. for your design.
-    """
-    def __init__(self, uid, pid, count):
-        self.id = id
-        self.uid = uid
+    def __init__(self, sid, pid, quantity):
+        self.sid = sid
         self.pid = pid
-        self.count = count
+        self.quantity = quantity
 
+    # get a single inventory tuple
     @staticmethod
-    def get_by_pid(id):
+    def get(pid, sid):
         rows = app.db.execute('''
-SELECT uid, pid, count
+SELECT pid, sid, quantity
+FROM Inventory
+WHERE pid = :pid AND sid = :sid
+''',
+                              pid=pid,
+                              sid=sid)
+        return Inventory(*(rows[0])) if rows else None
+
+    # get tuples associated with a product id
+    @staticmethod
+    def get_by_pid(pid):
+        rows = app.db.execute('''
+SELECT sid, pid, count
 FROM Inventory
 WHERE pid = :pid
 ''',
-                              id=id)
-        return Inventory(*(rows[0])) if rows else None
+                              pid=pid)
+        return [Inventory(*row) for row in rows]
 
+    # given id of seller, return list of products in their inventory (and quantity)
     @staticmethod
-    def get_by_uid(id):
+    def get_by_sid(sid):
         rows = app.db.execute('''
-SELECT uid, pid, count
+SELECT sid, pid, quantity
 FROM Inventory
-WHERE uid = :uid
+WHERE sid = :sid
 ''',
-                              id=id)
-        return Inventory(*(rows[0])) if rows else None
+                              sid=sid)
+        return [Inventory(*row) for row in rows]
