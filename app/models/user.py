@@ -70,11 +70,3 @@ WHERE id = :id
                               id=id)
         return User(*(rows[0])) if rows else None
 
-    @staticmethod
-    def get_purchases(id):
-        rows = app.db.execute('''
-SELECT Products.image, Products.name, Products.unit_price, Purchases.time_purchased
-FROM Purchases, Products
-WHERE Products.pid = Purchases.id and Purchases.id = :id
-        ''', id = id)
-        return [Users(*rows) for row in rows]
