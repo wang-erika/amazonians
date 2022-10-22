@@ -49,7 +49,7 @@ def inventory_page():
                             query_inventory = query_inventory,
                             form = form)
 
-@bp.route('/purchase', methods = ['GET', 'POST'])
+@bp.route('/purchases', methods = ['GET', 'POST'])
 def purchases():
     form = SearchBarForm()
     if current_user.is_authenticated:
@@ -59,6 +59,17 @@ def purchases():
         purchase = None
     
     return render_template('purchase.html', purchase = purchase, form = form)
+
+@bp.route('/review', methods = ['GET', 'POST'])
+def reviews():
+    form = SearchBarForm()
+    if current_user.is_authenticated:
+        #get all reviews
+        review = Review.get_recent_reviews(current_user.id)
+    else:
+        review = None
+    
+    return render_template('review.html', review = review, form = form)
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
