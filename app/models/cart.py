@@ -6,31 +6,31 @@ class Cart:
     This is just a TEMPLATE for Cart, you should change this by adding or 
         replacing new columns, etc. for your design.
     """
-    def __init__(self, id, uid, pid, time_added_to_cart):
-        self.id = id
+    def __init__(self, uid, product_name, pid, sid, quantity, unit_price):
         self.uid = uid
+        self.product_name = product_name
         self.pid = pid
-        self.time_added_to_cart = time_added_to_cart
+        self.sid = sid 
+        self.quantity = quantity
+        self.unit_price = unit_price
 
+    """
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_added_to_cart
+SELECT id, uid, pid
 FROM Cart
 WHERE id = :id
 ''',
                               id=id)
         return Cart(*(rows[0])) if rows else None
-
+    """
     @staticmethod
-    def get_all_by_uid_since(uid, since):
+    def get_all_in_cart(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_added_to_cart
-FROM Cart
-WHERE uid = :uid
-AND time_added_to_cart >= :since
-ORDER BY time_added_to_cart DESC
+SELECT uid, name, pid, sid, quantity, unit_price
+FROM Cart, Products
+WHERE uid = :uid AND Cart.pid = Products.id
 ''',
-                              uid=uid,
-                              since=since)
+                              uid=uid)
         return [Cart(*row) for row in rows]
