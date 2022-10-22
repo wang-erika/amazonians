@@ -43,3 +43,21 @@ from Cart, Products
 where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid
 ''',
                               uid=uid, pid=pid)
+
+    @staticmethod
+    def add_product_to_cart(uid, sid, pid, quantity):
+        try:
+            rows = app.db.execute('''
+insert into Cart(uid, sid, pid, quantity)
+VALUES(:uid, :sid, :pid, :quantity)
+returning uid, sid, pid
+''',
+                              uid=uid, sid = sid, pid=pid, quantity = quantity)
+            cart_info = rows[0]
+            if cart_info:
+                return True
+            else:
+                return False
+        except Expection as e:
+            print(str(e))
+            return False

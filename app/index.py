@@ -55,7 +55,8 @@ def cart_page():
     if form.validate_on_submit():
         print(form.query, file=sys.stderr)
         
-        cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
+        cart = Cart.get_all_in_cart(form.query.data)
+        #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
         
         if not cart:
             cart = []
