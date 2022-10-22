@@ -34,3 +34,12 @@ WHERE uid = :uid AND Cart.pid = Products.id
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows]
+
+    @staticmethod
+    def get_all_in_cart_by_pid(uid, pid):
+        rows = app.db.execute('''
+select uid, name, pid, sid, quantity, unit_price
+from Cart, Products
+where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid
+''',
+                              uid=uid, pid=pid)
