@@ -35,3 +35,15 @@ ORDER BY review_time DESC
                               uid=uid,
                               since=since)
         return [Review(*row) for row in rows]
+
+    @staticmethod
+    def get_recent_reviews(uid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, review_time, review_content
+FROM Review
+WHERE uid = :uid
+ORDER BY review_time DESC
+LIMIT 5
+''',
+                              uid=uid)
+        return [Review(*row) for row in rows]
