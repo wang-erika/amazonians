@@ -30,3 +30,12 @@ ORDER BY time_purchased DESC
                               uid=uid,
                               since=since)
         return [Purchase(*row) for row in rows]
+
+    @staticmethod
+    def get_purchases(uid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_purchased
+FROM Purchases
+WHERE uid = :uid
+''',    uid = uid)
+
