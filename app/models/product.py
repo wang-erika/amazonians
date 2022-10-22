@@ -20,12 +20,13 @@ WHERE id = :id
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
     """
+    
     @staticmethod
-    def get_all(available=True):
+    def get_all():
         rows = app.db.execute('''
-SELECT id, name, unit_price
+SELECT id, image, category, name, unit_price, description
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
 ''',
-                              available=available)
+                              )
         return [Product(*row) for row in rows]
