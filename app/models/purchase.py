@@ -12,7 +12,7 @@ class Purchase:
     def get(id):
         rows = app.db.execute('''
 SELECT id, uid, pid, time_purchased
-FROM Purchases
+FROM Purchases,
 WHERE id = :id
 ''',
                               id=id)

@@ -42,6 +42,17 @@ def inventory_page():
     return render_template('inventory.html', 
                             inventory = inventory)
 
+@bp.route('/purchase', methods = ['GET', 'POST'])
+def purchases():
+    form = SearchBarForm()
+    if current_user.is_authenticated:
+        #get all purchases
+        purchase = Purchase.get_purchases(current_user.id)
+    else:
+        purchase = None
+    
+    return render_template('purchase.html', purchase = purchase, form = form)
+
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
     form = SearchBarForm()
