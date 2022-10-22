@@ -9,52 +9,26 @@ SELECT pg_catalog.setval('public.users_id_seq',
 SELECT pg_catalog.setval('public.products_id_seq',
                          (SELECT MAX(id)+1 FROM Products),
                          false);
-\COPY Inventory FROM 'Inventory.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(pid)+1 FROM Inventory),
-                         false);
-
-\COPY Purchases FROM 'Purchases.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(pid)+1 FROM Purchases),
-                         false);
 
 \COPY Sellers FROM 'Sellers.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
+SELECT pg_catalog.setval('public.sellers_id_seq',
                          (SELECT MAX(id)+1 FROM Sellers),
                          false);
 
-\COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Inventory FROM 'Inventory.csv' WITH DELIMITER ',' NULL '' CSV;
+
+\COPY Purchases FROM 'Purchases.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(pid)+1 FROM Cart),
+                         (SELECT MAX(id)+1 FROM Purchases),
                          false);
 
-\COPY RatesSeller FROM 'RatesSeller.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(uid)+1 FROM RatesSeller),
-                         false);
+\COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV;
 
-\COPY RatesProduct FROM 'RatesProduct.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(pid)+1 FROM RatesProduct),
-                         false);
+\COPY RatesSeller FROM 'RatesSeller.csv' WITH DELIMITER ',' NULL '' CSV;
+
+\COPY RatesProduct FROM 'RatesProduct.csv' WITH DELIMITER ',' NULL '' CSV;
 
 \COPY Orders FROM 'Orders.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(orid)+1 FROM Orders),
-                         false);
-
-\COPY RatesSeller FROM 'RatesSeller.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(uid)+1 FROM RatesSeller),
-                         false);
-
-\COPY RatesProduct FROM 'RatesProduct.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(pid)+1 FROM RatesProduct),
-                         false);
-
-\COPY Orders FROM 'Orders.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(orid)+1 FROM Orders),
+SELECT pg_catalog.setval('public.orders_id_seq',
+                         (SELECT MAX(id)+1 FROM Orders),
                          false);
