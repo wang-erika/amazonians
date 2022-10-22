@@ -27,6 +27,7 @@ CREATE TABLE Inventory (
     sid INT NOT NULL REFERENCES Sellers(id),
     pid INT NOT NULL REFERENCES Products(id),
     quantity INT NOT NULL
+    PRIMARY KEY(sid, pid)
 );
 
 CREATE TABLE Purchases (
