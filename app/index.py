@@ -32,15 +32,22 @@ def index():
 
 @bp.route('/sell', methods=['GET', 'POST'])
 def inventory_page():
+    form = SearchBarForm()
     if current_user.is_authenticated:
         # get all products they are selling
         inventory = Inventory.get_by_sid(current_user.id)
     else:
         inventory = None
-
+    # render the search query if there is one
+    query_inventory = []
+    if form.validate_on_submit():
+        query_inventory = Inventory.get_by_sid(form.query.data)
+    
     # render Sell page (shows inventory)
     return render_template('inventory.html', 
-                            inventory = inventory)
+                            inventory = inventory,
+                            query_inventory = query_inventory,
+                            form = form)
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
