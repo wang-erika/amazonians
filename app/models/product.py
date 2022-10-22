@@ -30,3 +30,15 @@ WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
 ''',
                               )
         return [Product(*row) for row in rows]
+
+        
+    @staticmethod
+    def get_top_k(k):
+        rows = app.db.execute('''
+SELECT id, image, category, name, unit_price, description
+FROM Products, Inventory
+WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+ORDER BY unit_price DESC
+LIMIT :k
+''', k = k)
+        return [Product(*row) for row in rows]

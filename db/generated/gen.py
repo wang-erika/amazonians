@@ -59,10 +59,10 @@ def gen_inventory(num_purchases):
         for id in range(num_purchases):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
-            uid = fake.random_int(min=0, max=num_users-1)
+            sid = fake.random_int(min=0, max=num_users-1)
             pid = fake.random_int(min=0, max=num_products-1)
             quantity = fake.random_int(max=30)
-            writer.writerow([pid, uid, quantity])
+            writer.writerow([sid, pid, quantity])
         print(f'{num_purchases} generated')
     return
 
