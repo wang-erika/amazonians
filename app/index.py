@@ -1,10 +1,15 @@
-from flask import render_template
+from flask import render_template, flash
 from flask_login import current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
+import sys
 
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.inventory import Inventory
+from .models.cart import Cart
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -36,3 +41,33 @@ def inventory_page():
     # render Sell page (shows inventory)
     return render_template('inventory.html', 
                             inventory = inventory)
+
+@bp.route('/cart', methods=['GET', 'POST'])
+def cart_page():
+    form = SearchBarForm()
+    if current_user.is_authenticated:
+        # get all products they are selling
+        cart = Cart.get_all_in_cart(current_user.id)
+    else:
+        cart = []
+
+    # if query submitted
+    if form.validate_on_submit():
+        print(form.query, file=sys.stderr)
+        
+        cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
+        
+        if not cart:
+            cart = []
+
+        return render_template('cart.html',
+                            cart = cart, form = form)
+
+    # default: render full cart
+    return render_template('cart.html', 
+                            cart = cart, form = form)
+
+class SearchBarForm(FlaskForm):
+    query = StringField('query', validators=[DataRequired()])
+    submit = SubmitField('search')
+
