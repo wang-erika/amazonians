@@ -68,8 +68,17 @@ def reviews():
         review = Review.get_recent_reviews(current_user.id)
     else:
         review = None
+
+    query_review = []
+    if form.validate_on_submit():
+        query_review = Review.get_recent_reviews(form.query.data)
     
-    return render_template('review.html', review = review, form = form)
+    # render review page (shows reviews)
+    
+    return render_template('review.html', 
+                            review = review, 
+                            query_review = query_review, 
+                            form = form)
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
