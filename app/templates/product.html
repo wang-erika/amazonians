@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h1>Products</h1>
+<h2>K Most Expensive Products</h2>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.query.label }}<br/>
+      {{ form.query(size=32) }}<br/>
+      {% for error in form.query.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <!--<th scope="col">Product Name</th>-->
+      <!--<th scope="col">Price</th>-->
+      <th scope="col">Product Name</th>
+      <th scope="col">Quantity of products</th>
+      <th scope="col">unit_prices</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tuple in product%}
+      <tr>
+        <th scope="row">{{tuple.id}}</th>
+        <!--<td>{{tuple.name}}</td>-->
+        <!--<td>{{tuple.price}}</td>-->
+        <th scope="row">{{tuple.name}}</th>
+        <th scope="row">{{tuple.quantity}}</th>
+        <th scope="row">{{tuple.unit_price}}</th>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
