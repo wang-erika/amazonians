@@ -6,12 +6,13 @@ class Review:
     This is just a TEMPLATE for Review, you should change this by adding or 
         replacing new columns, etc. for your design.
     """
-    def __init__(self, uid, pid, review_time, rating, review_content):
-        self.uid = uid
+    def __init__(self, pid, uid, dates, rating, review):
         self.pid = pid
-        self.review_time = review_time
+        #self.sid = sid
+        self.uid = uid
+        self.dates = dates
         self.rating= rating
-        self.review_content = review_content
+        self.review = review
 
  #*  @staticmethod
  #   def get(uid):
@@ -40,18 +41,18 @@ ORDER BY review_time DESC
     def get_recent_reviews(uid):
         rows = app.db.execute('''
 SELECT uid, pid, dates, rating, review
-FROM RatesProduct
+FROM RatesProduct 
 WHERE uid = :uid
 ORDER BY dates DESC
 LIMIT 5
 ''',
-                              uid=uid)
+                              uid = uid)
         return [Review(*row) for row in rows]
 
     @staticmethod
     def get_seller_reviews(uid):
         rows = app.db.execute('''
-SELECT uid, sid, dates, rating, review
+SELECT *
 FROM RatesSeller
 WHERE uid = :uid
 ORDER BY dates DESC
