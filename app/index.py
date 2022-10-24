@@ -107,6 +107,6 @@ def cart_page():
                             cart = cart, form = form)
 
 class SearchBarForm(FlaskForm):
-    query = StringField('query', validators=[DataRequired()])
-    submit = SubmitField('search')
+    query = StringField('', validators=[DataRequired()])
+    submit = SubmitField('Search')
 
