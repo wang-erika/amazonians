@@ -5,8 +5,9 @@
 <br><br>
 {% if current_user.is_authenticated %}
 <h1>Purchases</h1>
-<h2>Recent Purchases</h2>
+<h2>Find A User's Recent Purchases</h2>
 <form action="" method="post">
+  Type a User ID!
     {{ form.hidden_tag() }}
     <p>
       {{ form.query.label }}<br/>
@@ -22,19 +23,21 @@
     <tr>
       <!--<th scope="col">Product Name</th>-->
       <!--<th scope="col">Price</th>-->
-      <th scope="col">User ID</th>
       <th scope="col">Product ID</th>
       <th scope="col">Time</th>
+      <th scope = "col">Name</th>
+      <th scope = "col">Price</th>
     </tr>
   </thead>
   <tbody>
-    {% for tuple in purchases%}
+    {% for tuple in query_purchases%}
       <tr>
         <!--<td>{{tuple.name}}</td>-->
         <!--<td>{{tuple.price}}</td>-->
-        <th scope="row">{{tuple.uid}}</th>
         <th scope="row">{{tuple.pid}}</th>
         <th scope="row">{{tuple.time_purchased}}</th>
+        <th scope = "row">{{tuple.name}}</th>
+        <th scope = "row">{{tuple.price}}</th>
       </tr>
     {% endfor %}
   </tbody>

@@ -115,6 +115,12 @@
         <div class="navbuttons">
           <div>
             {% if current_user.is_authenticated %}
+              <a href="{{ url_for('index.purchases') }}" type="button" class="btn btn-light">Purchases</a>
+            {% endif %}
+          </div>
+
+          <div>
+            {% if current_user.is_authenticated %}
               <a href="{{ url_for('index.cart_page') }}" type="button" class="btn btn-light">My cart</a>
             {% endif %}
           </div>

@@ -7,13 +7,15 @@ class Purchase:
         self.uid = uid
         self.pid = pid
         self.time_purchased = time_purchased
+        self.name = name
+        self.price = price
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
-FROM Purchases,
-WHERE id = :id
+SELECT Purchases.id, Purchases.uid, Purchases.pid, time_purchased, Products.name, Products.unit_price,
+FROM Purchases, Products
+WHERE Purchases.id = :id, and Purchases.pid = Products.id
 ''',
                               id=id)
         return Purchase(*(rows[0])) if rows else None
@@ -21,9 +23,9 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
-FROM Purchases
-WHERE uid = :uid
+SELECT Purchases.id, Purchases.uid, Purchases.pid, Purchases.time_purchased, Products.name, Products.unit_price
+FROM Purchases, Products
+WHERE uid = :uid and Purchases.pid = Products.id
 AND time_purchased >= :since
 ORDER BY time_purchased DESC
 ''',
@@ -34,8 +36,8 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_purchases(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
-FROM Purchases
-WHERE uid = :uid
+SELECT Purchases.id, uid, pid, time_purchased, name, unit_price
+FROM Purchases, Products
+WHERE uid = :uid and Purchases.pid = Products.id
 ''',    uid = uid)
-
+        return [Purchase(*row) for row in rows]

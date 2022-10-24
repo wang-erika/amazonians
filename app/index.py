@@ -50,16 +50,20 @@ def inventory_page():
                             query_inventory = query_inventory,
                             form = form)
 
-@bp.route('/purchases', methods = ['GET', 'POST'])
+@bp.route('/purchase', methods = ['GET', 'POST'])
 def purchases():
     form = SearchBarForm()
     if current_user.is_authenticated:
         #get all purchases
-        purchase = Purchase.get_purchases(current_user.id)
+        purchases = Purchase.get_purchases(current_user.id)
     else:
-        purchase = None
-    
-    return render_template('purchase.html', purchase = purchase, form = form)
+        purchases = None
+
+    query_purchases = []
+    if form.validate_on_submit():
+        query_purchases = Purchase.get_purchases(form.query.data)
+
+    return render_template('purchase.html', purchases = purchases, query_purchases = query_purchases, form = form)
 
 @bp.route('/review', methods = ['GET', 'POST'])
 def reviews():
