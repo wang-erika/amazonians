@@ -36,7 +36,7 @@ ORDER BY review_time DESC
     @staticmethod
     def get_recent_reviews(uid):
         rows = app.db.execute('''
-SELECT uid, pid, dates, rating, review
+SELECT *
 FROM RatesProduct 
 WHERE uid = :uid
 ORDER BY dates DESC
