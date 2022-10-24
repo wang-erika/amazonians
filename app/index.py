@@ -11,6 +11,7 @@ from .models.purchase import Purchase
 from .models.inventory import Inventory
 from .models.cart import Cart
 from .models.review import Review
+from .models.review import Seller_Review
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -81,7 +82,7 @@ def reviews():
     query_seller_review = []
     if form.validate_on_submit():
         query_reviews = Review.get_recent_reviews(form.query.data)
-        query_seller_review = Review.get_seller_reviews(form.query.data)
+        query_seller_review = Seller_Review.get_seller_reviews(form.query.data)
 
     # render review page (shows reviews)
     
