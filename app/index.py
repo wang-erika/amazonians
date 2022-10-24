@@ -70,20 +70,27 @@ def reviews():
     form = SearchBarForm()
     if current_user.is_authenticated:
         #get all reviews
-        review = Review.get_recent_reviews(current_user.id)
+        your_reviews = Review.get_recent_reviews(current_user.id)
+        your_seller_reviews = Review.get_seller_reviews(current_user.id)
     else:
-        review = None
+        your_reviews = None
+        your_seller_reviews = None
 
-    query_review = []
+    query_reviews = []
+    query_seller_review = []
     if form.validate_on_submit():
-        query_review = Review.get_recent_reviews(form.query.data)
+        query_reviews = Review.get_recent_reviews(form.query.data)
+        query_seller_review = Review.get_seller_reviews(form.query.data)
     
     # render review page (shows reviews)
     
     return render_template('review.html', 
-                            review = review, 
-                            query_review = query_review, 
+                            query_reviews = query_reviews,
+                            query_seller_review = query_seller_review,
+                            your_reviews = your_reviews,
+                            your_seller_reviews = your_seller_reviews,
                             form = form)
+
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():

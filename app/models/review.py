@@ -47,3 +47,15 @@ LIMIT 5
 ''',
                               uid=uid)
         return [Review(*row) for row in rows]
+
+    @staticmethod
+    def get_seller_reviews(uid):
+        rows = app.db.execute('''
+SELECT uid, sid, dates, rating, review
+FROM RatesSeller
+WHERE uid = :uid
+ORDER BY dates DESC
+LIMIT 5
+''',
+                              uid=uid)
+        return [Review(*row) for row in rows]
