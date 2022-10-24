@@ -21,8 +21,6 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
-      <!--<th scope="col">Product Name</th>-->
-      <!--<th scope="col">Price</th>-->
       <th scope="col">seller_id</th>
       <th scope="col">Quantity of products</th>
       <th scope="col">unit_prices</th>
@@ -31,12 +29,10 @@
   <tbody>
     {% for tuple in cart%}
       <tr>
-        <th scope="row">{{tuple.pid}}</th>
-        <!--<td>{{tuple.name}}</td>-->
-        <!--<td>{{tuple.price}}</td>-->
-        <th scope="row">{{tuple.sid}}</th>
-        <th scope="row">{{tuple.quantity}}</th>
-        <th scope="row">{{tuple.unit_price}}</th>
+        <td scope="row">{{tuple.pid}}</td>
+        <td scope="row">{{tuple.sid}}</td>
+        <td scope="row">{{tuple.quantity}}</td>
+        <td scope="row">{{tuple.unit_price}}</td>
       </tr>
     {% endfor %}
   </tbody>
