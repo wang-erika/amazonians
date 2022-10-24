@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, uid, pid, time_purchased):
+    def __init__(self, id, uid, pid, time_purchased, name, price):
         self.id = id
         self.uid = uid
         self.pid = pid
