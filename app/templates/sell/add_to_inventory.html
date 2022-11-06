@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Inventory</h1>    
+
+  <div class="page-form-section">
+    <h2>Add a new product</h2>
+    <form action="" method="post">
+      {{ add_form.hidden_tag() }}
+      <p>
+        {{ add_form.name.label }}<br/>
+        {{ add_form.name(size=32) }}<br/>
+        {% for error in add_form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.category.label }}<br/>
+        {{ add_form.category(size=32) }}<br/>
+        {% for error in add_form.category.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.description.label }}<br/>
+        {{ add_form.description(size=32) }}<br/>
+        {% for error in add_form.description.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.unit_price.label }}<br/>
+        {{ add_form.unit_price(size=32) }}<br/>
+        {% for error in add_form.unit_price.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.quantity.label }}<br/>
+        {{ add_form.quantity(size=32) }}<br/>
+        {% for error in add_form.quantity.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.image.label }}<br/>
+        {{ add_form.image(size=32) }}<br/>
+        {% for error in add_form.image.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>{{ add_form.submit() }}</p>
+    </form>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

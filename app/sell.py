@@ -16,7 +16,6 @@ from .models.review import Seller_Review
 from flask import Blueprint
 bp = Blueprint('sell', __name__)
 
-# SELL --------------------------------------
 @bp.route('/sell', methods=['GET', 'POST'])
 def inventory_page():
     # form = SearchBarForm()
@@ -60,5 +59,26 @@ class AddProductToInventoryForm(FlaskForm):
     image = StringField('Image TODO', validators=[])
     submit = SubmitField('Create and add')
 
+@bp.route('/sell/add', methods=['GET', 'POST'])
+def add_to_inventory_page():
+    add_form = AddProductToInventoryForm()
 
-# END OF SELL --------------------------------------
+    if add_form.validate_on_submit():
+        if Inventory.insert_new_inventory(current_user.id,
+                                    add_form.image.data,
+                                    add_form.category.data,
+                                    add_form.name.data,
+                                    add_form.quantity.data,
+                                    add_form.unit_price.data,
+                                    add_form.description.data):
+            flash('Success! Product added to your inventory.')
+            return redirect(url_for('sell.inventory_page'))
+
+    return render_template('sell/add_to_inventory.html', 
+                            add_form = add_form)
+
+@bp.route('/sell/delete/<pid>', methods=['GET', 'POST'])
+def delete_from_inventory(pid):
+    Inventory.delete_from_inventory(current_user.id, pid)
+    flash('Product removed from your inventory.')
+    return redirect(url_for('sell.inventory_page'))

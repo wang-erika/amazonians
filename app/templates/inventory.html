@@ -7,65 +7,63 @@
 <div class="page-content">
   <h1>Inventory</h1>    
 
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
   <div class="page-form-section">
-    <h2>Add a new product</h2>
-    <form action="" method="post">
-      {{ add_form.hidden_tag() }}
-      <p>
-        {{ add_form.name.label }}<br/>
-        {{ add_form.name(size=32) }}<br/>
-        {% for error in add_form.name.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>
-        {{ add_form.category.label }}<br/>
-        {{ add_form.category(size=32) }}<br/>
-        {% for error in add_form.category.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>
-        {{ add_form.description.label }}<br/>
-        {{ add_form.description(size=32) }}<br/>
-        {% for error in add_form.description.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>
-        {{ add_form.unit_price.label }}<br/>
-        {{ add_form.unit_price(size=32) }}<br/>
-        {% for error in add_form.unit_price.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>
-        {{ add_form.quantity.label }}<br/>
-        {{ add_form.quantity(size=32) }}<br/>
-        {% for error in add_form.quantity.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>
-        {{ add_form.image.label }}<br/>
-        {{ add_form.image(size=32) }}<br/>
-        {% for error in add_form.image.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p>
-      <p>{{ add_form.submit() }}</p>
-    </form>
+    <h2>Quick actions</h2>
+
+    <div class="quick-actions">
+      <a href="{{ url_for('sell.add_to_inventory_page') }}" type="button" class="quick-actions-button">Add new product for sale</a>
+
+      <a href="{{ url_for('sell.inventory_page') }}" type="button" class="quick-actions-button">View buyer analytics TODO</a>
+    </div>
   </div>
 
   <div>
     <h2>Your products for sale</h2>
-    <table class='table table-hover table-bordered container'>
+
+    <div class="grid">
+      {% for tuple in inventory%}
+        <div class="grid-item">
+          <div class="item-image">Image: {{tuple.image}}</div>
+          <h3>{{tuple.name}}</h3>
+          <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
+          
+          <div class="item-price">${{tuple.unit_price}}</div>
+          <div>
+            {{tuple.quantity}} in stock
+            <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
+          </div>
+
+          <div>Seller ID: {{tuple.sid}}</div>
+          <div>Product ID: {{tuple.pid}}</div>
+          <div class="delete-item-container">
+            <div class="delete-item-button">
+              <a href="{{ url_for('sell.delete_from_inventory', pid=tuple.pid) }}" type="button" class="delete-button">Delete</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- <table class="table table-hover table-bordered container">
       <thead class="thead-dark">
         <tr>
           <th scope="col">Seller ID</th>
           <th scope="col">Product ID</th>
           <th scope="col">Product name</th>
-          <th scope=""col">Image</th>
+          <th scope="col">Image</th>
           <th scope="col">Description</th>
           <th scope="col">Quantity in stock</th>
           <th scope="col">Unit price</th>
@@ -80,13 +78,20 @@
             <td scope="row">{{tuple.name}}</td>
             <td scope="row">{{tuple.image}}</td>
             <td scope="row">{{tuple.description}}</td>
-            <td scope="row">{{tuple.quantity}}</td>
+            <td scope="row">
+              <div class="quantity-cell">
+                <div>{{tuple.quantity}}</div>
+                <div>
+                  <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
+                </div>
+              </div>
+            </td>
             <td scope="row">{{tuple.unit_price}}</td>
             <td scope="row">{{tuple.category}}</td>
           </tr>
         {% endfor %}
       </tbody>
-    </table>
+    </table> -->
   </div>
 </div>
 

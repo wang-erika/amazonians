@@ -101,3 +101,13 @@ RETURNING sid, pid;
         except Exception as e:
             print(str(e))
             return None
+
+    # given sid and pid, delete product from inventory
+    @staticmethod
+    def delete_from_inventory(sid, pid):
+        rows = app.db.execute('''
+delete from Inventory
+where sid = :sid and pid = :pid
+''',
+                              sid=sid,
+                              pid=pid)
