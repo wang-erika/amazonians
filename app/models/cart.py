@@ -6,13 +6,17 @@ class Cart:
     This is just a TEMPLATE for Cart, you should change this by adding or 
         replacing new columns, etc. for your design.
     """
-    def __init__(self, uid, product_name, pid, sid, quantity, unit_price):
+    def __init__(self, uid, product_name, pid, sid, quantity, unit_price, category, description, image, full_name):
         self.uid = uid
         self.product_name = product_name
         self.pid = pid
         self.sid = sid 
         self.quantity = quantity
         self.unit_price = unit_price
+        self.category = category
+        self.description = description
+        self.image = image
+        self.full_name = full_name
 
     """
     @staticmethod
@@ -28,9 +32,9 @@ WHERE id = :id
     @staticmethod
     def get_all_in_cart(uid):
         rows = app.db.execute('''
-SELECT uid, name, pid, sid, quantity, unit_price
-FROM Cart, Products
-WHERE uid = :uid AND Cart.pid = Products.id
+SELECT uid, name, pid, sid, quantity, unit_price, category, description, image, full_name
+FROM Cart, Products, Users
+WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows]
@@ -38,7 +42,7 @@ WHERE uid = :uid AND Cart.pid = Products.id
     @staticmethod
     def get_all_in_cart_by_pid(uid, pid):
         rows = app.db.execute('''
-select uid, name, pid, sid, quantity, unit_price
+select uid, name, pid, sid, quantity, unit_price, category, description
 from Cart, Products
 where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid
 ''',
