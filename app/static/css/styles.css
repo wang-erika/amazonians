@@ -1,0 +1,151 @@
+body {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.25em;
+    background: #f5f4ed;
+    padding: 2em 5%;
+}
+
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+}
+
+/* Top nav bar */
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Site logo */
+.top-bar > .nile {
+  font-size: 3em;
+  font-family: 'Syne', sans-serif;
+  color: #2c7962; /* NILE GREEN */
+  line-height: 1;
+}
+
+/* Top right navigation */
+.nav-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0em;
+}
+
+/* Nav buttons/links */
+.nav-buttons > div > a {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: #194639;
+  border: 0;
+  padding: 0.5em 1em 0.5em 1em;
+}
+.nav-buttons > div > a:hover {
+  color: #d38541;
+  transition: 0.15s;
+}
+
+/* User-specific nav bar */
+.bottom-bar {
+  font-size: 1.2em;
+  color: #252d2a;
+  font-weight: 500;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 20px;
+  border-top: 3px solid #e5e1cf;
+}
+
+.greeting {
+}
+
+.user-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0em;
+}
+
+.user-nav > div > a {
+  color: #252d2a;
+  padding: 5px 1em;
+  height: 100%;
+}
+.user-nav > div > a:hover {
+  color: #2c7962;
+  background: #e5e1cf;
+  transition: 0.2s;
+}
+
+/* Login page */
+.login {
+  margin-top: 10em;
+  display: flex;
+  justify-content: center;
+}
+
+.login-form {
+  font-size: 2em;
+}
+
+.login-form > h1 {
+  color: #d38541;
+}
+
+.login-form > form {
+  margin-top: 50px;
+}
+
+.login-form > form > p > input {
+  font-size: 0.75em;
+  color: #194639;
+  padding: 10px 15px;
+}
+
+.form-error {
+  color: red;
+  font-size: 0.7em;
+}
+
+.form-submit-button {
+  color: #e5e1cf;
+  background: #2c7962;
+  padding: 0.5em 1em;
+  border: none;
+  font-size: 0.5em;
+  font-weight: 500;
+}
+
+.form-submit-button:hover {
+  color: #2c7962;
+  transition: 0.2s;
+  cursor: pointer;
+  background: #f9cba4;
+}
+
+.form-register-button {
+  color: #252d2a;
+  background: #fcfbf7;
+  padding: 0.65em 1em;
+  border: none;
+  font-size: 0.5em;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.form-register-button:hover {
+  color: #2c7962;
+  background: #e5e1cf;
+  transition: 0.2s;
+}
+
+h1 {
+  color: #2c7962;
+  font-weight: bold;
+}

@@ -3,149 +3,45 @@
 
 <head>
   <title>Nile.com</title>
+  
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  
+  <!-- Bootstrap styles -->
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
-  <style>
-    body {
-        font-family: "Lato", sans-serif;
-        font-size: 1.2em;
-    }
+  
+  <!-- CSS link (unused for now) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  
+  <!-- Google fonts: Syne -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap" rel="stylesheet">
 
-    .main-head {
-        height: 150px;
-        background: #fcfbf7;
-    }
-
-    .sidenav {
-        height: 100%;
-        background: #f5f4ed; /* NILE LIGHT SAND */
-        overflow-x: hidden;
-        color: black;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .topbar {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 25px 50px;
-    }
-
-    .topbar > .nile {
-      font-size: 3em;
-      font-weight: bold;
-      font-style: italic;
-      color: #47c69f; /* NILE GREEN */
-      line-height: 1;
-    }
-
-    .navbuttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      gap: 0em;
-    }
-
-    .navbuttons > div > a {
-      font-size: 1.2em;
-      font-weight: bold;
-      border-radius: 0;
-      color: #47c69f;
-      background: #f5f4ed;
-      border: 0;
-      padding: 0.5em 1em 0.5em 1em;
-    }
-
-    .bottombar {
-      background: #e5e1cf; /* NILE DARK SAND */
-      padding: 10px 50px 8px 50px;
-      color: black;
-    }
-
-    .main {
-      margin-left: 50px;
-      margin-right: 50px;
-    }
-
-    h1 {
-      color: #47c69f;
-      font-weight: bold;
-      margin-top: 1em;
-    }
-
-    h2 {
-      color: darkslategray;
-    }
-
-    form {
-      margin: 30px 0;
-    }
-
-    a:link, a:visited, a:hover, a:active {
-        text-decoration: none;
-    }
-
-    .login-main-text {
-        margin-top: 20%;
-        padding: 60px;
-        color: #fcfbf7;
-    }
-
-    .login-main-text h2 {
-        font-weight: 300;
-    }
-
-    .btn-black {
-        background-color: #47c69f !important;
-        color: #fff;
-    }
-  </style>
+  <!-- Google fonts: Work Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="sidenav">
+  <div class="side-nav">
     {% block msg %}
-      <div class="topbar">
-        <a class="nile" href="{{ url_for('index.index') }}">NILE</a>
+      <div class="top-bar">
+        <a class="nile" href="{{ url_for('index.index') }}">Nile</a>
 
-        <div class="navbuttons">
+        <div class="nav-buttons">
+          <div>
+            <a href="{{ url_for('index.product_page') }}" type="button">Browse</a>
+          </div>
+
           <div>
             {% if current_user.is_authenticated %}
-              <a href="{{ url_for('index.purchases') }}" type="button" class="btn btn-light">Purchases</a>
+              <a href="{{ url_for('index.inventory_page') }}"type="button">Sell with Nile</a>
             {% endif %}
           </div>
 
           <div>
-            {% if current_user.is_authenticated %}
-              <a href="{{ url_for('index.cart_page') }}" type="button" class="btn btn-light">My cart</a>
-            {% endif %}
-          </div>
-
-          <div>
-            {% if current_user.is_authenticated %}
-              <a href="{{ url_for('index.reviews') }}" type="button" class="btn btn-light">User Reviews</a>
-            {% endif %}
-          </div>
-
-          <div>
-            <a href="{{ url_for('index.product_page') }}" type="button" class="btn btn-light">Top products</a>
-          </div>
-
-          <div>
-            {% if current_user.is_authenticated %}
-              <a href="{{ url_for('index.inventory_page') }}"type="button" class="btn btn-light">Sell with Nile</a>
-            {% endif %}
-          </div>
-
-          <div>
-            {% if current_user.is_authenticated %}
-               <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-            {% else %}
-              <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+            {% if not current_user.is_authenticated %}
+              <a href="{{ url_for('users.login') }}" type="button">Sign in</a>              
             {% endif %}
           </div>
         </div>
@@ -153,17 +49,38 @@
 
       
       {% if current_user.is_authenticated %}
-        <div class="bottombar">
-          Hello {{current_user.full_name.split()[0]}}!
+        <div class="bottom-bar">
+          <div class="greeting">
+            👋 Hello, {{current_user.full_name.split()[0]}}!
+          </div>
+
+          <div class="user-nav">
+            <div>
+              <a href="{{ url_for('index.purchases') }}" type="button">My orders</a>
+            </div>
+
+            <div>
+              <a href="{{ url_for('index.reviews') }}" type="button">My reviews</a>
+            </div>
+
+            <div>
+              <a href="{{ url_for('index.cart_page') }}" type="button">My cart</a>
+            </div>
+
+            <div>
+              <a href="{{ url_for('users.logout') }}" type="button">Sign out</a> 
+            </div>
+          </div>
         </div>
-      {% else %}
       {% endif %}
       
     {% endblock %}
   </div>
+
   <div class="main">
     {% block content %}{% endblock %}
   </div>
+
 </body>
 
 </html>
