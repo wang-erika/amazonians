@@ -1,7 +1,7 @@
-from flask import render_template, flash
+from flask import render_template, flash, redirect, url_for, flash
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
@@ -31,20 +31,6 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases)
-
-@bp.route('/sell', methods=['GET', 'POST'])
-def inventory_page():
-    form = SearchBarForm()
-    if current_user.is_authenticated:
-        # get all products they are selling
-        inventory = Inventory.get_by_sid(current_user.id)
-    else:
-        inventory = None
-    
-    # render Sell page (shows inventory)
-    return render_template('inventory.html', 
-                            inventory = inventory,
-                            form = form)
 
 @bp.route('/purchase', methods = ['GET', 'POST'])
 def purchases():
@@ -139,4 +125,6 @@ def product_page():
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('Search')
+
+
 
