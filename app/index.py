@@ -40,15 +40,10 @@ def inventory_page():
         inventory = Inventory.get_by_sid(current_user.id)
     else:
         inventory = None
-    # render the search query if there is one
-    query_inventory = []
-    if form.validate_on_submit():
-        query_inventory = Inventory.get_by_sid(form.query.data)
     
     # render Sell page (shows inventory)
     return render_template('inventory.html', 
                             inventory = inventory,
-                            query_inventory = query_inventory,
                             form = form)
 
 @bp.route('/purchase', methods = ['GET', 'POST'])
