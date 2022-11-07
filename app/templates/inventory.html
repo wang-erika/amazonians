@@ -37,7 +37,9 @@
     <div class="grid">
       {% for tuple in inventory%}
         <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="grid-item">
-          <div class="item-image">Image: {{tuple.image}}</div>
+          <div class="item-image">
+            <img src={{tuple.image}} alt="Photo">
+          </div>
           <h3>{{tuple.name}}</h3>
           <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
           

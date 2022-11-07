@@ -6,6 +6,12 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
+from PIL import Image
+from io import BytesIO
+import os
+
+from flask import current_app as app
+
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -23,10 +29,19 @@ bp = Blueprint('sell', __name__)
 def inventory_page():
     # Retrieve inventory products
     inventory = Inventory.get_by_sid(current_user.id)
+    inventory = edit_inventory(inventory)
     
     # Render Sell page (shows inventory)
     return render_template('inventory.html', 
                             inventory = inventory)
+
+def edit_inventory(inventory):
+    for item in inventory:
+        path = os.path.join(app.root_path, 'static/' + str(item.pid) + '.png')
+        img = Image.open(BytesIO(item.image.tobytes()))
+        img.save(path)
+        item.image = 'static/' + str(item.pid) + '.png'
+    return inventory
 
 # Add page -- add new product to inventory
 @bp.route('/sell/add', methods=['GET', 'POST'])
@@ -71,6 +86,11 @@ def view_inventory_item(pid):
 
     # Get product details
     item = Inventory.get_by_sid_and_pid(current_user.id, pid)
+
+    # print(item.image.tobytes())
+
+    item.image = 'static/' + str(item.pid) + '.png'
+    print(item.image)
 
     # Re-render page if edit form is submitted
     if edit_quantity_form.validate_on_submit():
