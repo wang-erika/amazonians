@@ -16,38 +16,41 @@ from .models.review import Seller_Review
 from flask import Blueprint
 bp = Blueprint('sell', __name__)
 
+
+# MAIN ROUTE -- Sell page
 @bp.route('/sell', methods=['GET', 'POST'])
 def inventory_page():
-    # form = SearchBarForm()
+    # Retrieve inventory products
+    inventory = Inventory.get_by_sid(current_user.id)
+    
+    # Render Sell page (shows inventory)
+    return render_template('inventory.html', 
+                            inventory = inventory)
+
+# Add page -- add new product to inventory
+@bp.route('/sell/add', methods=['GET', 'POST'])
+def add_to_inventory_page():
+    # Create form
     add_form = AddProductToInventoryForm()
 
-    if current_user.is_authenticated:
-        # get all products they are selling
-        inventory = Inventory.get_by_sid(current_user.id)
-    else:
-        inventory = None
-
+    # Redirect to main Sell page once form completed
     if add_form.validate_on_submit():
-        if Inventory.insert_new_inventory(current_user.id,
+        if Inventory.add_new_inventory_item(current_user.id,
                                     add_form.image.data,
                                     add_form.category.data,
                                     add_form.name.data,
                                     add_form.quantity.data,
                                     add_form.unit_price.data,
                                     add_form.description.data):
-            flash('Product added to Products!')
+            
+            # Success message
+            msg = 'Success! Product "{name}" added to your inventory.'.format(name = add_form.name.data)
+            flash(msg)
+            
             return redirect(url_for('sell.inventory_page'))
-    
-    # render the search query if there is one
-    query_inventory = []
-    # if form.validate_on_submit():
-    #     query_inventory = Inventory.get_by_sid(form.query.data)
-    
-    # render Sell page (shows inventory)
-    return render_template('inventory.html', 
-                            inventory = inventory,
-                            query_inventory = query_inventory,
-                            # form = form,
+
+    # Render Add page with form
+    return render_template('sell/add_to_inventory.html', 
                             add_form = add_form)
 
 class AddProductToInventoryForm(FlaskForm):
@@ -59,26 +62,45 @@ class AddProductToInventoryForm(FlaskForm):
     image = StringField('Image TODO', validators=[])
     submit = SubmitField('Create and add')
 
-@bp.route('/sell/add', methods=['GET', 'POST'])
-def add_to_inventory_page():
-    add_form = AddProductToInventoryForm()
+# Details page -- view an inventory product's details
+@bp.route('/sell/details/<pid>', methods=['GET', 'POST'])
+def view_inventory_item(pid):
+    # Create edit form
+    edit_quantity_form = EditProductQuantityForm()
 
-    if add_form.validate_on_submit():
-        if Inventory.insert_new_inventory(current_user.id,
-                                    add_form.image.data,
-                                    add_form.category.data,
-                                    add_form.name.data,
-                                    add_form.quantity.data,
-                                    add_form.unit_price.data,
-                                    add_form.description.data):
-            flash('Success! Product added to your inventory.')
-            return redirect(url_for('sell.inventory_page'))
+    # Get product details
+    item = Inventory.get_by_sid_and_pid(current_user.id, pid)
 
-    return render_template('sell/add_to_inventory.html', 
-                            add_form = add_form)
+    # Re-render page if edit form is submitted
+    if edit_quantity_form.validate_on_submit():
+        Inventory.edit_inventory_item(current_user.id,
+                                    pid,
+                                    edit_quantity_form.quantity.data)
+        
+        msg = 'Product quantity updated to {q}.'.format(q = edit_quantity_form.quantity.data)
+        flash(msg)
+        return redirect(url_for('sell.inventory_page'))
 
+    # Render Details page
+    return render_template('sell/inventory_item.html',
+                            item = item,
+                            edit_quantity_form = edit_quantity_form)
+
+class EditProductQuantityForm(FlaskForm):
+    quantity = IntegerField('New quantity', validators=[])
+    submit = SubmitField('Update')
+
+# Delete route (no page) -- delete product from inventory
 @bp.route('/sell/delete/<pid>', methods=['GET', 'POST'])
-def delete_from_inventory(pid):
-    Inventory.delete_from_inventory(current_user.id, pid)
+def delete_inventory_item(pid):
+    # Delete product from database
+    Inventory.delete_inventory_item(current_user.id, pid)
+
+    # Success message
     flash('Product removed from your inventory.')
+
+    # Re-render Sell page
     return redirect(url_for('sell.inventory_page'))
+
+
+
