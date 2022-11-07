@@ -1,5 +1,5 @@
 # images
-static/*.png
+app/static/*.png
 
 # environment (requirements.txt is still tracked) #
 ######################
