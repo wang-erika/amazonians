@@ -81,25 +81,27 @@ def cart_page():
     if current_user.is_authenticated:
         # get all products they are selling
         cart = Cart.get_all_in_cart(current_user.id)
+        total = Cart.get_total_price_in_cart(form.query.data)
     else:
         cart = []
 
     # if query submitted
     if form.validate_on_submit():
         print(form.query, file=sys.stderr)
-        
+
         cart = Cart.get_all_in_cart(form.query.data)
         #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
         
         if not cart:
             cart = []
 
-        return render_template('cart.html',
-                            cart = cart, form = form)
+        flash('poop')
+        return render_template('cart.html', 
+                            cart = cart, form = form, total = total)
 
     # default: render full cart
     return render_template('cart.html', 
-                            cart = cart, form = form)
+                            cart = cart, form = form, total = total)
 
 
 class SearchBarForm(FlaskForm):
