@@ -40,6 +40,16 @@ WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
         return [Cart(*row) for row in rows]
 
     @staticmethod
+    def get_total_price_in_cart(uid):
+        total_price = app.db.execute('''
+SELECT SUM(quantity*unit_price) AS total_value
+FROM Cart, Products, Users
+WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
+''',
+                              uid=uid)
+        return total_price
+
+    @staticmethod
     def get_all_in_cart_by_pid(uid, pid):
         rows = app.db.execute('''
 select uid, name, pid, sid, quantity, unit_price, category, description
