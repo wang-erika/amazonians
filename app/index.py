@@ -105,26 +105,6 @@ def cart_page():
     return render_template('cart.html', 
                             cart = cart, form = form, total = total)
 
-@bp.route('/product', methods=['GET', 'POST'])
-def product_page():
-    form = SearchBarForm()
-    # if query submitted
-    product = []
-    if form.validate_on_submit():
-        print(form.query, file=sys.stderr)
-        
-        product = Product.get_top_k(form.query.data)
-        #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
-        
-        if not product:
-            product = []
-
-        return render_template('product.html',
-                            product = product, form = form)
-
-    # default: render full cart
-    return render_template('product.html', 
-                            product = product, form = form)
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])

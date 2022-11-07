@@ -1,12 +1,16 @@
 body {
     font-family: 'Work Sans', sans-serif;
-    font-size: 1.25em;
+    font-size: 1.1em;
     background: #f5f4ed;
     padding: 2em 5%;
 }
 
 a:link, a:visited, a:hover, a:active {
   text-decoration: none;
+}
+
+.main {
+  margin-bottom: 100px;
 }
 
 h1 {
@@ -27,6 +31,7 @@ h2 {
 h3 {
   color: #252d2a;
   font-weight: 500;
+  font-size: 1.25em;
 }
 
 .flash-message {
@@ -68,6 +73,7 @@ h3 {
   color: #194639;
   border: 0;
   padding: 0.5em 1em 0.5em 1em;
+  transition: 0.15s;
 }
 .nav-buttons > div > a:hover {
   color: #d38541;
@@ -103,6 +109,7 @@ h3 {
   color: #252d2a;
   padding: 5px 1em;
   height: 100%;
+  transition: 0.2s;
 }
 .user-nav > div > a:hover {
   color: #2c7962;
@@ -112,14 +119,9 @@ h3 {
 
 /* Login page */
 .login {
-  margin-top: 10em;
+  margin-top: 100px;
   display: flex;
   justify-content: center;
-}
-
-.login-form > h1 {
-  color: #d38541;
-  font-size: 3em;
 }
 
 .login-form > form {
@@ -145,6 +147,7 @@ h3 {
   border: none;
   font-size: 0.5em;
   font-weight: 500;
+  transition: 0.2s;
 }
 
 .form-submit-button:hover {
@@ -157,11 +160,12 @@ h3 {
 .form-register-button {
   color: #252d2a;
   background: #fcfbf7;
-  padding: 0.65em 1em;
+  padding: 0.675em 1em;
   border: none;
   font-size: 0.5em;
   font-weight: 500;
   margin-left: 5px;
+  transition: 0.2s;
 }
 
 .form-register-button:hover {
@@ -203,6 +207,7 @@ h3 {
   background: #fcfbf7;
   padding: 0.5em 1em;
   box-shadow: 0px 10px 30px -20px rgb(0,0,0,0.25);
+  transition: 0.2s;
 }
 
 .quick-actions-button:hover {
@@ -220,6 +225,7 @@ h3 {
 
 .edit-button {
   color: #5caac6;
+  transition: 0.15s;
 }
 .edit-button:hover {
   color: #4b6b86;
@@ -240,20 +246,26 @@ td {
 
 /* Displaying items in a grid */
 .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  row-gap: 1em;
-  column-gap: 3em;
+  display: flex;
   overflow: auto;
-  justify-items: start;
+  flex-wrap: wrap;
+  gap: 2em;
 }
 
 .grid-item {
-  width: 100%;
+  color: #252d2a;
+  width: 30em;
   background: #eae8df;
   padding: 2em 3em;
   border: 2px solid #e5e1cf;
   font-size: 1em;
+  transition: 0.2s;
+}
+
+.grid-item:hover {
+  color: #252d2a;
+  box-shadow: 0px 10px 30px -20px rgb(0,0,0,0.25);
+  transition: 0.2s;
 }
 
 .item-image {
@@ -269,12 +281,12 @@ td {
   color: #f5f4ed;
   padding: 2px 5px;
   border-radius: 5px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .item-description {
   margin: 10px 0 40px 0;
-  line-height: 1.2em;
+  line-height: 1.4em;
   font-style: italic;
 }
 
@@ -282,19 +294,56 @@ td {
   font-weight: 500;
 }
 
-.delete-item-container {
-  display: flex;
-  justify-content: flex-end;
+.item-quantity > form{
+  display: inline;
+}
+
+.page-form-section input[type="submit"] {
+  color: #2c7962;
+  background: #f5f4ed;
+  border: 2px solid #aca99b;
+  padding: 0.5em 1em;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-top: 10px;
+}
+
+.page-form-section input[type="submit"]:hover {
+  color: #f5f4ed;
+  border: 2px solid #2c7962;
+  transition: 0.2s;
+  cursor: pointer;
+  background: #2c7962;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.product-details > div {
+  margin: 10px 0;
+}
+
+.product-details-info {
+  margin-bottom: 40px;
 }
 
 .delete-button {
-  font-size: 0.9em;
+  background: #f5f4ed;
+  padding: 0.675em 1em;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-top: 50px;
+
   color: #d65050;
-  border: 1px solid #d65050;
-  padding: 0.2em 0.4em;
+  border: 2px solid #d65050;
+  margin-left: 5px;
 }
 .delete-button:hover {
   color: #f5f4ed;
   background: #d65050;
   transition: 0.2s;
 }
+
