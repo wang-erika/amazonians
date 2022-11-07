@@ -23,9 +23,11 @@
     <h2>Quick actions</h2>
 
     <div class="quick-actions">
-      <a href="{{ url_for('sell.add_to_inventory_page') }}" type="button" class="quick-actions-button">Add new product for sale</a>
+      <a href="{{ url_for('sell.add_to_inventory_page') }}" type="button" class="quick-actions-button">Add new product</a>
 
-      <a href="{{ url_for('sell.inventory_page') }}" type="button" class="quick-actions-button">View buyer analytics TODO</a>
+      <a href="{{ url_for('sell.order_fulfillment_page') }}" type="button" class="quick-actions-button">Order fulfillment</a>
+
+      <a href="{{ url_for('sell.inventory_page') }}" type="button" class="quick-actions-button">Customer analytics (TODO)</a>
     </div>
   </div>
 

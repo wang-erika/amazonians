@@ -102,5 +102,12 @@ def delete_inventory_item(pid):
     # Re-render Sell page
     return redirect(url_for('sell.inventory_page'))
 
+# Order fulfillment page
+@bp.route('/sell/orders', methods=['GET', 'POST'])
+def order_fulfillment_page():
+
+    # Render Order fulfillment page
+    return render_template('sell/order_fulfillment.html')
+
 
 
