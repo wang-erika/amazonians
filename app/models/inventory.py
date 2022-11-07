@@ -1,4 +1,6 @@
+import os
 from flask import current_app as app
+from werkzeug.utils import secure_filename
 
 
 class Inventory:
@@ -76,8 +78,7 @@ RETURNING id;
     # insert into Inventory table
     @staticmethod
     def insert_new_inventory(sid, image, category, name, quantity, unit_price, description):
-        # insert into Products
-        pid = Inventory.insert_new_product(image, category, name, unit_price, description)
+        pid = Inventory.insert_new_product(image.read(), category, name, unit_price, description)
 
         if not pid:
             return None

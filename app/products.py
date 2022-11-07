@@ -21,6 +21,7 @@ bp = Blueprint('product', __name__)
 @bp.route('/product', methods=['GET', 'POST'])
 def product_page():
     form = SearchBarForm()
+    image_form = ImageUploadForm()
     # if query submitted
     product = []
     if form.validate_on_submit():
@@ -47,4 +48,4 @@ class SearchBarForm(FlaskForm):
 
 class ImageUploadForm(FlaskForm):
     image = FileField('', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Upload')

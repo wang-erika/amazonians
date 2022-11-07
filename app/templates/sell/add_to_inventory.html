@@ -9,8 +9,9 @@
 
   <div class="page-form-section">
     <h2>Add a new product</h2>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
       {{ add_form.hidden_tag() }}
+      {{ add_form.csrf_token }}
       <p>
         {{ add_form.name.label }}<br/>
         {{ add_form.name(size=32) }}<br/>
@@ -47,8 +48,7 @@
         {% endfor %}
       </p>
       <p>
-        {{ add_form.image.label }}<br/>
-        {{ add_form.image(size=32) }}<br/>
+        <input type="file" name="image" class="form-control-file">
         {% for error in add_form.image.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
