@@ -23,9 +23,11 @@
     <h2>Quick actions</h2>
 
     <div class="quick-actions">
-      <a href="{{ url_for('sell.add_to_inventory_page') }}" type="button" class="quick-actions-button">Add new product for sale</a>
+      <a href="{{ url_for('sell.add_to_inventory_page') }}" type="button" class="quick-actions-button">Add new product</a>
 
-      <a href="{{ url_for('sell.inventory_page') }}" type="button" class="quick-actions-button">View buyer analytics TODO</a>
+      <a href="{{ url_for('sell.order_fulfillment_page') }}" type="button" class="quick-actions-button">Order fulfillment</a>
+
+      <a href="{{ url_for('sell.inventory_page') }}" type="button" class="quick-actions-button">Customer analytics (TODO)</a>
     </div>
   </div>
 
@@ -34,27 +36,18 @@
 
     <div class="grid">
       {% for tuple in inventory%}
-        <div class="grid-item">
+        <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="grid-item">
           <div class="item-image">Image: {{tuple.image}}</div>
           <h3>{{tuple.name}}</h3>
           <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
           
           <div class="item-price">${{tuple.unit_price}}</div>
-          <div>
-            {{tuple.quantity}} in stock
-            <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
-          </div>
+          <div>{{tuple.quantity}} in stock</div>
 
           <div>Seller ID: {{tuple.sid}}</div>
           <div>Product ID: {{tuple.pid}}</div>
-          <div class="delete-item-container">
-            <div class="delete-item-button">
-              <a href="{{ url_for('sell.delete_from_inventory', pid=tuple.pid) }}" type="button" class="delete-button">Delete</a>
-            </div>
-          </div>
-        </div>
+        </a>
       {% endfor %}
-
     </div>
 
     <!-- <table class="table table-hover table-bordered container">

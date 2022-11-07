@@ -26,6 +26,19 @@ where sid = :sid
                               sid=sid)
         return [Inventory(*row) for row in rows]
 
+    # given seller id and pid, return details on 1 product
+    @staticmethod
+    def get_by_sid_and_pid(sid, pid):
+        rows = app.db.execute('''
+select sid, pid, image, category, name, quantity, unit_price, description
+from Inventory join Products
+    on Inventory.pid = Products.id
+where sid = :sid and pid = :pid
+''',
+                              sid=sid,
+                              pid=pid)
+        return Inventory(*(rows[0])) if rows is not None else None
+
     # PRIVATE HELPER METHOD
     # given product image, category, name, unit_price, description
     # insert into Products table
@@ -77,7 +90,8 @@ RETURNING id;
     # insert into Sellers table
     # insert into Inventory table
     @staticmethod
-    def insert_new_inventory(sid, image, category, name, quantity, unit_price, description):
+    def add_new_inventory_item(sid, image, category, name, quantity, unit_price, description):
+        # insert into Products
         pid = Inventory.insert_new_product(image.read(), category, name, unit_price, description)
 
         if not pid:
@@ -103,12 +117,26 @@ RETURNING sid, pid;
             print(str(e))
             return None
 
+
+    # given sid and pid, edit product quantity
+    @staticmethod
+    def edit_inventory_item(sid, pid, quantity):
+        rows = app.db.execute('''
+update Inventory
+set quantity = :quantity
+where sid = :sid and pid = :pid;
+''',
+                              sid=sid,
+                              pid=pid,
+                              quantity=quantity)
+
+
     # given sid and pid, delete product from inventory
     @staticmethod
-    def delete_from_inventory(sid, pid):
+    def delete_inventory_item(sid, pid):
         rows = app.db.execute('''
 delete from Inventory
-where sid = :sid and pid = :pid
+where sid = :sid and pid = :pid;
 ''',
                               sid=sid,
                               pid=pid)

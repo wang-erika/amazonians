@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Inventory</h1>    
+
+  <div class="page-form-section">
+    <h2>Order fulfillment</h2>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
