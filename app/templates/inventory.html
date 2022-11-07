@@ -51,42 +51,6 @@
         </a>
       {% endfor %}
     </div>
-
-    <!-- <table class="table table-hover table-bordered container">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Seller ID</th>
-          <th scope="col">Product ID</th>
-          <th scope="col">Product name</th>
-          <th scope="col">Image</th>
-          <th scope="col">Description</th>
-          <th scope="col">Quantity in stock</th>
-          <th scope="col">Unit price</th>
-          <th scope="col">Category</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for tuple in inventory%}
-          <tr>
-            <td scope="row">{{tuple.sid}}</td>
-            <td scope="row">{{tuple.pid}}</td>
-            <td scope="row">{{tuple.name}}</td>
-            <td scope="row">{{tuple.image}}</td>
-            <td scope="row">{{tuple.description}}</td>
-            <td scope="row">
-              <div class="quantity-cell">
-                <div>{{tuple.quantity}}</div>
-                <div>
-                  <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
-                </div>
-              </div>
-            </td>
-            <td scope="row">{{tuple.unit_price}}</td>
-            <td scope="row">{{tuple.category}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table> -->
   </div>
 </div>
 

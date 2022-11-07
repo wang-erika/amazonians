@@ -11,9 +11,7 @@
     <h2>Product details: {{ item.name }}</h2>
 
     <div class="product-details">
-      <div class="item-image">
-        <img src={{item.image}} alt="Photo">
-      </div>
+      <img src={{ '../../' + item.image }} alt="Photo">
 
       <div><span class="bold">Category:</span> {{ item.category }}</div>
       <div><span class="bold">Description:</span> {{ item.description }}</div>
@@ -24,7 +22,7 @@
         <form action="" method="post">
           {{ edit_quantity_form.hidden_tag() }}
           
-          {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/>
+          {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/><br/>
           
           {% for error in edit_quantity_form.quantity.errors %}
           <span style="color: red;">[{{ error }}]</span>

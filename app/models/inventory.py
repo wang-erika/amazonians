@@ -131,12 +131,41 @@ where sid = :sid and pid = :pid;
                               quantity=quantity)
 
 
+
+    # PRIVATE HELPER METHOD 
+    # given product id, delete product from Products
+    @staticmethod
+    def delete_product(pid):
+        rows = app.db.execute('''
+delete from Products
+where id = :pid;
+''',
+                              pid=pid)
+
+    # PRIVATE HELPER METHOD 
+    # given seller id, delete person from Sellers
+    @staticmethod
+    def delete_seller(sid):
+        rows = app.db.execute('''
+delete from Sellers
+where id = :sid;
+''',
+                              sid=sid)                     
+
     # given sid and pid, delete product from inventory
     @staticmethod
     def delete_inventory_item(sid, pid):
+        # Delete product from Inventory
         rows = app.db.execute('''
 delete from Inventory
 where sid = :sid and pid = :pid;
 ''',
                               sid=sid,
                               pid=pid)
+
+        # Then delete product from Products
+        Inventory.delete_product(pid)
+        
+        # If this seller is now no longer selling ANY products, delete them from Sellers
+        if (len(Inventory.get_by_sid(sid)) == 0):
+            Inventory.delete_seller(sid)

@@ -177,7 +177,7 @@ h3 {
 /* PAGE CONTENT */
 .page-content {
   padding: 0 5em;
-  margin-top: 5em;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -250,6 +250,7 @@ td {
   overflow: auto;
   flex-wrap: wrap;
   gap: 2em;
+  padding-bottom: 50px;
 }
 
 .grid-item {
@@ -270,6 +271,11 @@ td {
 
 .item-image {
   margin-bottom: 30px;
+}
+
+.item-image > img {
+  height: 150px;
+  object-fit: contain;
 }
 
 .item-category {
@@ -323,6 +329,12 @@ td {
 
 .product-details > div {
   margin: 10px 0;
+}
+
+.product-details > img {
+  height: 300px;
+  object-fit: contain;
+  margin-bottom: 25px;
 }
 
 .product-details-info {

@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<br><br>
 <div class = "page-content">
   <h1>Products</h1>
+
   <div class="flash-notifications">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -17,7 +17,7 @@
     {% endwith %}
   </div>
 
-  <h2>Products for sale:</h2>
+  <h2>Products for sale</h2>
   <div class="grid">
     {% for tuple in avail_products%}
       <div class="grid-item">
@@ -31,11 +31,8 @@
     {% endfor %}
   </div>
 
-
-
-  <br><br>
   {% if current_user.is_authenticated %}
-  <h2>Your recent purchases:</h2>
+  <h2>Your recent purchases</h2>
   <div class="grid">
     {% for tuple in purchase_history%}
       <div class="grid-item">
@@ -47,11 +44,9 @@
         <div class="item-price">${{tuple.unit_price}}</div>
       </div>
     {% endfor %}
-
   </div>
 </div>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+
 {% endif %}
 
 {% endblock %}

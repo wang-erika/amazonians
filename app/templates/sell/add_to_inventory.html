@@ -48,7 +48,7 @@
         {% endfor %}
       </p>
       <p>
-        <input type="file" name="image" class="form-control-file">
+        {{ add_form.image }}
         {% for error in add_form.image.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
