@@ -81,7 +81,9 @@ def cart_page():
     if current_user.is_authenticated:
         # get all products they are selling
         cart = Cart.get_all_in_cart(current_user.id)
-        total = Cart.get_total_price_in_cart(form.query.data)
+        #total = Cart.get_total_price_in_cart(form.query.data)
+        total = Cart.get_total_price_in_cart(current_user.id)
+        total = float(total[0][0])
     else:
         cart = []
 
@@ -89,8 +91,8 @@ def cart_page():
     if form.validate_on_submit():
         print(form.query, file=sys.stderr)
 
-        cart = Cart.get_all_in_cart(form.query.data)
-        #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
+        #cart = Cart.get_all_in_cart(form.query.data)
+        cart = Cart.get_all_in_cart(current_user.id)
         
         if not cart:
             cart = []
