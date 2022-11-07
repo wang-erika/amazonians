@@ -2,43 +2,61 @@
 
 {% block content %}
 
-<br><br>
 {% if current_user.is_authenticated %}
-<h1>Cart</h1>
-<h2>Products in your cart:</h2>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-      {{ form.query.label }} Enter a user id to see their cart!<br/>
-      {{ form.query(size=32) }}<br/>
-      {% for error in form.query.errors %}
-      <span style="color: red;">[{{ error }}]</span>
+<div class = "page-content">
+  <h1>Cart</h1>
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
       {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product Name</th>
-      <th scope="col">seller_id</th>
-      <th scope="col">Quantity of products</th>
-      <th scope="col">unit_prices</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tuple in cart%}
-      <tr>
-        <td scope="row">{{tuple.product_name}}</td>
-        <td scope="row">{{tuple.sid}}</td>
-        <td scope="row">{{tuple.quantity}}</td>
-        <td scope="row">{{tuple.unit_price}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <div>
+    total = {{total}}
+  </div>
+  <div>
+    <h2>Products in your cart</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+          {{ form.query.label }} Enter a user id to see their cart!<br/>
+          {{ form.query(size=32) }}<br/>
+          {% for error in form.query.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <div class="grid">
+      {% for tuple in cart%}
+        <div class="grid-item">
+          <div>Product name: {{tuple.product_name}}</div>
+          <div>Seller ID: {{tuple.full_name}}</div>
+          <div class="item-image">Image: {{tuple.image}}</div>
+          <h3>{{tuple.name}}</h3>
+          <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
+          
+          <div class="item-price">${{tuple.unit_price}}</div>
+          <div>
+            Qty: {{tuple.quantity}} 
+            <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
+          </div>
+          <div class="delete-item-container">
+            <div class="delete-item-button">
+              <a href="{{ url_for('sell.delete_from_inventory', pid=tuple.pid) }}" type="button" class="delete-button">Delete</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
 {% endif %}
 
 {% endblock %}
