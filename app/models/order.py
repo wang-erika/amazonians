@@ -40,3 +40,42 @@ order by Orders.date_ordered desc;
 ''',
                               sid=sid)
         return [Order(*row) for row in rows]
+
+    # given order id, toggle fulfilled status
+    @staticmethod
+    def toggle_order_fulfilled(id):
+        # Get current status
+        status = app.db.execute('''
+select fulfilled
+from Orders
+where id = :id
+''',
+                              id=id)
+
+        # toggle
+        status = 'f' if (status[0][0]) else 't'
+
+        rows = app.db.execute('''
+update Orders
+set fulfilled = :fulfilled
+where id = :id;
+''',
+                              id=id,
+                              fulfilled=status)
+    
+    @staticmethod
+    def get_orders_by_uid(uid):
+        rows = app.db.execute('''
+select Orders.id, Orders.sid, Orders.uid, Orders.pid, Orders.quantity, Orders.date_ordered,
+    Orders.fulfilled, Orders.unit_price_at_time_of_payment, Users.address, Users.full_name,
+    Products.image, Products.category, Products.name, Products.description
+from Orders join Products
+    on Orders.pid = Products.id 
+    join Users
+    on Orders.uid = Users.id
+where uid = :uid
+order by Orders.date_ordered desc;
+''',
+                              uid=uid)
+        return [Order(*row) for row in rows]
+    

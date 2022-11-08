@@ -134,5 +134,13 @@ def order_fulfillment_page():
     return render_template('sell/order_fulfillment.html',
                             orders = orders)
 
+# Toggle order fulfilled status
+@bp.route('/sell/orders/<id>', methods=['GET', 'POST'])
+def toggle_order_fulfilled(id):
+    # Toggle
+    Order.toggle_order_fulfilled(id)
+    # Re-render Order page
+    return redirect(url_for('sell.order_fulfillment_page'))
+
 
 

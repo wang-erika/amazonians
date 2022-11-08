@@ -9,7 +9,7 @@
     <div class="page-form-section">
         <h2>Product details: {{ item.name }}</h2>
         <div class="product-details">
-            <img src={{ '../../' + item.image }} alt="Photo">
+            <img src={{item.image }} alt="Photo">
 
             <div><span class="bold">Category:</span> {{ item.category }}</div>
             <div><span class="bold">Description:</span> {{ item.description }}</div>
@@ -26,7 +26,7 @@
                 
                 {{ edit_quantity_form.submit() }}
               </form>
-              <a href="{{ url_for('index.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
+              <a href="{{ url_for('buy.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
             </div>
         </div>
 </div>
