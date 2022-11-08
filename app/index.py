@@ -42,7 +42,7 @@ def index():
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
-            item.image = 'static/default.png'
+            item.image = 'static/default.jpg'
         else:
             try:
                 item.image = 'static/' + str(item.id) + '.png'  
