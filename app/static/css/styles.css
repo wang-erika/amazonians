@@ -269,22 +269,6 @@ td {
   transition: 0.2s;
 }
 
-.grid-item-full {
-  color: #252d2a;
-  width: 1000px;
-  background: #eae8df;
-  padding: 2em 3em;
-  border: 2px solid #e5e1cf;
-  font-size: 1em;
-  transition: 0.2s;
-}
-
-.grid-item-full:hover {
-  color: #252d2a;
-  box-shadow: 0px 10px 30px -20px rgb(0,0,0,0.25);
-  transition: 0.2s;
-}
-
 .item-image {
   margin-bottom: 30px;
 }
@@ -393,4 +377,78 @@ td {
   transition: 0.2s;
 }
 
+.order-item-fulfilled {
+  color: #252d2a;
+  width: 1000px;
+  background: #eae8df;
+  border: 2px solid #e5e1cf;
+  font-size: 1em;
+  transition: 0.2s;
+}
+
+.order-item-fulfilled:hover {
+  color: #252d2a;
+  box-shadow: 0px 10px 30px -20px rgb(0,0,0,0.25);
+  transition: 0.2s;
+}
+
+.order-item-unfulfilled {
+  color: #252d2a;
+  width: 1000px;
+  background: #fcfbf7;
+  border: 2px solid #e5e1cf;
+  font-size: 1em;
+  transition: 0.2s;
+}
+
+.order-item-unfulfilled:hover {
+  color: #252d2a;
+  box-shadow: 0px 10px 30px -20px rgb(0,0,0,0.25);
+  transition: 0.2s;
+}
+
+.order-ids {
+  display: flex;
+  font-size: 0.8em;
+  padding: 5px 0;
+  border-bottom: 2px solid #e5e1cf;
+}
+
+.order-ids div {
+  padding: 0px 10px;
+}
+
+.order-ids > .product-id {
+  border-left: 1px solid #aca99b;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-details-upper {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px 0px 10px;
+  align-items: baseline;
+}
+
+.order-details-lower {
+  padding: 0px 10px 10px 10px;
+}
+
+.date-ordered {
+  font-size: 0.8em;
+  padding: 5px 10px;
+  border-top: 2px solid #e5e1cf;
+}
+
+.sort {
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #aca99b;
+}
 

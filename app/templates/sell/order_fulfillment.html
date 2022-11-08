@@ -10,23 +10,35 @@
   <div class="page-form-section">
     <h2>Order fulfillment</h2>
 
+    <div class="sort">Date ordered ▼</div>
+
     <div class="grid">
       {% for tuple in orders%}
-        <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="grid-item-full">
-          <div class="item-image">
-            <img src={{tuple.p_image}} alt="Photo">
+        <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="{{'order-item-fulfilled' if tuple.fulfilled else 'order-item-unfulfilled'}}">
+          <!-- <div class="item-image">
+            <img src={{ tuple.p_image}} alt="Photo">
+          </div> -->
+          <div class="order-ids">
+            <div>ORDER ID {{tuple.id}}</div>
+            <div class="product-id">PRODUCT ID {{tuple.pid}}</div>
           </div>
-          
-          <h3>{{tuple.p_name}}</h3>
-          <div class="item-description"><span class="item-category">{{tuple.p_category}}</span></div>
-          
-          <div class="item-price">${{tuple.unit_price_at_time_of_payment}}</div>
-          <div>Qty: {{tuple.quantity}}</div>
 
-          <div>Seller ID: {{tuple.sid}}</div>
-          <div>Product ID: {{tuple.pid}}</div>
-          <div>User ID: {{tuple.uid}}</div>
-          <div>Line item ID: {{tuple.id}}</div>
+          <div class="order-details">
+            <div class="order-details-upper">
+              <div><h3>{{tuple.p_name}}</h3></div>
+              <div>Status: {{ '✅' if tuple.fulfilled else '⌛'}}</div>
+            </div>
+            
+            <div class="order-details-lower">
+              <span class="item-category">{{tuple.p_category}}</span>
+              <div class="item-price">${{tuple.unit_price_at_time_of_payment}}</div>
+              <div>Qty: {{tuple.quantity}}</div>
+              <div>{{tuple.u_full_name}}</div>
+              <div>{{tuple.u_address}}</div>
+            </div>
+          </div>
+
+          <div class="date-ordered">{{tuple.date_ordered}}</div>
         </a>
       {% endfor %}
     </div>
