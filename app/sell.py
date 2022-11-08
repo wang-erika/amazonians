@@ -95,7 +95,6 @@ def view_inventory_item(pid):
 
     # Re-render page if edit form is submitted
     if edit_quantity_form.validate_on_submit():
-        flash("poop")
         Inventory.edit_inventory_item(current_user.id,
                                     pid,
                                     edit_quantity_form.quantity.data)
