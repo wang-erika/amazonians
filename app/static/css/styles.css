@@ -414,6 +414,19 @@ td {
   border-bottom: 2px solid #e5e1cf;
 }
 
+.order-item-fulfilled:hover .order-id {
+  color: #47c69f;
+  transition: 0.2s;
+}
+.order-item-unfulfilled:hover .order-id {
+  color: #cea702;
+  transition: 0.2s;
+}
+
+.order-id {
+  transition: 0.2s;
+}
+
 .order-ids div {
   padding: 0px 10px;
 }

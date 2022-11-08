@@ -19,14 +19,14 @@
             <img src={{ tuple.p_image}} alt="Photo">
           </div> -->
           <div class="order-ids">
-            <div>ORDER ID {{tuple.id}}</div>
+            <div class="order-id">ORDER ID {{tuple.id}}</div>
             <div class="product-id">PRODUCT ID {{tuple.pid}}</div>
           </div>
 
           <div class="order-details">
             <div class="order-details-upper">
               <div><h3>{{tuple.p_name}}</h3></div>
-              <div>Status: {{ '✅' if tuple.fulfilled else '⌛'}}</div>
+              <div class="order-status">Status: {{ '✅' if tuple.fulfilled else '⌛'}}</div>
             </div>
             
             <div class="order-details-lower">
