@@ -16,6 +16,7 @@ from .models.inventory import Inventory
 from .models.cart import Cart
 from .models.review import Review
 from .models.review import Seller_Review
+from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -106,7 +107,6 @@ def cart_page():
     # default: render full cart
     return render_template('cart.html', 
                             cart = cart, total = total)
-
 @bp.route('/cart/details/<pid>', methods=['GET', 'POST'])
 def view_cart_item(pid):
     #todo ADD FLASHES

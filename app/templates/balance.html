@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<div class = "page-content">
+  <h1>Balance</h1>
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <div>
+    You have: <b>${{user[0].balance}}</b>
+  </div>
+  <br/>
+  <form action = "" method = "post">
+    <h3>Add Money</h3>
+    {{form.amount(size = 32)}}
+    {% for error in form.amount.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+    {{form.submit}}
+  </form>
+
+</div>
+{% endif %}
+
+{% endblock %}
+
