@@ -121,7 +121,6 @@ def view_cart_item(pid):
     print(item.image)
     
     if edit_quantity_form.validate_on_submit():
-        flash('poop')
         Cart.edit_cart_item(current_user.id, pid, edit_quantity_form.quantity.data)
         return redirect(url_for('index.cart_page'))
     

@@ -84,7 +84,6 @@ def view_cart_item(pid):
     print(item.image)
     
     if edit_quantity_form.validate_on_submit():
-        flash('poop')
         Cart.edit_cart_item(current_user.id, pid, edit_quantity_form.quantity.data)
         return redirect(url_for('buy.cart_page'))
     
@@ -104,15 +103,17 @@ def orders_cart_page():
     #todo ADD FLASHES   
     cart = Cart.get_all_in_cart(current_user.id)
     total = Cart.get_total_price_in_cart(current_user.id)
-    Cart.add_cart_to_orders(current_user.id)
-    Cart.delete_all_cart_items(current_user.id)
-    orders = Order.get_orders_by_uid(current_user.id)
     if total[0][0]:
         total = float(total[0][0])
     else:
         total = 0
-    return render_template('cart_order.html', 
-                            cart = cart, total = total, orders=orders)
+    if Cart.add_cart_to_orders(current_user.id):
+        Cart.delete_all_cart_items(current_user.id)
+        orders = Order.get_orders_by_uid(current_user.id)
+        return render_template('cart_order.html', 
+                                cart = cart, total = total, orders=orders)
+    return render_template('cart.html', 
+                            cart = cart, total = total) 
 
     
 class EditProductQuantityForm(FlaskForm):

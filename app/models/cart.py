@@ -1,4 +1,5 @@
 from flask import current_app as app
+from flask import flash
 
 class Cart:
     """
@@ -96,15 +97,34 @@ where uid = :uid and pid = :pid;
     @staticmethod     
     def add_cart_to_orders(uid):
         lst = Cart.get_all_in_cart(uid)
+        
         for item in lst:
-            rows = app.db.execute('''
+            balance = app.db.execute('''
+select balance
+from Users 
+where id = :uid
+''',
+                              uid=uid)
+            
+            quantity = app.db.execute('''
+select quantity
+from Inventory
+where pid = :pid
+''',
+                              pid=item.pid)
+            #todo 
+            if item.quantity <= quantity[0][0] and balance >= Cart.get_total_price_in_cart(uid):
+                rows = app.db.execute('''
 insert into Orders(uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment)
 VALUES(:uid, :sid, :pid, :quantity, :fulfilled, :unit_price_at_time_of_payment)
 returning uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment
 ''',
-                              uid=item.uid, sid = item.sid, pid=item.pid, quantity = item.quantity, fulfilled = False, 
-                              unit_price_at_time_of_payment = item.unit_price,
-                              )
+                                uid=item.uid, sid = item.sid, pid=item.pid, quantity = item.quantity, fulfilled = False, 
+                                unit_price_at_time_of_payment = item.unit_price,
+                                )
+                return 1
+            else:
+                flash('order could not be completed, too much quantity')
 
     @staticmethod
     def add_product_to_cart(uid, sid, pid, quantity):
