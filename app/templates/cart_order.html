@@ -8,9 +8,8 @@
     <h1>Orders Page</h1>    
     <div>
         <h2>Your previous orders</h2>
-        <div class="grid">
+        <div>
             {% for tuple in orders%}
-              <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="grid-item-full">
                 <div class="item-image">
                   <img src={{tuple.p_image}} alt="Photo">
                 </div>
@@ -20,11 +19,10 @@
                 
                 <div class="item-price">${{tuple.unit_price_at_time_of_payment}}</div>
                 <div>Qty: {{tuple.quantity}}</div>
-      
                 <div>Seller ID: {{tuple.sid}}</div>
                 <div>Product ID: {{tuple.pid}}</div>
                 <div>User ID: {{tuple.uid}}</div>
-              </a>
+                <div>Fufillment: {{tuple.fulfilled}}</div>
             {% endfor %}
           </div>
     </div>
