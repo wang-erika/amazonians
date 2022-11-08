@@ -23,37 +23,19 @@
     <h2>Products in your cart</h2>
     <div class="grid">
       {% for tuple in cart%}
-        <div class="grid-item">
-          <div>Product name: {{tuple.product_name}}</div>
-          <div>Seller ID: {{tuple.full_name}}</div>
-          <div class="item-image">
-            <img src={{tuple.image}} alt="Image">
-          </div>
-          <h3>{{tuple.name}}</h3>
-          <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
-          <div class="item-price">${{tuple.unit_price}}</div>
-          <div class = "item-quantity">
-            <span class="bold">Qty:</span>
-            <form action=""  method="post">
-              {{ edit_quantity_form.hidden_tag() }}
-              
-              {{ edit_quantity_form.quantity(size=4, placeholder=tuple.quantity) }}<br/><br/>
-              
-              {% for error in edit_quantity_form.quantity.errors %}
-              <span style="color: red;">[{{ error }}]</span>
-              {% endfor %}           
-              
-              {{ edit_quantity_form.submit() }}
-      
-            </form>
-          </div>
-
-
-          <div>
-            Qty: {{tuple.quantity}} 
-            <a href="{{ url_for('sell.inventory_page') }}" type="button" class="edit-button">Edit</a>
-          </div>
-        </div>
+          <a href="{{ url_for('index.view_cart_item', pid=tuple.pid) }}" class="grid-item">
+            <div>Product name: {{tuple.product_name}}</div>
+            <div>Seller ID: {{tuple.full_name}}</div>
+            <div class="item-image">
+              <img src={{tuple.image}} alt="Photo">
+            </div> 
+            <h3>{{tuple.name}}</h3>
+            <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
+            <div class="item-price">${{tuple.unit_price}}</div>
+            <div class = "item-quantity">
+              <span class="bold">Qty: {{tuple.quantity}}</span>
+            </div>
+          </a>
       {% endfor %}
 
     </div>

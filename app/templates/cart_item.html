@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+    <h1>Cart item</h1> 
+    <div class="page-form-section">
+        <h2>Product details: {{ item.name }}</h2>
+        <div class="product-details">
+            <img src={{ '../../' + item.image }} alt="Photo">
+
+            <div><span class="bold">Category:</span> {{ item.category }}</div>
+            <div><span class="bold">Description:</span> {{ item.description }}</div>
+            <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
+            <div class="item-quantity">
+              <span class="bold">Qty:</span>
+              <form action=""  method="post">
+                {{ edit_quantity_form.hidden_tag() }}
+                {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/><br/>
+  
+                {% for error in edit_quantity_form.quantity.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}           
+                
+                {{ edit_quantity_form.submit() }}
+              </form>
+              <a href="{{ url_for('index.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
+            </div>
+        </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

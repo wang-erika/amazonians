@@ -1,6 +1,5 @@
 from flask import current_app as app
 
-
 class Cart:
     """
     This is just a TEMPLATE for Cart, you should change this by adding or 
@@ -52,11 +51,12 @@ WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
     @staticmethod
     def get_all_in_cart_by_pid(uid, pid):
         rows = app.db.execute('''
-select uid, name, pid, sid, quantity, unit_price, category, description
-from Cart, Products
-where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid
+select uid, name, pid, sid, quantity, unit_price, category, description, image, full_name
+from Cart, Products, Users
+where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid AND Users.id = Cart.sid
 ''',
                               uid=uid, pid=pid)
+        return Cart(*(rows[0])) if rows is not None else None 
         
     @staticmethod
     def delete_cart_item(uid, pid):
@@ -67,15 +67,25 @@ where uid = :uid and Cart.pid = :pid;
                               uid=uid, pid=pid)
         
     @staticmethod
-    def edit_cart_item(sid, pid, quantity):
+    def edit_cart_item(uid, pid, quantity):
         rows = app.db.execute('''
 update Cart
 set quantity = :quantity
-where sid = :sid and pid = :pid;
+where uid = :uid and pid = :pid;
 ''',
-                              sid=sid,
+                              uid=uid,
                               pid=pid,
-                              quantity=quantity)        
+                              quantity=quantity)   
+    
+    @staticmethod
+    def delete_cart_item(uid, pid):
+        # Delete product from Inventory
+        rows = app.db.execute('''
+delete from Cart
+where uid = :uid and pid = :pid;
+''',
+                              uid=uid,
+                              pid=pid)     
 
     @staticmethod
     def add_product_to_cart(uid, sid, pid, quantity):
