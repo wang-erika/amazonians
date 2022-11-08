@@ -5,6 +5,11 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Decim
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
+import os
+from io import BytesIO
+
+from flask import current_app as app
+
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -21,6 +26,7 @@ bp = Blueprint('index', __name__)
 def index():
     # get all available products for sale:
     products = Product.get_all()
+    products = update_image(products)
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -31,6 +37,15 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases)
+
+
+def update_image(products):
+    for item in products:
+        if (item.image.tobytes() == b'0'):
+            item.image = 'static/default.png'
+        else:
+            item.image = 'static/' + str(item.id) + '.png'  
+    return products
 
 @bp.route('/purchase', methods = ['GET', 'POST'])
 def purchases():
