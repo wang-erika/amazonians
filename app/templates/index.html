@@ -21,7 +21,9 @@
   <div class="grid">
     {% for tuple in avail_products%}
       <div class="grid-item">
-        <div class="item-image">Image: {{tuple.image}}</div>
+        <div class="item-image">
+          <img src={{tuple.image}} alt="Image">
+        </div>
         <div>Product ID: {{tuple.id}}</div>
         <h3>{{tuple.name}}</h3>
         <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>

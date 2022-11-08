@@ -57,6 +57,25 @@ from Cart, Products
 where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid
 ''',
                               uid=uid, pid=pid)
+        
+    @staticmethod
+    def delete_cart_item(uid, pid):
+        rows = app.db.execute('''
+delete from Cart
+where uid = :uid and Cart.pid = :pid;
+''',
+                              uid=uid, pid=pid)
+        
+    @staticmethod
+    def edit_cart_item(sid, pid, quantity):
+        rows = app.db.execute('''
+update Cart
+set quantity = :quantity
+where sid = :sid and pid = :pid;
+''',
+                              sid=sid,
+                              pid=pid,
+                              quantity=quantity)        
 
     @staticmethod
     def add_product_to_cart(uid, sid, pid, quantity):
