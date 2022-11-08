@@ -19,6 +19,7 @@ from .models.inventory import Inventory
 from .models.cart import Cart
 from .models.review import Review
 from .models.review import Seller_Review
+from .models.order import Order
 
 from flask import Blueprint
 bp = Blueprint('sell', __name__)
@@ -123,12 +124,15 @@ def delete_inventory_item(pid):
     # Re-render Sell page
     return redirect(url_for('sell.inventory_page'))
 
+
 # Order fulfillment page
 @bp.route('/sell/orders', methods=['GET', 'POST'])
 def order_fulfillment_page():
+    orders = Order.get_orders_by_sid('10')
 
     # Render Order fulfillment page
-    return render_template('sell/order_fulfillment.html')
+    return render_template('sell/order_fulfillment.html',
+                            orders = orders)
 
 
 
