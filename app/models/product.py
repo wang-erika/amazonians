@@ -44,3 +44,35 @@ ORDER BY unit_price DESC
 LIMIT :k
 ''', k = k)
         return [Product(*row) for row in rows]
+
+
+    @staticmethod
+    def add_to_cart(pid, uid):
+        sid = Product.get_sid_from_pid(pid)
+        cart = Product.in_cart(pid)
+        print(sid, cart)
+        if not cart:
+            rows = app.db.execute('''
+    INSERT INTO Cart(quantity, uid, pid, sid)        
+    VALUES(1, :uid, :pid, :sid)''', uid=uid, pid=pid, sid=sid)
+        else:
+            rows = app.db.execute('''
+    UPDATE Cart SET quantity = quantity+1 WHERE pid=:pid         
+            ''', pid=pid)
+
+    @staticmethod
+    def get_sid_from_pid(pid):
+        sid = app.db.execute('''
+SELECT sid FROM Inventory
+WHERE pid=:pid''', pid=pid)
+        return sid[0][0]
+
+
+    @staticmethod
+    def in_cart(pid):
+        ret = app.db.execute(''' 
+ SELECT quantity from Cart
+ WHERE pid=:pid       
+        ''', pid=pid)
+
+        return len(ret) > 0

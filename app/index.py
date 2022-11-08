@@ -44,7 +44,10 @@ def update_image(products):
         if (item.image.tobytes() == b'0'):
             item.image = 'static/default.png'
         else:
-            item.image = 'static/' + str(item.id) + '.png'  
+            try:
+                item.image = 'static/' + str(item.id) + '.png'  
+            except:
+                item.image = 'static/' + str(item.pid) + '.png'
     return products
 
 @bp.route('/purchase', methods = ['GET', 'POST'])
@@ -94,6 +97,7 @@ def cart_page():
     if current_user.is_authenticated:
         # get all products they are selling
         cart = Cart.get_all_in_cart(current_user.id)
+        cart = update_image(cart)
         #total = Cart.get_total_price_in_cart(form.query.data)
         total = Cart.get_total_price_in_cart(current_user.id)
         if total[0][0]:

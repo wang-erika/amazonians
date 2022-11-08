@@ -375,3 +375,22 @@ td {
   transition: 0.2s;
 }
 
+.add-button {
+  background: #f5f4ed;
+  padding: 0.675em 1em;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-top: 50px;
+
+  color: #2c7962;
+  border: 2px solid #2c7962;
+  margin-left: 200px;
+}
+.add-button:hover {
+  color: #f5f4ed;
+  background: #2c7962;
+  transition: 0.2s;
+}
+
+

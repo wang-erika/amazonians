@@ -41,6 +41,16 @@ def product_page():
                             product = product, form = form)
 
 
+@bp.route('/product/addcart/<pid>', methods=['GET', 'POST'])
+def add_to_cart(pid):
+    Product.add_to_cart(pid, current_user.id)
+
+    flash('Added to Cart')
+
+    return redirect(url_for('index.index'))
+
+
+
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('Search')

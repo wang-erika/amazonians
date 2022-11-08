@@ -26,7 +26,9 @@
         <div class="grid-item">
           <div>Product name: {{tuple.product_name}}</div>
           <div>Seller ID: {{tuple.full_name}}</div>
-          <div class="item-image">Image: {{tuple.image}}</div>
+          <div class="item-image">
+            <img src={{tuple.image}} alt="Image">
+          </div>
           <h3>{{tuple.name}}</h3>
           <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
           <div class="item-price">${{tuple.unit_price}}</div>
