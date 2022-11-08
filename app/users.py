@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FloatField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
@@ -67,6 +67,67 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
+
+@bp.route('/balance', methods = ['GET', 'POST'])
+def balance():
+    form = UpdateBalanceForm()
+    if current_user.is_authenticated:
+        user = User.get_all(current_user.id)
+        #has email, name, password, address, balance
+    else:
+        return redirect(url_for('users.login'))
+    if form.validate_on_submit():
+        Users.update_balance(current_user.id, form.amount)
+        flash("Added money!")
+        return redirect(url_for('balance'))
+    return render_template('balance.html', user = user, form = form)
+
+class UpdateBalanceForm(FlaskForm):
+    amount = FloatField('Amount')
+    submit = SubmitField('Add')
+
+@bp.route('/account', methods = ['GET', 'POST'])
+def account_page():
+    if current_user.is_authenticated:
+        user = User.get_all(current_user.id)
+        #has email, name, password, address, balance
+    else:
+        return redirect(url_for('users.login'))
+    
+    return render_template('account.html', user = user)
+
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name')
+    lastname = StringField('Last Name')
+    email = StringField('Email', validators=[Email()])
+    address = StringField('Address')
+    password = PasswordField('Password')
+    password2 = PasswordField(
+        'Repeat Password', validators=[EqualTo('password')])
+    submit = SubmitField('Update')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+@bp.route('/account/edit', methods = ['GET', 'POST'])
+def edit_account():
+    if current_user.is_authenticated:
+        user = User.get_all(current_user.id)
+    else:
+        redirect(url_for('users.login'))
+    form = UpdateForm()
+    if form.validate_on_submit():
+        '''
+        email = form.email.data if len(form.email.data) > 0 else user[0].email
+        password = form.password.data if len(form.password.data) > 0 else user[0].password
+        firstname = form.firstname.data if len(form.firstname.data) > 0 else user[0].full_name.split(" ")[0]
+        lastname = form.lastname.data if len(form.lastname.data) > 0 else user[0].full_name.split(" ")[1]
+        '''
+        if User.update(current_user.id, email):
+            flash('Successfully updated account!')
+            return redirect(url_for('users.account_page'))
+    return render_template('edit_account.html', user = user, form=form)
 
 @bp.route('/logout')
 def logout():

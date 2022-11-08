@@ -60,6 +60,28 @@ RETURNING id
             return None
 
     @staticmethod
+    def update(id, email):
+        rows = app.db.execute('''
+        update Users
+        set email = :email
+        where id = :id;
+        ''',
+                            id = id,
+                            email = email)
+        return id
+
+    @staticmethod
+    def update_balance(id, amount):
+        rows = app.db.execute('''
+        update Users
+        set balance = :amount
+        where id = :id;
+        ''',
+                        id = id,
+                        amount = amount)
+    
+    
+    @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
@@ -70,3 +92,12 @@ WHERE id = :id
                               id=id)
         return User(*(rows[0])) if rows else None
 
+    @staticmethod
+    def get_all(id):
+        rows = app.db.execute("""
+SELECT *
+FROM Users
+WHERE id = :id
+""",
+                              id=id)
+        return [User(*row) for row in rows]

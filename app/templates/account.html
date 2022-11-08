@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<div class = "page-content">
+  <h1>Your Account Information</h1>
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <div>
+    <h2>Email</h2>
+    <div>
+        Email: {{user[0].email}}
+    </div>
+    <h2>Account ID</h2>
+    <div>
+        {{user[0].id}}
+    </div>
+    <h2>Name</h2>
+    <div>
+        {{user[0].full_name}}
+    </div>
+    <h2>Address</h2>
+    <div>
+        {{user[0].address}}
+    </div>
+    <h2>Balance</h2>
+    <div>
+        {{user[0].balance}}
+    </div>
+  </div>
+  <a href="{{ url_for('users.edit_account') }}" type="button" class="quick-actions-button">Update Information</a>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -81,6 +81,10 @@
 
           <div class="user-nav">
             <div>
+              <a href="{{ url_for('users.balance') }}" type="button">My wallet</a>
+            </div>
+
+            <div>
               <a href="{{ url_for('index.purchases') }}" type="button">My orders</a>
             </div>
 
@@ -90,6 +94,10 @@
 
             <div>
               <a href="{{ url_for('buy.cart_page') }}" type="button">My cart</a>
+            </div>
+
+            <div>
+              <a href = "{{ url_for('users.account_page')}}" type = "button">My account</a>
             </div>
 
             <div>
