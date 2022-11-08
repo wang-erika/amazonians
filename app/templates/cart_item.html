@@ -26,7 +26,7 @@
                 
                 {{ edit_quantity_form.submit() }}
               </form>
-              <a href="{{ url_for('index.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
+              <a href="{{ url_for('buy.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
             </div>
         </div>
 </div>

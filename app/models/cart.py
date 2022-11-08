@@ -85,7 +85,26 @@ delete from Cart
 where uid = :uid and pid = :pid;
 ''',
                               uid=uid,
-                              pid=pid)     
+                              pid=pid)
+    
+    @staticmethod
+    def delete_all_cart_items(uid):
+        lst = Cart.get_all_in_cart(uid)
+        for item in lst:
+            Cart.delete_cart_item(uid,item.pid)
+    
+    @staticmethod     
+    def add_cart_to_orders(uid):
+        lst = Cart.get_all_in_cart(uid)
+        for item in lst:
+            rows = app.db.execute('''
+insert into Orders(uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment)
+VALUES(:uid, :sid, :pid, :quantity, :fulfilled, :unit_price_at_time_of_payment)
+returning uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment
+''',
+                              uid=item.uid, sid = item.sid, pid=item.pid, quantity = item.quantity, fulfilled = False, 
+                              unit_price_at_time_of_payment = item.unit_price,
+                              )
 
     @staticmethod
     def add_product_to_cart(uid, sid, pid, quantity):
