@@ -89,37 +89,42 @@ def reviews():
                             #your_seller_reviews = your_seller_reviews,
                             form = form)
 
-
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
-    form = SearchBarForm()
     if current_user.is_authenticated:
         # get all products they are selling
         cart = Cart.get_all_in_cart(current_user.id)
         #total = Cart.get_total_price_in_cart(form.query.data)
         total = Cart.get_total_price_in_cart(current_user.id)
-        total = float(total[0][0])
+        if total[0][0]:
+            total = float(total[0][0])
+        else:
+            total = 0
+
     else:
         cart = []
-
-    # if query submitted
-    if form.validate_on_submit():
-        print(form.query, file=sys.stderr)
-
-        #cart = Cart.get_all_in_cart(form.query.data)
-        cart = Cart.get_all_in_cart(current_user.id)
-        
-        if not cart:
-            cart = []
-
+    
+    edit_quantity_form = EditProductQuantityForm()
+    
+    #if edit form
+    if edit_quantity_form.validate_on_submit():
         flash('poop')
-        return render_template('cart.html', 
-                            cart = cart, form = form, total = total)
+        Cart.edit_cart_item(current_user.id, 100, edit_quantity_form.quantity.data)
+        cart = Cart.get_all_in_cart(current_user.id)
+        total = Cart.get_total_price_in_cart(current_user.id)
+        if total[0][0]:
+            total = float(total[0][0])
+        else:
+            total = 0
+        return redirect(url_for('index.cart_page'))
 
     # default: render full cart
     return render_template('cart.html', 
-                            cart = cart, form = form, total = total)
-
+                            cart = cart, total = total, edit_quantity_form = edit_quantity_form)
+    
+class EditProductQuantityForm(FlaskForm):
+    quantity = IntegerField('New quantity', validators=[])
+    submit = SubmitField('Update')
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
