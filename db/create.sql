@@ -44,7 +44,7 @@ CREATE TABLE RatesSeller (
     rating INT NOT NULL,
     review VARCHAR(2000),
     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY(sid, uid, date)
+    PRIMARY KEY(uid, sid, date)
 );
 
 CREATE TABLE RatesProduct (
@@ -53,7 +53,7 @@ CREATE TABLE RatesProduct (
     rating INT NOT NULL,
     review VARCHAR(2000),
     date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    PRIMARY KEY(pid, uid, date)
+    PRIMARY KEY(uid, pid, date)
 );
 
 CREATE TABLE Purchases (
