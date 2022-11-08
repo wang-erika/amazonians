@@ -40,3 +40,25 @@ order by Orders.date_ordered desc;
 ''',
                               sid=sid)
         return [Order(*row) for row in rows]
+
+    # given order id, toggle fulfilled status
+    @staticmethod
+    def toggle_order_fulfilled(id):
+        # Get current status
+        status = app.db.execute('''
+select fulfilled
+from Orders
+where id = :id
+''',
+                              id=id)
+
+        # toggle
+        status = 'f' if (status[0][0]) else 't'
+
+        rows = app.db.execute('''
+update Orders
+set fulfilled = :fulfilled
+where id = :id;
+''',
+                              id=id,
+                              fulfilled=status)

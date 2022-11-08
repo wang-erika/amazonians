@@ -7,6 +7,18 @@
 <div class="page-content">
   <h1>Inventory</h1>    
 
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
   <div class="page-form-section">
     <h2>Order fulfillment</h2>
 
@@ -14,7 +26,7 @@
 
     <div class="grid">
       {% for tuple in orders%}
-        <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="{{'order-item-fulfilled' if tuple.fulfilled else 'order-item-unfulfilled'}}">
+        <a href="{{ url_for('sell.toggle_order_fulfilled', id=tuple.id) }}" class="{{'order-item-fulfilled' if tuple.fulfilled else 'order-item-unfulfilled'}}">
           <!-- <div class="item-image">
             <img src={{ tuple.p_image}} alt="Photo">
           </div> -->
