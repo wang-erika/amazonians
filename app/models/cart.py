@@ -276,10 +276,22 @@ returning id;
             # Maps to a list where 1st element is list of purchases
             # and 2nd element is total price for this order
             map[order] = [
-                Purchase.get_purchases_by_oid_and_uid(oid, uid),
+                Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)),
                 Cart.get_order_total(oid, uid)
             ]
         return map
+
+    @staticmethod
+    def update_image(products):
+        for item in products:
+            if (item.image.tobytes() == b'0'):
+                item.image = '../../static/default.jpg'
+            else:
+                try:
+                    item.image = '../../static/' + str(item.pid) + '.png'  
+                except:
+                    item.image = '../../static/' + str(item.id) + '.png'  
+        return products
 
     @staticmethod 
     def get_order_total(oid, uid):
