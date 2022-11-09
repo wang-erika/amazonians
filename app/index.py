@@ -55,11 +55,7 @@ def purchases():
     else:
         purchases = None
 
-    query_purchases = []
-    if form.validate_on_submit():
-        query_purchases = Purchase.get_purchases(form.query.data)
-
-    return render_template('purchase.html', purchases = purchases, query_purchases = query_purchases, form = form)
+    return render_template('purchase.html', purchases = purchases)
 
 
 class SearchBarForm(FlaskForm):
