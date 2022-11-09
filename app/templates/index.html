@@ -21,17 +21,30 @@
   <div class="grid">
     {% for tuple in avail_products%}
       <div class="grid-item">
-        <div class="item-image">
-          <img src={{tuple.image}} alt="Image">
+        <div class="item-ids">
+          <div class="main-id">PRODUCT ID {{tuple.id}}</div>
         </div>
-        <div>Product ID: {{tuple.id}}</div>
-        <h3>{{tuple.name}}</h3>
-        <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
+
+        <div class="item-details">
+          <div class="item-details-image">
+            <img src={{tuple.image}} alt="Image">
+            {% if current_user.is_authenticated %}
+            <div class="add-button-container">
+              <a href="{{ url_for('product.add_to_cart', pid=tuple.id) }}" class="add-button">Add to cart</a>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="item-details-content">
+            <div><h3>{{tuple.name}}</h3></div>
+            <span class="item-category">{{tuple.category}}</span>
+            <div class="item-price">${{tuple.unit_price}}</div>
+            <div class="item-description">{{tuple.description}}</div>
+          </div>
+        </div>
+
         
-        <div class="item-price">${{tuple.unit_price}}</div>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('product.add_to_cart', pid=tuple.id) }}" class="add-button">Add to Cart</a>
-        {% endif %}
+      </div>
     {% endfor %}
   </div>
 
