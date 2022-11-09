@@ -32,6 +32,20 @@ ORDER BY review_time DESC
                               since=since)
         return [Review(*row) for row in rows]
 
+#get specific product review from uid and pid
+    @staticmethod
+    def get_product_review(uid, pid):
+        rows = app.db.execute('''
+SELECT *
+FROM RatesProduct 
+WHERE uid = :uid
+AND pid = :pid
+''',
+                              uid=uid,
+                              pid = pid)
+        return Review(*(rows[0])) if rows is not None else None
+
+
     @staticmethod
     def get_recent_reviews(uid):
         rows = app.db.execute('''
@@ -93,7 +107,7 @@ VALUES(:uid, :pid, :date, :rating, :review)
             print(str(e))
             return None
 
-# given uid and pid, delete reiew from RatesProduct
+# given uid and pid, delete review from RatesProduct
     @staticmethod
     def delete_product_review(uid, pid):
         # Delete review
@@ -104,7 +118,7 @@ where uid = :uid and pid = :pid;
                               uid=uid,
                               pid=pid)
 
-
+# check if there is already a product review
     @staticmethod
     def has_product_review(uid, pid):
         rows = app.db.execute('''

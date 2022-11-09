@@ -357,11 +357,27 @@ td {
   transition: 0.2s;
 }
 
-.add-button-container {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0 7.5px 0;
+
+.view-button {
+  background: #f5f4ed;
+  padding: 0.675em 1em;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-top: 50px;
+
+  color: #52bde4;
+  border: 2px solid #52bde4;
+  margin-left: 5px;
 }
+.view-button:hover {
+  color: #f5f4ed;
+  background: #52bde4;
+  transition: 0.2s;
+}
+
+
+
 .add-button {
   background: #f5f4ed;
   font-size: 0.85em;
