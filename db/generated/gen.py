@@ -80,10 +80,9 @@ def gen_inventory(sellers, products):
                 print(f'{id}', end=' ', flush=True)
             sid = fake.random_element(elements=list(sellers))
             pid = fake.random_element(elements=list(products))
-            while (sid, pid) in used_keys:
-                sid = fake.random_element(elements=list(sellers))
+            while (pid) in used_keys:
                 pid = fake.random_element(elements=list(products))
-            used_keys.add((sid, pid))
+            used_keys.add(pid)
             # print(sid, pid)
             quantity = fake.random_int(max=30)
             writer.writerow([sid, pid, quantity])
