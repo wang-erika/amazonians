@@ -84,7 +84,7 @@ def balance():
     #when form is submitted, call update_balance and redirect to /balance
     if form.validate_on_submit():
         balance = user[0].balance
-        User.update_balance(current_user.id, form.amount.data, balance)
+        User.edit_balance(current_user.id, form.amount.data, balance)
         flash("Added money!")
         return redirect(url_for('users.balance'))
     return render_template('balance.html', user = user, form = form)
