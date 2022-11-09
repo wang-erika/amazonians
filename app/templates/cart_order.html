@@ -5,7 +5,19 @@
 {% if current_user.is_authenticated %}
 
 <div class="page-content">
-    <h1>Orders Page</h1>    
+    <h1>Orders Page</h1>
+    <div class="flash-notifications">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div>
+        {% for message in messages %}
+        <div class="flash-message">⚠️ {{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+     
     <div>
         <h2>Your previous orders</h2>
         <div class= "grid">
