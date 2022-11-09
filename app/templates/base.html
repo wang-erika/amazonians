@@ -7,29 +7,7 @@
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
   <!-- Order fulfillment hover functionality -->
-  <script>
-    $(document).ready(function () {
-      $(".order-item-fulfilled").hover(function() {
-        $(this).addClass("order-item-unfulfilled");
-        $(this).removeClass("order-item-fulfilled");
-        $(this).find("div.order-status").text('Mark as ⌛');
-      }, function() {
-        $(this).removeClass("order-item-unfulfilled");
-        $(this).addClass("order-item-fulfilled");
-        $(this).find("div.order-status").text('Status: ✅');
-      });
-
-      $(".order-item-unfulfilled").hover(function() {
-        $(this).addClass("order-item-fulfilled");
-        $(this).removeClass("order-item-unfulfilled");
-        $(this).find("div.order-status").text('Mark as ✅');
-      }, function() {
-        $(this).removeClass("order-item-fulfilled");
-        $(this).addClass("order-item-unfulfilled");
-        $(this).find("div.order-status").text('Status: ⌛');
-      });
-    });
-  </script>
+  <script></script>
   
   <!-- Bootstrap styles -->
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -89,7 +67,7 @@
             </div>
 
             <div>
-              <a href="{{ url_for('index.reviews') }}" type="button">My reviews</a>
+              <a href="{{ url_for('reviews.reviews_page') }}" type="button">My reviews</a>
             </div>
 
             <div>
