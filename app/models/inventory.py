@@ -4,56 +4,62 @@ from werkzeug.utils import secure_filename
 
 
 class Inventory:
-    def __init__(self, sid, pid, image, category, name, quantity, unit_price, description):
+    def __init__(self, sid, pid, name, category, image, unit_price, description, quantity):
         self.sid = sid
         self.pid = pid
-        self.image = image
-        self.category = category
         self.name = name
-        self.quantity = quantity
+        self.category = category
+        self.image = image
         self.unit_price = unit_price
         self.description = description
+        self.quantity = quantity
 
-    # given id of seller, return list of products in their inventory (and associated info)
+
+    # Given id of seller, return list of products in their inventory (and associated info)
     @staticmethod
     def get_by_sid(sid):
         rows = app.db.execute('''
-select sid, pid, image, category, name, quantity, unit_price, description
+select sid, pid, name, category, image, unit_price, description, quantity
 from Inventory join Products
     on Inventory.pid = Products.id
 where sid = :sid
 ''',
                               sid=sid)
+
         return [Inventory(*row) for row in rows]
 
-    # given seller id and pid, return details on 1 product
+
+    # Given seller id and product id, 
+    # return details on 1 product
     @staticmethod
     def get_by_sid_and_pid(sid, pid):
         rows = app.db.execute('''
-select sid, pid, image, category, name, quantity, unit_price, description
+select sid, pid, name, category, image, unit_price, description, quantity
 from Inventory join Products
     on Inventory.pid = Products.id
 where sid = :sid and pid = :pid
 ''',
                               sid=sid,
                               pid=pid)
+
         return Inventory(*(rows[0])) if rows is not None else None
 
+
     # PRIVATE HELPER METHOD
-    # given product image, category, name, unit_price, description
+    # Given product details
     # insert into Products table
-    # and return id
+    # and return the created pid
     @staticmethod
-    def insert_new_product(image, category, name, unit_price, description):
+    def insert_new_product(name, category, image, unit_price, description):
         try:
             rows = app.db.execute("""
-INSERT INTO Products(image, category, name, unit_price, description)
-VALUES(:image, :category, :name, :unit_price, :description)
+INSERT INTO Products(name, category, image, unit_price, description)
+VALUES(:name, :category, :image, :unit_price, :description)
 RETURNING id;
 """,
-                                  image=image,
-                                  category=category,
                                   name=name,
+                                  category=category,
+                                  image=image,
                                   unit_price=unit_price,
                                   description=description)
             
@@ -65,17 +71,17 @@ RETURNING id;
             return None
 
     # PRIVATE HELPER METHOD
-    # given id,
+    # Given user id,
     # insert this person into the Sellers table
     @staticmethod
-    def insert_new_seller(sid):
+    def insert_new_seller(id):
         try:
             rows = app.db.execute("""
 INSERT INTO Sellers(id)
 VALUES(:id)
 RETURNING id;
 """,
-                                  id=sid)
+                                  id=id)
             
             sid = rows[0][0]
             return sid
@@ -84,16 +90,17 @@ RETURNING id;
             print(str(e))
             return None
 
-
-    # given seller id AND product image, category, name, quantity, unit_price, description
+    # Given seller id AND product details
     # insert into Products table
     # insert into Sellers table
     # insert into Inventory table
+    # Returns created pid
     @staticmethod
-    def add_new_inventory_item(sid, image, category, name, quantity, unit_price, description):
+    def add_new_inventory_item(sid, name, image, category, unit_price, description, quantity):
         # insert into Products
-        pid = Inventory.insert_new_product(image.read(), category, name, unit_price, description)
+        pid = Inventory.insert_new_product(name, category, image.read(), unit_price, description)
 
+        # stop if the Product insert did not work
         if not pid:
             return None
 
@@ -118,7 +125,7 @@ RETURNING sid, pid;
             return None
 
 
-    # given sid and pid, edit product quantity
+    # Given sid and pid, edit product quantity
     @staticmethod
     def edit_inventory_item(sid, pid, quantity):
         rows = app.db.execute('''
@@ -129,11 +136,12 @@ where sid = :sid and pid = :pid;
                               sid=sid,
                               pid=pid,
                               quantity=quantity)
+        
+        return rows
 
 
-
-    # PRIVATE HELPER METHOD 
-    # given product id, delete product from Products
+    # PRIVATE HELPER METHOD
+    # Given product id, delete product from Products
     @staticmethod
     def delete_product(pid):
         rows = app.db.execute('''
@@ -141,18 +149,22 @@ delete from Products
 where id = :pid;
 ''',
                               pid=pid)
+        
+        return rows
 
     # PRIVATE HELPER METHOD 
-    # given seller id, delete person from Sellers
+    # Given seller id, delete person from Sellers
     @staticmethod
     def delete_seller(sid):
         rows = app.db.execute('''
 delete from Sellers
 where id = :sid;
 ''',
-                              sid=sid)                     
+                              sid=sid)
+        
+        return rows
 
-    # given sid and pid, delete product from inventory
+    # Given sid and pid, delete product from inventory
     @staticmethod
     def delete_inventory_item(sid, pid):
         # Delete product from Inventory
