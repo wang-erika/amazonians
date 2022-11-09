@@ -80,12 +80,6 @@ def delete_cart_item(pid):
     return redirect(url_for('buy.cart_page'))
 
 @bp.route('/cart/order/', methods=['GET', 'POST'])
-def view_orders_cart_page():
-    orders_map = Cart.order_map_purchases(current_user.id)
-    return render_template('cart_order.html', 
-                                orders_map=orders_map)
-
-@bp.route('/cart/order/', methods=['GET', 'POST'])
 def orders_cart_page():
     #todo ADD FLASHES   
     flash('Does this work')
