@@ -124,6 +124,21 @@ def gen_rates(filename, people, users):
             review = fake.sentence(nb_words=40)[:-1]
             writer.writerow([uid, fid, rating, review, date])
 
+def gen_orders(users):
+    orders = set()
+    with open("./db/data/Orders.csv", 'w') as f:
+        writer = get_csv_writer(f)
+        print("Orders...", end=' ', flush=True)
+        for oid in range(30):
+            orders.add(oid)
+            # Update sid to select from sellers
+            uid = fake.random_element(elements=users)
+            date_ordered = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
+            fufilled = fake.random_element(elements=('true', 'false'))
+            
+            writer.writerow([oid, uid, date_ordered, fufilled])
+    return orders
+
 def gen_purchases(orders, users, products):
     with open('./db/data/Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -141,21 +156,6 @@ def gen_purchases(orders, users, products):
             fufilled = fake.random_element(elements=('true', 'false'))
             writer.writerow([id, oid, uid, pid, quantity, time_purchased, unit_price_at_time_of_payment, fufilled])
         print(f'{num_purchases} generated')
-
-def gen_orders(users):
-    orders = set()
-    with open("./db/data/Orders.csv", 'w') as f:
-        writer = get_csv_writer(f)
-        print("Orders...", end=' ', flush=True)
-        for oid in range(30):
-            orders.add(oid)
-            # Update sid to select from sellers
-            uid = fake.random_element(elements=users)
-            date_ordered = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
-            fufilled = fake.random_element(elements=('true', 'false'))
-            
-            writer.writerow([oid, uid, date_ordered, fufilled])
-    return orders
 
 
 
