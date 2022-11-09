@@ -12,12 +12,7 @@ from flask import current_app as app
 
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.inventory import Inventory
 from .models.cart import Cart
-from .models.order import Order
-from .models.review import Review
-from .models.review import Seller_Review
-from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -67,55 +62,8 @@ def purchases():
     return render_template('purchase.html', purchases = purchases, query_purchases = query_purchases, form = form)
 
 
-@bp.route('/cart', methods=['GET', 'POST'])
-def cart_page():
-    if current_user.is_authenticated:
-        # get all products they are selling
-        cart = Cart.get_all_in_cart(current_user.id)
-        #total = Cart.get_total_price_in_cart(form.query.data)
-        total = Cart.get_total_price_in_cart(current_user.id)
-        if total[0][0]:
-            total = float(total[0][0])
-        else:
-            total = 0
-    else:
-        cart = []
-    
-    #if edit form
-    # default: render full cart
-    return render_template('cart.html', 
-                            cart = cart, total = total)
-
-@bp.route('/cart/details/<pid>', methods=['GET', 'POST'])
-def view_cart_item(pid):
-    #todo ADD FLASHES
-    edit_quantity_form = EditProductQuantityForm()
-    item = Cart.get_all_in_cart_by_pid(current_user.id, pid)
-    item.image = 'static/' + str(item.pid) + '.png'
-    print(item.image)
-    
-    if edit_quantity_form.validate_on_submit():
-        Cart.edit_cart_item(current_user.id, pid, edit_quantity_form.quantity.data)
-        return redirect(url_for('index.cart_page'))
-    
-    return render_template('cart_item.html',
-                            item = item,
-                            edit_quantity_form = edit_quantity_form)
-
-@bp.route('/cart/delete/<pid>', methods=['GET', 'POST'])
-def delete_cart_item(pid):
-    #todo ADD FLASHES   
-    Cart.delete_cart_item(current_user.id, pid)
-    flash('Product removed from your cart.')
-    return redirect(url_for('index.cart_page'))
-    
-class EditProductQuantityForm(FlaskForm):
-    quantity = IntegerField('New quantity', validators=[])
-    submit = SubmitField('Update')
-
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('Search')
-
 
 
