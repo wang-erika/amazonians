@@ -13,8 +13,14 @@ import os
 
 from flask import current_app as app
 
+
+from .models.product import Product
+from .models.purchase import Purchase
+from .models.inventory import Inventory
+from .models.cart import Cart
 from .models.review import Review
 from .models.review import Seller_Review
+from .models.order import Order
 
 from flask import Blueprint
 bp = Blueprint('reviews', __name__)
@@ -27,7 +33,7 @@ def reviews_page():
     product_reviews = Review.get_all_product_reviews(current_user.id)
     seller_reviews = Seller_Review.get_all_seller_reviews(current_user.id)
 
-    return render_template('reviews/your_reviews.html', 
+    return render_template('reviews/temp.html', 
                             product_reviews = product_reviews, 
                             seller_reviews = seller_reviews)
 
@@ -81,5 +87,37 @@ def delete_product_review(pid):
     # Re-render Sell page
     return redirect(url_for('reviews.reviews_page'))
 
-# edit a product review'''
 
+# Details page -- view a review's details
+@bp.route('/reviews/detail/<pid>', methods=['GET', 'POST'])
+def view_product_review(pid):
+    # Create edit form
+    edit_form = EditProductReviewForm()
+
+    # Get Review Details
+    review = Review.get_product_review(current_user.id, pid)
+
+    # Re-render page if edit form is submitted
+    if edit_form.validate_on_submit():
+        Review.delete_product_review(current_user.id, pid)
+
+        Review.add_new_product_review(current_user.id,
+                                    pid,
+                                    datetime.now(),
+                                    edit_form.rating.data,
+                                    edit_form.review.data)
+        
+        msg = 'Review Updated'
+        flash(msg)
+        return redirect(url_for('reviews.reviews_page'))
+
+    # Render Details page
+    return render_template('reviews/review_details.html',
+
+                            review= review,
+                            edit_form = edit_form)
+
+class EditProductReviewForm(FlaskForm):
+    rating = IntegerField('New Rating', validators = [DataRequired()])
+    review = StringField("New Review", validators = [])
+    submit = SubmitField('Update')

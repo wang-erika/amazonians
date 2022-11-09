@@ -31,7 +31,7 @@ class Purchase:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT *
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -46,14 +46,14 @@ WHERE Purchases.id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT *
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
     on Purchases.uid = Users.id
     join Products
     on Purchases.pid = Products.id
-WHERE uid = :uid
+WHERE Purchases.uid = :uid
     AND time_purchased >= :since
 ORDER BY time_purchased DESC
 ''',
@@ -65,14 +65,14 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_purchases(uid):
         rows = app.db.execute('''
-SELECT *
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
     on Purchases.uid = Users.id
     join Products
     on Purchases.pid = Products.id
-WHERE uid = :uid
+WHERE Purchases.uid = :uid
 ''',    
                               uid = uid)
         

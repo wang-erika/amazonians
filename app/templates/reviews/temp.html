@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Reviews</h1>    
+
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div>
+    <h2>Your Product Reviews</h2>
+
+    <div class="grid">
+      {% for tuple in product_reviews%}
+      <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
+          <h3>Product ID: {{tuple.pid}}</h3>
+          <div>Date: {{tuple.dates}}</div>
+          <div>Review: {{tuple.review}}</div>
+          <div>Rating: {{tuple.rating}}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
