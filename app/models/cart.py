@@ -2,21 +2,18 @@ from flask import current_app as app
 from flask import flash
 
 class Cart:
-    """
-    This is just a TEMPLATE for Cart, you should change this by adding or 
-        replacing new columns, etc. for your design.
-    """
-    def __init__(self, uid, product_name, pid, sid, quantity, unit_price, category, description, image, full_name):
+    def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
         self.uid = uid
-        self.product_name = product_name
         self.pid = pid
-        self.sid = sid 
+        self.sid = sid
         self.quantity = quantity
-        self.unit_price = unit_price
-        self.category = category
-        self.description = description
-        self.image = image
         self.full_name = full_name
+        self.product_name = product_name
+        self.category = category
+        self.image = image
+        self.unit_price = unit_price
+        self.description = description
+
 
     """
     @staticmethod
@@ -29,15 +26,18 @@ WHERE id = :id
                               id=id)
         return Cart(*(rows[0])) if rows else None
     """
+
+
     @staticmethod
     def get_all_in_cart(uid):
         rows = app.db.execute('''
-SELECT uid, name, pid, sid, quantity, unit_price, category, description, image, full_name
+SELECT uid, pid, sid, quantity, full_name, Products.name as product_name, category, image, unit_price, description
 FROM Cart, Products, Users
 WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows]
+
 
     @staticmethod
     def get_total_price_in_cart(uid):
@@ -49,24 +49,32 @@ WHERE uid = :uid AND Cart.pid = Products.id AND Users.id = Cart.sid
                               uid=uid)
         return total_price
 
+
     @staticmethod
     def get_all_in_cart_by_pid(uid, pid):
         rows = app.db.execute('''
-select uid, name, pid, sid, quantity, unit_price, category, description, image, full_name
+SELECT uid, pid, sid, quantity, full_name, Products.name as product_name, category, image, unit_price, description
 from Cart, Products, Users
 where uid = :uid and Cart.pid = Products.id and Cart.pid = :pid AND Users.id = Cart.sid
 ''',
-                              uid=uid, pid=pid)
-        return Cart(*(rows[0])) if rows is not None else None 
+                              uid=uid, 
+                              pid=pid)
         
+        return Cart(*(rows[0])) if rows is not None else None 
+
+
     @staticmethod
     def delete_cart_item(uid, pid):
         rows = app.db.execute('''
 delete from Cart
 where uid = :uid and Cart.pid = :pid;
 ''',
-                              uid=uid, pid=pid)
+                              uid=uid, 
+                              pid=pid)
         
+        return rows
+
+
     @staticmethod
     def edit_cart_item(uid, pid, quantity):
         rows = app.db.execute('''
@@ -76,8 +84,11 @@ where uid = :uid and pid = :pid;
 ''',
                               uid=uid,
                               pid=pid,
-                              quantity=quantity)   
-    
+                              quantity=quantity)
+
+        return rows
+
+
     @staticmethod
     def delete_cart_item(uid, pid):
         # Delete product from Inventory
@@ -87,13 +98,17 @@ where uid = :uid and pid = :pid;
 ''',
                               uid=uid,
                               pid=pid)
+        
+        return rows
     
+
     @staticmethod
     def delete_all_cart_items(uid):
         lst = Cart.get_all_in_cart(uid)
         for item in lst:
             Cart.delete_cart_item(uid,item.pid)
     
+
     @staticmethod     
     def add_cart_to_orders(uid):
         lst = Cart.get_all_in_cart(uid)
@@ -112,6 +127,7 @@ from Inventory
 where pid = :pid
 ''',
                               pid=item.pid)
+            
             #todo 
             if item.quantity <= quantity[0][0] and balance >= Cart.get_total_price_in_cart(uid):
                 rows = app.db.execute('''
@@ -140,6 +156,7 @@ returning uid, sid, pid
                 return True
             else:
                 return False
-        except Expection as e:
+
+        except Exception as e:
             print(str(e))
             return False
