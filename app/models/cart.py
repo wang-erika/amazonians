@@ -179,7 +179,7 @@ where id = :uid;
         return not (balance < total)
     
     @staticmethod
-    def edit_balance(uid, total):
+    def edit_balance_user(uid, total):
         balance = app.db.execute('''
 select balance
 from Users
@@ -187,7 +187,25 @@ where id = :uid;
 ''',
                               uid=uid)[0][0]
         User.update_balance(uid, float(balance) - total)
-        
+
+    @staticmethod
+    def edit_balance_seller(cart):
+        for item in cart:
+            balance = app.db.execute('''
+select balance
+from Users
+where id = :uid;
+''',
+                              uid=item.sid)[0][0]
+            #get item price
+            price = app.db.execute('''
+select unit_price
+from Products
+where id = :uid;
+''',
+                              uid=item.pid)[0][0]
+            
+            User.update_balance(item.sid, float(balance) + float(price)*item.quantity)
 
     @staticmethod 
     def check_quantity(cart):
