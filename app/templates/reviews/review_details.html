@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Review Details</h1>    
+
+  <div class="page-form-section">
+
+    <div class="product-details">
+
+      <div><span class="bold">PID:</span> {{ review.pid }}</div>
+      <div><span class="bold">UID:</span> {{ review.uid }}</div>
+      <div><span class="bold">Date Reviewed:</span> ${{review.dates}}</div>
+      <div class="item-quantity">
+        <span class="bold">Edit Rating:</span>
+        <form action="" method="post">
+          {{ edit_form.hidden_tag() }}
+          
+          {{ edit_form.rating(size=4, placeholder=review.rating) }}<br/><br/>
+          <span class="bold">Edit Review:</span>
+          {{ edit_form.review(size=50, placeholder=review.review) }}<br/><br/>
+          
+          {% for error in edit_form.rating.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}        
+          
+          {{ edit_form.submit() }}
+          
+        </form>
+        <a href="{{ url_for('reviews.delete_product_review', pid=review.pid) }}" class="delete-button">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
