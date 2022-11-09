@@ -32,7 +32,7 @@ def gen_users():
             address = fake.address()
             balance = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             users.add(uid)
-            writer.writerow([uid, email, password, name, address, balance])
+            writer.writerow([uid, name, email, balance, address, password])
         print(f'{num_users} generated')
     return users
 
@@ -51,7 +51,7 @@ def gen_products():
             category = fake.random_element(elements=('Cosmetics', 'Electronics', 'Home Goods', 'Food'))
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             description = fake.sentence(nb_words=10)[:-1]
-            writer.writerow([pid, image, category, name, price, description])
+            writer.writerow([pid, name, category, image, price, description])
         print(f'{num_products} generated;')
     return products
 
@@ -90,19 +90,6 @@ def gen_inventory(sellers, products):
         print(f'{num_products} generated')
     return
 
-def gen_purchases(users, products):
-    with open('./db/data/Purchases.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Purchases...', end=' ', flush=True)
-        for id in range(num_purchases):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            uid = fake.random_element(elements=list(users))
-            pid = fake.random_element(elements=list(products))
-            date = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
-            writer.writerow([id, uid, pid, date])
-        print(f'{num_purchases} generated')
-
 def gen_cart(users, products, sellers):
     combos = set()
     with open('./db/data/Cart.csv', 'w') as f:
@@ -119,7 +106,7 @@ def gen_cart(users, products, sellers):
                 sid = fake.random_element(elements=list(sellers))
             combos.add((uid, pid, sid))
             quantity = fake.random_int(max=20)
-            writer.writerow([quantity, uid, pid, sid])
+            writer.writerow([uid, pid, sid, quantity])
 
 
 def gen_rates(filename, people, users):
@@ -133,26 +120,43 @@ def gen_rates(filename, people, users):
             while (fid, uid) in combo:
                 fid = fake.random_element(elements=people)
                 uid = fake.random_element(elements=users)
-            dates = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
+            date = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
             rating = fake.random_int(min=1, max=5)
             review = fake.sentence(nb_words=40)[:-1]
-            writer.writerow([fid, uid, dates, rating, review])
+            writer.writerow([uid, fid, rating, review, date])
 
-def gen_orders(sellers, users, products):
+def gen_purchases(orders, users, products):
+    with open('./db/data/Purchases.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Purchases...', end=' ', flush=True)
+        for id in range(num_purchases):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            
+            oid = fake.random_element(elements=list(orders))
+            uid = fake.random_element(elements=list(users))
+            pid = fake.random_element(elements=list(products))
+            quantity = fake.random_int(min=0, max = 20)
+            time_purchased = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
+            unit_price_at_time_of_payment = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
+            fufilled = fake.random_element(elements=('true', 'false'))
+            writer.writerow([id, oid, uid, pid, quantity, time_purchased, unit_price_at_time_of_payment, fufilled])
+        print(f'{num_purchases} generated')
+
+def gen_orders(users):
+    orders = set()
     with open("./db/data/Orders.csv", 'w') as f:
         writer = get_csv_writer(f)
         print("Orders...", end=' ', flush=True)
         for oid in range(30):
+            orders.add(oid)
             # Update sid to select from sellers
-            sid = fake.random_element(elements=sellers)
             uid = fake.random_element(elements=users)
-            pid = fake.random_element(elements=products)
-            dates = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
-            quantity = fake.random_int(min=0, max = 20)
-            rating = fake.random_int(min=1, max=5)
+            date_ordered = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
             fufilled = fake.random_element(elements=('true', 'false'))
-            price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
-            writer.writerow([oid, sid, uid, pid, quantity, dates, fufilled, price])
+            
+            writer.writerow([oid, uid, date_ordered, fufilled])
+    return orders
 
 
 
@@ -161,9 +165,9 @@ users = gen_users()
 products = gen_products()
 sellers = gen_sellers()
 gen_inventory(sellers, products)
-gen_purchases(users, products)
 gen_rates("./db/data/RatesSeller.csv", sellers, users)
 gen_rates("./db/data/RatesProduct.csv", products, users)
-gen_orders(sellers, users, products)
+orders = gen_orders(users)
+gen_purchases(orders, users, products)
 gen_cart(users, products, sellers)
 
