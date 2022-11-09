@@ -80,22 +80,30 @@ def delete_cart_item(pid):
     return redirect(url_for('buy.cart_page'))
 
 @bp.route('/cart/order/', methods=['GET', 'POST'])
+def view_orders_cart_page():
+    orders_map = Cart.order_map_purchases(current_user.id)
+    return render_template('cart_order.html', 
+                                orders_map=orders_map)
+
+@bp.route('/cart/order/', methods=['GET', 'POST'])
 def orders_cart_page():
-    #todo ADD FLASHES   
+    #todo ADD FLASHES
     cart = Cart.get_all_in_cart(current_user.id)
     total = Cart.get_total_price_in_cart(current_user.id)
     if total[0][0]:
         total = float(total[0][0])
     else:
         total = 0
-    if Cart.add_cart_to_orders(current_user.id):
+    oid_and_bool = Cart.add_order_to_orders(current_user.id, total)
+    if oid_and_bool:
+        Cart.add_items_to_purchases(current_user.id, oid_and_bool)
         Cart.delete_all_cart_items(current_user.id)
+        orders_map = Cart.order_map_purchases(current_user.id)
         orders = Order.get_orders_by_uid(current_user.id)
         return render_template('cart_order.html', 
-                                cart = cart, total = total, orders=orders)
+                                cart = cart, total = total, orders=orders, orders_map=orders_map)
     return render_template('cart.html', 
                             cart = cart, total = total) 
-
     
 class EditProductQuantityForm(FlaskForm):
     quantity = IntegerField('New quantity', validators=[])

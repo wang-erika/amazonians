@@ -1,6 +1,9 @@
 from flask import current_app as app
 from flask import flash
 
+from app.models.purchase import Purchase
+from app.models.order import Order
+
 class Cart:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
         self.uid = uid
@@ -107,40 +110,92 @@ where uid = :uid and pid = :pid;
         lst = Cart.get_all_in_cart(uid)
         for item in lst:
             Cart.delete_cart_item(uid,item.pid)
-    
-
-    @staticmethod     
-    def add_cart_to_orders(uid):
-        lst = Cart.get_all_in_cart(uid)
-        
-        for item in lst:
-            balance = app.db.execute('''
+            
+    #boolean checker for inventory and balance
+    @staticmethod
+    def submit_order_check(uid, total):
+        balance = app.db.execute('''
 select balance
 from Users 
 where id = :uid
 ''',
                               uid=uid)
-            
+        if balance[0][0] < total:
+            return False
+        
+        lst = Cart.get_all_in_cart(uid)
+        for item in lst:
             quantity = app.db.execute('''
 select quantity
 from Inventory
 where pid = :pid
 ''',
                               pid=item.pid)
-            
-            #todo 
-            if item.quantity <= quantity[0][0] and balance >= Cart.get_total_price_in_cart(uid):
-                rows = app.db.execute('''
-insert into Orders(uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment)
-VALUES(:uid, :sid, :pid, :quantity, :fulfilled, :unit_price_at_time_of_payment)
-returning uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment
+            if item.quantity >= quantity[0][0]:
+                return False
+        return True
+    
+    @staticmethod
+    def add_order_to_orders(uid, total):
+        if Cart.submit_order_check(uid, total):
+            rows = app.db.execute('''
+insert into Orders(uid, fulfilled)
+VALUES(:uid, :fulfilled)
+returning uid, fulfilled
 ''',
-                                uid=item.uid, sid = item.sid, pid=item.pid, quantity = item.quantity, fulfilled = False, 
-                                unit_price_at_time_of_payment = item.unit_price,
-                                )
-                return 1
-            else:
-                flash('order could not be completed, too much quantity')
+                              uid=uid, fulfilled = False)
+            oid = app.db.execute('''
+SELECT id
+FROM Orders 
+ORDER BY ID DESC LIMIT 1
+                                 ''')[0][0]
+            return oid
+        else:
+            flash("You either don't have enough funds or there is not enough quantity")
+            return False
+        
+    @staticmethod
+    def add_items_to_purchases(uid, oid):
+        lst = Cart.get_all_in_cart(uid)
+        for item in lst:
+            rows = app.db.execute('''
+insert into Purchases(oid, uid, pid, quantity, unit_price_at_time_of_payment, fulfilled)
+VALUES(:oid, :uid, :pid, :quantity, :unit_price_at_time_of_payment, :fulfilled)
+returning oid, uid, pid, quantity, unit_price_at_time_of_payment, fulfilled
+''',
+                              oid = oid,
+                              uid=uid, 
+                              pid = item.pid,
+                              quantity = item.quantity, 
+                              unit_price_at_time_of_payment = item.unit_price,
+                              fulfilled = False
+                              )
+    
+    @staticmethod
+    def order_map_purchases(uid):
+        map = {}
+        orders = Order.get_orders_by_uid(uid)
+        for items in orders:
+            oid = items.id
+            map[items] = [Purchase.get_purchases_by_oid(oid, uid), Cart.get_total_cart_amount(uid, oid)]
+        return map
+
+    @staticmethod
+    def get_total_cart_amount(uid, oid):
+        total = app.db.execute('''
+SELECT SUM(Purchases.quantity*unit_price_at_time_of_payment) AS total_value
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+    join Inventory
+    on Purchases.pid = Inventory.pid
+WHERE oid = :oid and users.id = :uid
+''',    
+                              oid=oid, uid = uid)
+        return total[0][0]
 
     @staticmethod
     def add_product_to_cart(uid, sid, pid, quantity):

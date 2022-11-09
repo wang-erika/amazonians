@@ -8,21 +8,29 @@
     <h1>Orders Page</h1>    
     <div>
         <h2>Your previous orders</h2>
-        <div>
-            {% for tuple in orders%}
-                <div class="item-image">
-                  <img src={{tuple.p_image}} alt="Photo">
-                </div>
-                
-                <h3>{{tuple.p_name}}</h3>
-                <div class="item-description"><span class="item-category">{{tuple.p_category}}</span></div>
-                
-                <div class="item-price">${{tuple.unit_price_at_time_of_payment}}</div>
-                <div>Qty: {{tuple.quantity}}</div>
-                <div>Seller ID: {{tuple.sid}}</div>
-                <div>Product ID: {{tuple.pid}}</div>
-                <div>User ID: {{tuple.uid}}</div>
-                <div>Fufillment: {{tuple.fulfilled}}</div>
+        <div class= "grid">
+            {% for tuple in orders_map%}
+              <div class = "grid-item">
+                  <div>Order ID: {{tuple.id}}</div>
+                  <div>Date_ordered: {{tuple.date_ordered}}</div>
+                  <div>Order Fufillment: {{tuple.fulfilled}}</div>
+                  <div>
+                    Subtotal: <b>${{orders_map[tuple][1]}}</b>
+                  </div>
+                  {%for elem in orders_map[tuple][0]%}
+                      <div>Product name: {{elem.product_name}}</div>
+                      <div>Seller ID: {{elem.full_name}}</div>
+                      <div class="item-image">
+                        <img src={{elem.image}} alt="Photo">
+                      </div> 
+                      <div class="item-description"><span class="item-category">{{elem.category}}</span>{{elem.description}}</div>
+                      <div class="item-price">${{elem.unit_price_at_time_of_payment}}</div>
+                      <div class = "item-quantity">
+                        <span class="bold">Qty: {{elem.quantity}}</span>
+                      </div>
+                      <div> item Fufillment: {{elem.fulfilled}} </div>
+                  {% endfor %}
+              </div>
             {% endfor %}
           </div>
     </div>

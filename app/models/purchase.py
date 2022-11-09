@@ -97,6 +97,24 @@ order by Orders.date_ordered desc
                               sid=sid)
         
             return [Purchase(*row) for row in rows]
+        
+    @staticmethod
+    def get_purchases_by_oid(oid, uid):
+            rows = app.db.execute('''
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+    join Inventory
+    on Purchases.pid = Inventory.pid
+WHERE oid = :oid
+''',    
+                              oid=oid,
+                              uid=uid)
+            return [Purchase(*row) for row in rows]
 
     # given purchase id, toggle fulfilled status
     @staticmethod
