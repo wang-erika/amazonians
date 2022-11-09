@@ -39,7 +39,6 @@ def product_page():
 @bp.route('/product/addcart/<pid>', methods=['GET', 'POST'])
 def add_to_cart(pid):
     Product.add_to_cart(pid, current_user.id)
-
     flash('Added to Cart')
 
     return redirect(url_for('index.index'))

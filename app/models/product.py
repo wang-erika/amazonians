@@ -51,8 +51,7 @@ LIMIT :k
     @staticmethod
     def add_to_cart(pid, uid):
         sid = Product.get_sid_from_pid(pid)
-        cart = Product.in_cart(pid)
-        print(sid, cart)
+        cart = Product.in_cart(pid, uid)
         if not cart:
             rows = app.db.execute('''
     INSERT INTO Cart(uid, pid, sid, quantity)        
@@ -71,10 +70,9 @@ WHERE pid=:pid''', pid=pid)
 
 
     @staticmethod
-    def in_cart(pid):
+    def in_cart(pid, uid):
         ret = app.db.execute(''' 
  SELECT quantity from Cart
- WHERE pid=:pid       
-        ''', pid=pid)
-
+ WHERE pid=:pid and uid=:uid      
+        ''', pid=pid, uid=uid)
         return len(ret) > 0
