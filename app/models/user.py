@@ -76,7 +76,7 @@ where id = :id;
 
     #given id and amount, update the user's balance
     @staticmethod
-    def update_balance(id, amount, balance):
+    def edit_balance(id, amount, balance):
         rows = app.db.execute('''
 update Users
 set balance = :amount
@@ -84,6 +84,17 @@ where id = :id;
 ''',
                                   id=id,
                                   amount=balance + amount)
+        return rows
+
+    @staticmethod
+    def update_balance(id, amount):
+        rows = app.db.execute('''
+update Users
+set balance = :amount
+where id = :id;
+''',
+                                  id=id,
+                                  amount=amount)
         return rows
     
     @staticmethod
