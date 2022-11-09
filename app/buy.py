@@ -98,10 +98,14 @@ def orders_cart_page():
         oid = Cart.add_order_to_orders(current_user.id)
         
         #edit balance for user
-        Cart.edit_balance(current_user.id, total)
+        Cart.edit_balance_user(current_user.id, total)
+        
+        #edit balance for seller
+        Cart.edit_balance_seller(cart)
         
         #edit quantity for seller
         Cart.edit_quantity(cart)
+        
         
         # Add items to Purchases (referencing oid)
         Cart.add_items_to_purchases(cart, oid)
