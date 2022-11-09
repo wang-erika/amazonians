@@ -29,8 +29,9 @@
         <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
         
         <div class="item-price">${{tuple.unit_price}}</div>
+        {% if current_user.is_authenticated %}
         <a href="{{ url_for('product.add_to_cart', pid=tuple.id) }}" class="add-button">Add to Cart</a>
-      </div>
+        {% endif %}
     {% endfor %}
   </div>
 
