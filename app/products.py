@@ -8,11 +8,6 @@ import datetime
 import sys
 
 from .models.product import Product
-from .models.purchase import Purchase
-from .models.inventory import Inventory
-from .models.cart import Cart
-from .models.review import Review
-#from .models.review import Seller_Review
 
 from flask import Blueprint
 bp = Blueprint('product', __name__)

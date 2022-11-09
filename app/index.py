@@ -12,12 +12,7 @@ from flask import current_app as app
 
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.inventory import Inventory
 from .models.cart import Cart
-from .models.order import Order
-from .models.review import Review
-from .models.review import Seller_Review
-from .models.user import User
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
