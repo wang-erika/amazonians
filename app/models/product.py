@@ -11,16 +11,17 @@ class Product:
         self.description = description
         self.quantity = quantity
         
-    """
-    @staticmethod
-    def get(id):
+    
+    '''@staticmethod
+    def get(pid):
         rows = app.db.execute('''
-SELECT id, name, price, available
-FROM Products
+SELECT *
+FROM Products, Inventory
+WHERE pid = :pid AND Inventory.p
 ''',
-                              id=id)
-        return Product(*(rows[0])) if rows is not None else None
-    """
+                              pid=pid)
+        return Product(*(rows[0])) if rows is not None else None'''
+    
     
     @staticmethod
     def get_all():
