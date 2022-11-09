@@ -14,10 +14,10 @@ class Order:
     @staticmethod
     def get_orders_by_uid(uid):
         rows = app.db.execute('''
-SELECT id, uid, date_ordered, fulfilled
-FROM Orders 
-WHERE uid = :uid 
-Order by date_ordered DESC
+select id, uid, date_ordered, fulfilled
+from Orders
+where uid = :uid
+order by date_ordered desc
 ''',
                               uid=uid)
         return [Order(*row) for row in rows]

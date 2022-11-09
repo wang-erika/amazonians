@@ -9,15 +9,15 @@
     <div>
         <h2>Your previous orders</h2>
         <div class= "grid">
-            {% for tuple in orders_map%}
+            {% for tuple in map%}
               <div class = "grid-item">
                   <div>Order ID: {{tuple.id}}</div>
                   <div>Date_ordered: {{tuple.date_ordered}}</div>
                   <div>Order Fufillment: {{tuple.fulfilled}}</div>
                   <div>
-                    Subtotal: <b>${{orders_map[tuple][1]}}</b>
+                    Subtotal: <b>${{map[tuple][1]}}</b>
                   </div>
-                  {%for elem in orders_map[tuple][0]%}
+                  {%for elem in map[tuple][0]%}
                       <div>Product name: {{elem.product_name}}</div>
                       <div>Seller ID: {{elem.full_name}}</div>
                       <div class="item-image">

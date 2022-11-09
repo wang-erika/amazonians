@@ -137,3 +137,24 @@ where id = :id;
 ''',
                               id=id,
                               fulfilled=status)
+
+    # given order id and a given user
+    # return purchases
+    def get_purchases_by_oid_and_uid(oid, uid):
+            rows = app.db.execute('''
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+    join Inventory
+    on Purchases.pid = Inventory.pid
+where Purchases.oid = :oid
+    and Purchases.uid = :uid
+''',    
+                              oid=oid,
+                              uid=uid)
+        
+            return [Purchase(*row) for row in rows]
