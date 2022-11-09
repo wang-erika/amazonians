@@ -376,8 +376,11 @@ td {
   transition: 0.2s;
 }
 
-
-
+.add-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 7.5px 0;
+}
 .add-button {
   background: #f5f4ed;
   font-size: 0.85em;
