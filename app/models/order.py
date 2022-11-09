@@ -9,7 +9,7 @@ class Order:
         self.uid = uid
         self.date_ordered = date_ordered 
         self.fulfilled = fulfilled
-   
+
 
     @staticmethod
     def get_orders_by_uid(uid):

@@ -14,6 +14,7 @@ from flask import current_app as app
 
 from .models.inventory import Inventory
 from .models.order import Order
+from .models.purchase import Purchase
 
 from flask import Blueprint
 bp = Blueprint('sell', __name__)
@@ -123,7 +124,7 @@ def delete_inventory_item(pid):
 # Order fulfillment page
 @bp.route('/sell/orders', methods=['GET', 'POST'])
 def order_fulfillment_page():
-    orders = Order.get_orders_by_sid(current_user.id)
+    orders = Purchase.get_purchases_by_sid(current_user.id)
 
     # Render Order fulfillment page
     return render_template('sell/order_fulfillment.html',
