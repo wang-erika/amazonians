@@ -37,17 +37,22 @@
     <div class="grid">
       {% for tuple in inventory%}
         <a href="{{ url_for('sell.view_inventory_item', pid=tuple.pid) }}" class="grid-item">
-          <div class="item-image">
-            <img src={{tuple.image}} alt="Photo">
+          <div class="item-ids">
+            <div class="main-id">PRODUCT ID {{tuple.pid}}</div>
           </div>
-          <h3>{{tuple.name}}</h3>
-          <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
-          
-          <div class="item-price">${{tuple.unit_price}}</div>
-          <div>{{tuple.quantity}} in stock</div>
 
-          <div>Seller ID: {{tuple.sid}}</div>
-          <div>Product ID: {{tuple.pid}}</div>
+          <div class="item-details">
+            <div class="item-details-image">
+              <img src={{tuple.image}} alt="Photo">
+            </div>
+
+            <div class="item-details-content">
+              <div><h3>{{tuple.name}}</h3></div>
+              <span class="item-category">{{tuple.category}}</span>
+              <div class="item-price">${{tuple.unit_price}}</div>
+              <div>{{tuple.quantity}} in stock</div>
+            </div>
+          </div>         
         </a>
       {% endfor %}
     </div>

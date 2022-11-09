@@ -23,6 +23,7 @@ class LoginForm(FlaskForm):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
@@ -57,6 +58,7 @@ class RegistrationForm(FlaskForm):
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
+        
     form = RegistrationForm()
     if form.validate_on_submit():
         if User.register(form.firstname.data,
