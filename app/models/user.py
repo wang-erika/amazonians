@@ -88,8 +88,8 @@ where id = :id;
                                   amount=balance + amount)
         return rows
 
-    #given id and amount, edit the users balance
-    @staticmethod
+    #given id and amount, edit the users alance DONOTCHANGE
+    @staticmethodb
     def update_balance(id, amount):
         rows = app.db.execute('''
 update Users
