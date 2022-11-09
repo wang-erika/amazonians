@@ -17,7 +17,7 @@ from .models.cart import Cart
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-
+#Main route to Home Page
 @bp.route('/')
 def index():
     # get all available products for sale:
@@ -34,7 +34,7 @@ def index():
                            avail_products=products,
                            purchase_history=purchases)
 
-
+#adds image to each product
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
@@ -46,6 +46,7 @@ def update_image(products):
                 item.image = 'static/' + str(item.pid) + '.png'  
     return products
 
+#get recent purchases
 @bp.route('/purchase', methods = ['GET', 'POST'])
 def purchases():
     form = SearchBarForm()

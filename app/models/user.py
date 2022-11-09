@@ -13,6 +13,7 @@ class User(UserMixin):
         self.balance = balance
         self.address = address
 
+    #given email, password, return user data
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
@@ -30,7 +31,7 @@ WHERE email = :email
         else:
             return User(*(rows[0][1:]))
 
-
+    #given email, check if email is in db
     @staticmethod
     def email_exists(email):
         rows = app.db.execute("""
@@ -41,7 +42,7 @@ WHERE email = :email
                               email=email)
         return len(rows) > 0
 
-
+    #given fn, ln, email, pw, try to register if email is not used already
     @staticmethod
     def register(firstname, lastname, email, password):
         try:
@@ -63,6 +64,7 @@ RETURNING id
             print(str(e))
             return None
 
+    #update user information
     @staticmethod
     def update(id, email):
         rows = app.db.execute('''
@@ -74,7 +76,7 @@ where id = :id;
                                   email=email)
         return id
 
-    #given id and amount, update the user's balance
+    #given id, balance, and amount, edit the user's balance
     @staticmethod
     def edit_balance(id, amount, balance):
         rows = app.db.execute('''
@@ -86,6 +88,7 @@ where id = :id;
                                   amount=balance + amount)
         return rows
 
+    #given id and amount, edit the users balance
     @staticmethod
     def update_balance(id, amount):
         rows = app.db.execute('''
@@ -108,7 +111,7 @@ WHERE id = :id
                               id=id)
         return User(*(rows[0])) if rows else None
 
-
+    #get all of user's attributes
     @staticmethod
     def get_all(id):
         rows = app.db.execute("""

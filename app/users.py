@@ -13,16 +13,17 @@ from .models.review import Seller_Review
 from flask import Blueprint
 bp = Blueprint('users', __name__)
 
-
+#LOGIN Form
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign in')
 
-
+#Login Route
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    #redirects user if already authenticated
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
 
@@ -40,7 +41,7 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
-
+#Registration form
 class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
@@ -55,7 +56,7 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
-
+#Register route
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -71,10 +72,11 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
-
+#balance route - view and edit current user's balance
 @bp.route('/balance', methods = ['GET', 'POST'])
 def balance():
     form = UpdateBalanceForm()
+    #check to see if user is authenticated
     if current_user.is_authenticated:
         user = User.get_all(current_user.id)
         #has email, name, password, address, balance
@@ -82,17 +84,25 @@ def balance():
         return redirect(url_for('users.login'))
 
     #when form is submitted, call update_balance and redirect to /balance
+    #adding money
     if form.validate_on_submit():
+        amount = form.amount.data
+        if form.withdraw.data:
+            amount *= -1
         balance = user[0].balance
-        User.edit_balance(current_user.id, form.amount.data, balance)
-        flash("Added money!")
+        User.edit_balance(current_user.id, amount, balance)
+
+        flash("{button}{amount}".format(amount = form.amount.data, button = "Added $" if form.add.data else "Withdrew $"))
         return redirect(url_for('users.balance'))
+
     return render_template('balance.html', user = user, form = form)
 
 class UpdateBalanceForm(FlaskForm):
     amount = DecimalField('Amount', validators = [])
-    submit = SubmitField('Add')
+    add = SubmitField('Add')
+    withdraw = SubmitField('Withdraw')
 
+#current user's account information
 @bp.route('/account', methods = ['GET', 'POST'])
 def account_page():
     if current_user.is_authenticated:
@@ -117,25 +127,31 @@ class UpdateForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
+
+#edit current user's account information
 @bp.route('/account/edit', methods = ['GET', 'POST'])
 def edit_account():
+    #if not logged in, redirect
     if current_user.is_authenticated:
         user = User.get_all(current_user.id)
     else:
         redirect(url_for('users.login'))
     form = UpdateForm()
     if form.validate_on_submit():
+        #if fields are empty, use current info
         '''
         email = form.email.data if len(form.email.data) > 0 else user[0].email
         password = form.password.data if len(form.password.data) > 0 else user[0].password
         firstname = form.firstname.data if len(form.firstname.data) > 0 else user[0].full_name.split(" ")[0]
         lastname = form.lastname.data if len(form.lastname.data) > 0 else user[0].full_name.split(" ")[1]
         '''
+        #call update function to update user's information in the db
         if User.update(current_user.id, email):
             flash('Successfully updated account!')
             return redirect(url_for('users.account_page'))
     return render_template('edit_account.html', user = user, form=form)
 
+#logout route
 @bp.route('/logout')
 def logout():
     logout_user()
@@ -145,18 +161,20 @@ class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('Search')
 
-
+#search account page
 @bp.route('/view_accounts', methods = ['GET', 'POST'])
 def view_accounts():
     if not current_user.is_authenticated:
         redirect(url_for('users.login'))
     form = SearchBarForm()
     account, reviews, seller = None, None, None
+    #after submitting, use query to retrieve information
     if form.validate_on_submit():
         account = User.get(form.query.data)
         reviews = Review.get_all_product_reviews(form.query.data)
         seller = Seller_Review.get_all_seller_reviews(form.query.data)
     
+    #initial state, use current id instead
     else:
         account = User.get(current_user.id)
         reviews = Review.get_all_product_reviews(current_user.id)
