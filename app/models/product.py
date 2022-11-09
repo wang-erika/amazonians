@@ -2,14 +2,15 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, image, category, name, unit_price, quantity, description):
+    def __init__(self, id, name, category, image, unit_price, description, quantity):
         self.id = id
-        self.image = image
-        self.category = category
         self.name = name
+        self.category = category
+        self.image = image
         self.unit_price = unit_price
-        self.quantity = quantity
         self.description = description
+        self.quantity = quantity
+        
     """
     @staticmethod
     def get(id):
@@ -25,18 +26,19 @@ WHERE id = :id
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT id, image, category, name, unit_price, quantity, description
+SELECT id, name, category, image, unit_price, description, quantity
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
 ''',
                               )
+                              
         return [Product(*row) for row in rows]
 
         
     @staticmethod
     def get_top_k(k):
         rows = app.db.execute('''
-SELECT id, image, category, name, unit_price, sum(quantity) as quantity, description
+SELECT id, image, category, name, unit_price, description, sum(quantity) as quantity
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
 GROUP BY id
@@ -53,8 +55,8 @@ LIMIT :k
         print(sid, cart)
         if not cart:
             rows = app.db.execute('''
-    INSERT INTO Cart(quantity, uid, pid, sid)        
-    VALUES(1, :uid, :pid, :sid)''', uid=uid, pid=pid, sid=sid)
+    INSERT INTO Cart(uid, pid, sid, quantity)        
+    VALUES(:uid, :pid, :sid, 1)''', uid=uid, pid=pid, sid=sid)
         else:
             rows = app.db.execute('''
     UPDATE Cart SET quantity = quantity+1 WHERE pid=:pid         
