@@ -2,6 +2,8 @@ from flask import current_app as app
 from flask import flash
 
 from app.models.purchase import Purchase
+from app.models.user import User
+from app.models.inventory import Inventory
 
 class Cart:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
@@ -175,6 +177,17 @@ where id = :uid;
                               uid=uid)[0][0]
         
         return not (balance < total)
+    
+    @staticmethod
+    def edit_balance(uid, total):
+        balance = app.db.execute('''
+select balance
+from Users
+where id = :uid;
+''',
+                              uid=uid)[0][0]
+        User.update_balance(uid, float(balance) - total)
+        
 
     @staticmethod 
     def check_quantity(cart):
@@ -190,6 +203,17 @@ where pid = :pid;
                 return False
         
         return True
+    
+    @staticmethod
+    def edit_quantity(cart):
+        for item in cart:
+            in_stock_quantity = app.db.execute('''
+select quantity
+from Inventory
+where pid = :pid;
+''',
+                              pid=item.pid)[0][0]
+            Inventory.edit_inventory_item(item.sid, item.pid, in_stock_quantity - item.quantity)
 
     @staticmethod
     def add_order_to_orders(uid):

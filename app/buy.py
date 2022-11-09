@@ -82,23 +82,27 @@ def delete_cart_item(pid):
 @bp.route('/cart/order/', methods=['GET', 'POST'])
 def orders_cart_page():
     #todo ADD FLASHES   
-    flash('Does this work')
     cart = Cart.get_all_in_cart(current_user.id)
     total = Cart.get_total_price_in_cart(current_user.id)
     if total[0][0]:
         total = float(total[0][0])
     else:
         total = 0
-    flash(total)
     # Check total
-    flash(Cart.check_balance(current_user.id, total))
 
     # If total is affordable
     # && all cart items have enough quantity
     # && user cart is not empty
-    if (Cart.check_balance(current_user.id, total) and Cart.check_quantity(cart)):
+    if (Cart.check_balance(current_user.id, total) and Cart.check_quantity(cart) and cart):
         # Create Order
         oid = Cart.add_order_to_orders(current_user.id)
+        
+        #edit balance for user
+        Cart.edit_balance(current_user.id, total)
+        
+        #edit quantity for seller
+        Cart.edit_quantity(cart)
+        
         # Add items to Purchases (referencing oid)
         Cart.add_items_to_purchases(cart, oid)
 
@@ -114,8 +118,9 @@ def orders_cart_page():
                                 total = total,
                                 map=map)
                         
-    
-    return render_template('cart_order.html', 
+    #EDIT
+    flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
+    return render_template('cart.html', 
                             cart = cart, 
                             total = total) 
 
