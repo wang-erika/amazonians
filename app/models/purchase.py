@@ -73,6 +73,7 @@ FROM Purchases join Orders
     join Products
     on Purchases.pid = Products.id
 WHERE Purchases.uid = :uid
+ORDER BY time_purchased DESC
 ''',    
                               uid = uid)
         

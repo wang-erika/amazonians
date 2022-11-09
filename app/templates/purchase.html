@@ -13,54 +13,20 @@
       <th scope="col">Time Purchased</th>
       <th scope = "col">Item</th>
       <th scope = "col">Price</th>
+      <th scope = "col">Quantity</th>
+      <th scope = "col">Fulfilled</th>
     </tr>
   </thead>
   <tbody>
     {% for tuple in purchases%}
-      <tr>
+      <tr style = "color: white">
         <!--<td>{{tuple.name}}</td>-->
         <!--<td>{{tuple.price}}</td>-->
         <th scope="row">{{tuple.time_purchased}}</th>
-        <th scope = "row">{{tuple.name}}</th>
-        <th scope = "row">{{tuple.price}}</th>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-
-
-<h2>Find A User's Recent Purchases</h2>
-<form action="" method="post">
-  Type a User ID!
-    {{ form.hidden_tag() }}
-    <p>
-      {{ form.query.label }}<br/>
-      {{ form.query(size=32) }}<br/>
-      {% for error in form.query.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <!--<th scope="col">Product Name</th>-->
-      <!--<th scope="col">Price</th>-->
-      <th scope="col">Time Purchased</th>
-      <th scope = "col">Item</th>
-      <th scope = "col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tuple in query_purchases%}
-      <tr>
-        <!--<td>{{tuple.name}}</td>-->
-        <!--<td>{{tuple.price}}</td>-->
-        <th scope="row">{{tuple.time_purchased}}</th>
-        <th scope = "row">{{tuple.name}}</th>
-        <th scope = "row">{{tuple.price}}</th>
+        <th scope = "row"><a href = ''>{{tuple.product_name}}</a></th>
+        <th scope = "row">{{tuple.unit_price_at_time_of_payment}}</th>
+        <th scope = "row">{{tuple.quantity}}</th>
+        <th scope = "row">{{tuple.fulfilled}}</th>
       </tr>
     {% endfor %}
   </tbody>
