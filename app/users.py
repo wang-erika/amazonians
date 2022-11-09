@@ -86,10 +86,14 @@ def balance():
     #when form is submitted, call update_balance and redirect to /balance
     #adding money
     if form.validate_on_submit():
+        balance = user[0].balance
         amount = form.amount.data
         if form.withdraw.data:
+            if amount > balance:
+                flash('Insufficient funds!')
+                return redirect(url_for('users.balance'))
             amount *= -1
-        balance = user[0].balance
+            
         User.edit_balance(current_user.id, amount, balance)
 
         flash("{button}{amount}".format(amount = form.amount.data, button = "Added $" if form.add.data else "Withdrew $"))
