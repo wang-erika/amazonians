@@ -36,6 +36,8 @@ def inventory_page():
     return render_template('inventory.html', 
                             inventory = inventory)
 
+# Take an inventory and configure the image
+# Returns the inventory
 def edit_inventory(inventory):
     for item in inventory:
         path = os.path.join(app.root_path, 'static/' + str(item.pid) + '.png')
@@ -53,12 +55,12 @@ def add_to_inventory_page():
     # Redirect to main Sell page once form completed
     if add_form.validate_on_submit():
         if Inventory.add_new_inventory_item(current_user.id,
+                                    add_form.name.data,
                                     add_form.image.data,
                                     add_form.category.data,
-                                    add_form.name.data,
-                                    add_form.quantity.data,
                                     add_form.unit_price.data,
-                                    add_form.description.data):
+                                    add_form.description.data,
+                                    add_form.quantity.data,):
             
             # Success message
             msg = 'Success! Product "{name}" added to your inventory.'.format(name = add_form.name.data)
@@ -72,11 +74,12 @@ def add_to_inventory_page():
 
 class AddProductToInventoryForm(FlaskForm):
     name = StringField('Product name', validators=[])
-    category = StringField('Category', validators=[])
-    description = StringField('Description', validators=[])
-    unit_price = DecimalField('Unit price', validators=[])
-    quantity = IntegerField('Quantity in stock', validators=[])
     image = FileField('Image', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    category = StringField('Category', validators=[])
+    unit_price = DecimalField('Unit price', validators=[])
+    description = StringField('Description', validators=[])
+    quantity = IntegerField('Quantity in stock', validators=[])
+    
     submit = SubmitField('Create and add')
 
 # Details page -- view an inventory product's details
@@ -88,10 +91,8 @@ def view_inventory_item(pid):
     # Get product details
     item = Inventory.get_by_sid_and_pid(current_user.id, pid)
 
-    # print(item.image.tobytes())
-
+    # Format image path
     item.image = 'static/' + str(item.pid) + '.png'
-    print(item.image)
 
     # Re-render page if edit form is submitted
     if edit_quantity_form.validate_on_submit():
@@ -128,7 +129,7 @@ def delete_inventory_item(pid):
 # Order fulfillment page
 @bp.route('/sell/orders', methods=['GET', 'POST'])
 def order_fulfillment_page():
-    orders = Order.get_orders_by_sid('10')
+    orders = Order.get_orders_by_sid(current_user.id)
 
     # Render Order fulfillment page
     return render_template('sell/order_fulfillment.html',
