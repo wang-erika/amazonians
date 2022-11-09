@@ -20,13 +20,17 @@
     You have: <b>${{user[0].balance}}</b>
   </div>
   <br/>
-  <form action = "" method = "post">
-    <h3>Add Money</h3>
-    {{form.amount(size = 32)}}
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    
+    {{ form.amount(size=12)}}<br/><br/>
+    
     {% for error in form.amount.errors %}
     <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-    {{form.submit}}
+    {% endfor %}           
+    
+    {{ form.submit() }}
+    
   </form>
 
 </div>

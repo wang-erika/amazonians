@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FloatField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
@@ -83,13 +83,14 @@ def balance():
 
     #when form is submitted, call update_balance and redirect to /balance
     if form.validate_on_submit():
-        User.update_balance(current_user.id, form.amount.data)
+        balance = user[0].balance
+        User.update_balance(current_user.id, form.amount.data, balance)
         flash("Added money!")
         return redirect(url_for('users.balance'))
     return render_template('balance.html', user = user, form = form)
 
 class UpdateBalanceForm(FlaskForm):
-    amount = FloatField('Amount', validators = [])
+    amount = DecimalField('Amount', validators = [])
     submit = SubmitField('Add')
 
 @bp.route('/account', methods = ['GET', 'POST'])
@@ -160,5 +161,5 @@ def view_accounts():
         account = User.get(current_user.id)
         reviews = Review.get_all_product_reviews(current_user.id)
         seller = Seller_Review.get_all_seller_reviews(current_user.id)
-
+ 
     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
