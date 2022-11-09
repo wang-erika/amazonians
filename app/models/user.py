@@ -89,7 +89,7 @@ where id = :id;
         return rows
 
     #given id and amount, edit the users alance DONOTCHANGE
-    @staticmethodb
+    @staticmethod
     def update_balance(id, amount):
         rows = app.db.execute('''
 update Users
