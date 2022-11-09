@@ -7,6 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.review import Review
+from .models.review import Seller_Review
 
 
 from flask import Blueprint
@@ -149,12 +150,15 @@ def view_accounts():
     if not current_user.is_authenticated:
         redirect(url_for('users.login'))
     form = SearchBarForm()
-    account, reviews = None, None
+    account, reviews, seller = None, None, None
     if form.validate_on_submit():
         account = User.get(form.query.data)
         reviews = Review.get_all_product_reviews(form.query.data)
+        seller = Seller_Review.get_all_seller_reviews(form.query.data)
     
     else:
         account = User.get(current_user.id)
         reviews = Review.get_all_product_reviews(current_user.id)
-    return render_template('public_account.html', form = form, account = account, reviews = reviews)
+        seller = Seller_Review.get_all_seller_reviews(current_user.id)
+
+    return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
