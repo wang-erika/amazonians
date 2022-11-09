@@ -48,3 +48,25 @@ WHERE uid = :uid and Purchases.pid = Products.id
                               uid = uid)
         
         return [Purchase(*row) for row in rows]
+
+    # given purchase id, toggle fulfilled status
+    @staticmethod
+    def toggle_purchase_fulfilled(id):
+        # Get current status
+        status = app.db.execute('''
+select fulfilled
+from Purchases
+where id = :id
+''',
+                              id=id)
+
+        # toggle
+        status = 'f' if (status[0][0]) else 't'
+
+        rows = app.db.execute('''
+update Purchases
+set fulfilled = :fulfilled
+where id = :id;
+''',
+                              id=id,
+                              fulfilled=status)
