@@ -82,19 +82,42 @@ def delete_cart_item(pid):
 @bp.route('/cart/order/', methods=['GET', 'POST'])
 def orders_cart_page():
     #todo ADD FLASHES   
+    flash('Does this work')
     cart = Cart.get_all_in_cart(current_user.id)
     total = Cart.get_total_price_in_cart(current_user.id)
     if total[0][0]:
         total = float(total[0][0])
     else:
         total = 0
-    if Cart.add_cart_to_orders(current_user.id):
-        Cart.delete_all_cart_items(current_user.id)
+    flash(total)
+    # Check total
+    flash(Cart.check_balance(current_user.id, total))
+
+    # If total is affordable
+    # && all cart items have enough quantity
+    # && user cart is not empty
+    if (Cart.check_balance(current_user.id, total) and Cart.check_quantity(cart)):
+        # Create Order
+        oid = Cart.add_order_to_orders(current_user.id)
+        # Add items to Purchases (referencing oid)
+        Cart.add_items_to_purchases(cart, oid)
+
+        # Clear Cart
+        Cart.delete_all_cart_items(cart)
+
         orders = Order.get_orders_by_uid(current_user.id)
+
+        map = Cart.order_map_purchases(current_user.id, orders)
+
         return render_template('cart_order.html', 
-                                cart = cart, total = total, orders=orders)
-    return render_template('cart.html', 
-                            cart = cart, total = total) 
+                                cart = cart, 
+                                total = total,
+                                map=map)
+                        
+    
+    return render_template('cart_order.html', 
+                            cart = cart, 
+                            total = total) 
 
     
 class EditProductQuantityForm(FlaskForm):

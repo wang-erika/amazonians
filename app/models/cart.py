@@ -1,6 +1,8 @@
 from flask import current_app as app
 from flask import flash
 
+from app.models.purchase import Purchase
+
 class Cart:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
         self.uid = uid
@@ -103,10 +105,9 @@ where uid = :uid and pid = :pid;
     
 
     @staticmethod
-    def delete_all_cart_items(uid):
-        lst = Cart.get_all_in_cart(uid)
-        for item in lst:
-            Cart.delete_cart_item(uid,item.pid)
+    def delete_all_cart_items(cart):
+        for item in cart:
+            Cart.delete_cart_item(item.uid,item.pid)
     
 
     @staticmethod     
@@ -131,13 +132,12 @@ where pid = :pid
             #todo 
             if item.quantity <= quantity[0][0] and balance >= Cart.get_total_price_in_cart(uid):
                 rows = app.db.execute('''
-insert into Orders(uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment)
-VALUES(:uid, :sid, :pid, :quantity, :fulfilled, :unit_price_at_time_of_payment)
-returning uid, sid, pid, quantity, fulfilled, unit_price_at_time_of_payment
+insert into Orders(uid, fulfilled)
+VALUES(:uid, :fulfilled)
+returning id;
 ''',
-                                uid=item.uid, sid = item.sid, pid=item.pid, quantity = item.quantity, fulfilled = False, 
-                                unit_price_at_time_of_payment = item.unit_price,
-                                )
+                                uid=item.uid,
+                                fulfilled = False)
                 return 1
             else:
                 flash('order could not be completed, too much quantity')
@@ -160,3 +160,98 @@ returning uid, sid, pid
         except Exception as e:
             print(str(e))
             return False
+
+    @staticmethod 
+    def check_balance(uid, total):
+        balance = app.db.execute('''
+select balance
+from Users
+where id = :uid;
+''',
+                              uid=uid)[0][0]
+        
+        return not (balance < total)
+
+    @staticmethod 
+    def check_quantity(cart):
+        for item in cart:
+            in_stock_quantity = app.db.execute('''
+select quantity
+from Inventory
+where pid = :pid;
+''',
+                              pid=item.pid)[0][0]
+
+            if item.quantity > in_stock_quantity:
+                return False
+        
+        return True
+
+    @staticmethod
+    def add_order_to_orders(uid):
+        try:
+            rows = app.db.execute('''
+insert into Orders(uid, fulfilled)
+VALUES(:uid, :fulfilled)
+returning id;
+''',
+                              uid=uid,
+                              fulfilled = False)
+            return rows[0][0]
+
+        except Exception as e:
+            print(str(e))
+            return False
+
+    @staticmethod 
+    def add_items_to_purchases(cart, oid):
+        for item in cart:
+            rows = app.db.execute('''
+insert into Purchases(oid, uid, pid, quantity, unit_price_at_time_of_payment, fulfilled)
+VALUES(:oid, :uid, :pid, :quantity, :unit_price_at_time_of_payment, :fulfilled)
+returning id;
+''',
+                              oid=oid,
+                              uid=item.uid,
+                              pid=item.pid,
+                              quantity=item.quantity,
+                              unit_price_at_time_of_payment=item.unit_price,
+                              fulfilled = False)
+    
+    # Creates a map with key = each order id,
+    # and the value is an array of purchases for that order
+    # AS WELL AS the cart total for that order
+    @staticmethod 
+    def order_map_purchases(uid, orders):
+        map = {}
+        
+        for order in orders:
+            oid = order.id
+            # Maps to a list where 1st element is list of purchases
+            # and 2nd element is total price for this order
+            map[order] = [
+                Purchase.get_purchases_by_oid_and_uid(oid, uid),
+                Cart.get_order_total(oid, uid)
+            ]
+        return map
+
+    @staticmethod 
+    def get_order_total(oid, uid):
+        rows = app.db.execute('''
+SELECT SUM(Purchases.quantity * unit_price_at_time_of_payment) as total_value
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+    join Inventory
+    on Purchases.pid = Inventory.pid
+where Purchases.oid = :oid
+    and Purchases.uid = :uid
+''',    
+                              oid=oid,
+                              uid=uid)
+        return rows[0][0]
+
+
