@@ -31,22 +31,23 @@
             <img src={{ tuple.p_image}} alt="Photo">
           </div> -->
           <div class="order-ids">
-            <div class="order-id">ORDER ID {{tuple.id}}</div>
+            <div class="order-id">ORDER ID {{tuple.oid}}</div>
+            <div class="purchase-id">PURCHASE ID {{tuple.id}}</div>
             <div class="product-id">PRODUCT ID {{tuple.pid}}</div>
           </div>
 
           <div class="order-details">
             <div class="order-details-upper">
-              <div><h3>{{tuple.p_name}}</h3></div>
+              <div><h3>{{tuple.product_name}}</h3></div>
               <div class="order-status">Status: {{ '✅' if tuple.fulfilled else '⌛'}}</div>
             </div>
             
             <div class="order-details-lower">
-              <span class="item-category">{{tuple.p_category}}</span>
+              <span class="item-category">{{tuple.category}}</span>
               <div class="item-price">${{tuple.unit_price_at_time_of_payment}}</div>
               <div>Qty: {{tuple.quantity}}</div>
-              <div>{{tuple.u_full_name}}</div>
-              <div>{{tuple.u_address}}</div>
+              <div>{{tuple.user_full_name}}</div>
+              <div>{{tuple.user_address}}</div>
             </div>
           </div>
 

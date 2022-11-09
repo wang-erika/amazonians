@@ -2,12 +2,26 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, oid, uid, pid, product_name, quantity, time_purchased, unit_price_at_time_of_payment, fulfilled):
+    def __init__(self, id, oid, date_ordered, uid, user_full_name, user_address, pid, product_name, category, image, description, quantity, time_purchased, unit_price_at_time_of_payment, fulfilled):
         self.id = id
+
+        # From Orders
         self.oid = oid
+        self.date_ordered = date_ordered
+
+        # From Users
         self.uid = uid
+        self.user_full_name = user_full_name
+        self.user_address = user_address
+
+        # From Products
         self.pid = pid
         self.product_name = product_name
+        self.category = category
+        self.image = image
+        self.description = description
+
+        # From Purchases
         self.quantity = quantity
         self.time_purchased = time_purchased
         self.unit_price_at_time_of_payment = unit_price_at_time_of_payment
@@ -17,9 +31,14 @@ class Purchase:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Purchases.uid, Purchases.pid, Products.name as product_name, time_purchased, unit_price_at_time_of_payment, fulfilled
-FROM Purchases, Products
-WHERE Purchases.id = :id, and Purchases.pid = Products.id
+SELECT *
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+WHERE Purchases.id = :id
 ''',
                               id=id)
         return Purchase(*(rows[0])) if rows else None
@@ -27,10 +46,15 @@ WHERE Purchases.id = :id, and Purchases.pid = Products.id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Purchases.uid, Purchases.pid, Products.name as product_name, time_purchased, unit_price_at_time_of_payment, fulfilled
-FROM Purchases, Products
-WHERE uid = :uid and Purchases.pid = Products.id
-AND time_purchased >= :since
+SELECT *
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+WHERE uid = :uid
+    AND time_purchased >= :since
 ORDER BY time_purchased DESC
 ''',
                               uid=uid,
@@ -41,23 +65,34 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_purchases(uid):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Purchases.uid, Purchases.pid, Products.name as product_name, time_purchased, unit_price_at_time_of_payment, fulfilled
-FROM Purchases, Products
-WHERE uid = :uid and Purchases.pid = Products.id
+SELECT *
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+WHERE uid = :uid
 ''',    
                               uid = uid)
         
         return [Purchase(*row) for row in rows]
 
     # given seller id, return all purchases associated with that seller
+    # IN REVERSE CHRONOLOGICAL ORDER
     def get_purchases_by_sid(sid):
             rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Purchases.uid, Purchases.pid, Products.name as product_name, time_purchased, unit_price_at_time_of_payment, fulfilled
-FROM Purchases join Products
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
     on Purchases.pid = Products.id
     join Inventory
     on Purchases.pid = Inventory.pid
 where Inventory.sid = :sid
+order by Orders.date_ordered desc
 ''',    
                               sid=sid)
         

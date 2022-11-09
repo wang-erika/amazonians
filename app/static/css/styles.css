@@ -414,16 +414,16 @@ td {
   border-bottom: 2px solid #e5e1cf;
 }
 
-.order-item-fulfilled:hover .order-id {
+.order-item-fulfilled:hover .order-id, .order-item-fulfilled:hover .purchase-id {
   color: #47c69f;
   transition: 0.2s;
 }
-.order-item-unfulfilled:hover .order-id {
+.order-item-unfulfilled:hover .order-id, .order-item-unfulfilled:hover .purchase-id {
   color: #cea702;
   transition: 0.2s;
 }
 
-.order-id {
+.order-id, .purchase-id {
   transition: 0.2s;
 }
 
@@ -431,7 +431,7 @@ td {
   padding: 0px 10px;
 }
 
-.order-ids > .product-id {
+.order-ids > .product-id, .order-ids > .purchase-id {
   border-left: 1px solid #aca99b;
 }
 

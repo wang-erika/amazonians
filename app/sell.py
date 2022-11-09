@@ -124,7 +124,7 @@ def delete_inventory_item(pid):
 # Order fulfillment page
 @bp.route('/sell/orders', methods=['GET', 'POST'])
 def order_fulfillment_page():
-    orders = Purchase.get_purchases_by_sid(current_user.id)
+    orders = Purchase.get_purchases_by_sid('10') # TODO CHANGE
 
     # Render Order fulfillment page
     return render_template('sell/order_fulfillment.html',
@@ -134,7 +134,7 @@ def order_fulfillment_page():
 @bp.route('/sell/orders/<id>', methods=['GET', 'POST'])
 def toggle_order_fulfilled(id):
     # Toggle
-    Order.toggle_order_fulfilled(id)
+    Purchase.toggle_purchase_fulfilled(id)
     # Re-render Order page
     return redirect(url_for('sell.order_fulfillment_page'))
 
