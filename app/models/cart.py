@@ -205,7 +205,7 @@ where id = :uid;
 ''',
                               uid=item.pid)[0][0]
             
-            User.update_balance(item.sid, float(balance) + float(price)*item.quantity)
+            User.update_fbalance(item.sid, float(balance) + float(price)*item.quantity)
 
     @staticmethod 
     def check_quantity(cart):

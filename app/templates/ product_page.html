@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-content">
+  <h1>Product Details</h1> 
+  
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div class="page-form-section">
+
+    <div class="product-details">
+
+      <div><span class="bold">ID:</span> {{ product.ID }}</div>
+      <div><span class="bold">Name:</span> {{ product.Name }}</div>
+      <div class="item-quantity">
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

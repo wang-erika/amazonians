@@ -20,6 +20,8 @@
     You have: <b>${{user[0].balance}}</b>
   </div>
   <br/>
+
+
   <form action="" method="post">
     {{ form.hidden_tag() }}
     
@@ -29,10 +31,10 @@
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}           
     
-    {{ form.submit() }}
+    {{ form.add }}
+    {{ form.withdraw }}
     
   </form>
-
 </div>
 {% endif %}
 

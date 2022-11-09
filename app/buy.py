@@ -21,7 +21,7 @@ from .models.order import Order
 from flask import Blueprint
 bp = Blueprint('buy', __name__)
 
-
+my_formatter = "{0:.2f}"
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
@@ -51,7 +51,7 @@ def cart_page():
     #if edit form
     # default: render full cart
     return render_template('cart.html', 
-                            cart = cart, total = total)
+                            cart = cart, total = my_formatter.format(total))
 
 @bp.route('/cart/details/<pid>', methods=['GET', 'POST'])
 def view_cart_item(pid):
@@ -119,14 +119,14 @@ def orders_cart_page():
 
         return render_template('cart_order.html', 
                                 cart = cart, 
-                                total = total,
+                                total = my_formatter.format(total),
                                 map=map)
                         
     #EDIT
     flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
     return render_template('cart.html', 
                             cart = cart, 
-                            total = total) 
+                            total = my_formatter.format(total)) 
 
     
 class EditProductQuantityForm(FlaskForm):
