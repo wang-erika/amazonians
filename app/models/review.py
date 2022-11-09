@@ -2,11 +2,11 @@ from flask import current_app as app
 
 class Review:
 
-    def __init__(self, pid, uid, dates, rating, review):
+    def __init__(self, uid, pid, rating, review, date):
         self.pid = pid
         self.uid = uid
-        self.dates = dates
-        self.rating= rating
+        self.date = date
+        self.rating = rating
         self.review = review
 
  #*  @staticmethod
@@ -38,11 +38,25 @@ ORDER BY review_time DESC
 SELECT *
 FROM RatesProduct 
 WHERE uid = :uid
-ORDER BY dates DESC
+ORDER BY date DESC
 LIMIT 5
 ''',
                               uid = uid)
         return [Review(*row) for row in rows]
+
+    @staticmethod
+    def get_product_review(uid, pid):
+        rows = app.db.execute('''
+SELECT *
+FROM RatesProduct 
+WHERE uid = :uid
+AND pid = :pid
+ORDER BY date DESC
+''',
+                              uid = uid, 
+                              pid = pid)
+        return Review(*(rows[0])) if rows is not None else None
+
 
     @staticmethod
     def get_all_product_reviews(uid):
@@ -50,7 +64,7 @@ LIMIT 5
 SELECT *
 FROM RatesProduct 
 WHERE uid = :uid
-ORDER BY dates DESC
+ORDER BY date DESC
 ''',
                               uid = uid)
         return [Review(*row) for row in rows]
@@ -58,17 +72,17 @@ ORDER BY dates DESC
 
 #add product review to db
     @staticmethod
-    def add_new_product_review(uid, pid, dates, rating, review):
+    def add_new_product_review(uid, pid, date, rating, review):
             
         # then add this product into RatesProduct
         try:
             rows = app.db.execute("""
-INSERT INTO RatesProduct(pid, uid, dates, rating, review)
-VALUES(:pid, :uid, :dates, :rating, :review)
+INSERT INTO RatesProduct(uid, pid, date, rating, review)
+VALUES(:uid, :pid, :date, :rating, :review)
 """,
-                                pid = pid, 
                                 uid = uid, 
-                                dates = dates, 
+                                pid = pid, 
+                                date = date, 
                                 rating = rating, 
                                 review = review)
             
@@ -108,10 +122,10 @@ AND pid = :pid
 
 class Seller_Review:
 
-    def __init__(self, sid, uid, dates, rating, review):
+    def __init__(self, sid, uid, date, rating, review):
         self.sid = sid
         self.uid = uid
-        self.dates = dates
+        self.date = date
         self.rating= rating
         self.review = review
 
@@ -135,7 +149,7 @@ ORDER BY review_time DESC
 SELECT *
 FROM RatesSeller
 WHERE uid = :uid
-ORDER BY dates DESC
+ORDER BY date DESC
 LIMIT 5
 ''',
                               uid=uid)
@@ -147,7 +161,7 @@ LIMIT 5
 SELECT *
 FROM RatesSeller
 WHERE uid = :uid
-ORDER BY dates DESC
+ORDER BY date DESC
 ''',
                               uid=uid)
         return [Seller_Review(*row) for row in rows]

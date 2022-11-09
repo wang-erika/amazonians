@@ -5,7 +5,19 @@
 {% if current_user.is_authenticated %}
 
 <div class="page-content">
-  <h1>Review Details</h1>    
+  <h1>Review Details</h1> 
+  
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
 
   <div class="page-form-section">
 
@@ -13,7 +25,7 @@
 
       <div><span class="bold">PID:</span> {{ review.pid }}</div>
       <div><span class="bold">UID:</span> {{ review.uid }}</div>
-      <div><span class="bold">Date Reviewed:</span> ${{review.dates}}</div>
+      <div><span class="bold">Date Reviewed:</span> ${{review.date}}</div>
       <div class="item-quantity">
         <span class="bold">Edit Rating:</span>
         <form action="" method="post">

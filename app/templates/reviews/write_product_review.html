@@ -7,6 +7,18 @@
 <div class="page-content">
   <h1>Reviews</h1>    
 
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
   <div class="page-form-section">
     <h2>Write a Product Review</h2>
     <form action="" method="post" enctype="multipart/form-data">

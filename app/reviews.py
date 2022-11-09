@@ -58,6 +58,11 @@ def add_product_review(pid):
 
     # Redirect to main Sell page once form completed
     if add_form.validate_on_submit():
+        if add_form.rating.data > 5 or add_form.rating.data < 1:
+            flash('Please Enter a Number Between 1-5')
+            return redirect(url_for('reviews.add_product_review', pid = pid))
+
+
         Review.add_new_product_review(current_user.id,
                                     pid,
                                     datetime.now(),
@@ -99,8 +104,11 @@ def view_product_review(pid):
 
     # Re-render page if edit form is submitted
     if edit_form.validate_on_submit():
+        if edit_form.rating.data > 5 or edit_form.rating.data < 1:
+            flash('Please Enter a Number Between 1-5')
+            return redirect(url_for('reviews.view_product_review', pid = pid))
+            
         Review.delete_product_review(current_user.id, pid)
-
         Review.add_new_product_review(current_user.id,
                                     pid,
                                     datetime.now(),
