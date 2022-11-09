@@ -62,4 +62,8 @@ def purchases():
     return render_template('purchase.html', purchases = purchases, query_purchases = query_purchases, form = form)
 
 
+class SearchBarForm(FlaskForm):
+    query = StringField('', validators=[DataRequired()])
+    submit = SubmitField('Search')
+
 
