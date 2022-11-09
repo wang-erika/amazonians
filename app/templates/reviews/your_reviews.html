@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+{% if current_user.is_authenticated %}
+<div class = "page-content">
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+<h1>Reviews</h1>
+
+<div style="background: #fcfbf7; padding: 30px; margin: 30px 0 30px 0">
+
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">User ID</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Review Time</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tuple in product_reviews%}
+        <tr>
+          <td scope="row">{{tuple.uid}}</td>
+          <td scope="row">{{tuple.pid}}</td>
+          <td scope="row">{{tuple.dates}}</td>
+          <td scope="row">{{tuple.rating}}</td>
+          <td scope="row">{{tuple.review}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">User ID</th>
+        <th scope="col">Seller ID</th>
+        <th scope="col">Review Time</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tuple in seller_reviews%}
+        <tr>
+          <td scope="row">{{tuple.uid}}</td>
+          <td scope="row">{{tuple.sid}}</td>
+          <td scope="row">{{tuple.dates}}</td>
+          <td scope="row">{{tuple.rating}}</td>
+          <td scope="row">{{tuple.review}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your reviews!</p>
+{% endif %}
+
+{% endblock %}
