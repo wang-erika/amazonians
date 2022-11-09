@@ -52,8 +52,14 @@
     {% block msg %}
       <div class="top-bar">
         <a class="nile" href="{{ url_for('index.index') }}">Nile</a>
-
+      
         <div class="nav-buttons">
+          <div>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('users.view_accounts') }}" type="button">Search Accounts</a>
+            {% endif %}
+          </div>
+  
           <div>
             <a href="{{ url_for('product.product_page') }}" type="button">Browse</a>
           </div>

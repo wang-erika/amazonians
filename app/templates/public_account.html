@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h1>Search An Account</h1>
+<form action="" method="post">
+      {{ form.hidden_tag() }}
+      <p>
+        {{ form.query.label }}<br/>
+        {{ form.query(size=32, placeholder = "Enter a User ID") }}<br/>
+        {% for error in form.query.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>{{ form.submit() }}</p>
+  </form>
+
+<h2>Account Information</h2>
+<div>Account ID: {{account.id}}</div>
+<div>Name: {{account.full_name}}</div>
+<div>Email: {{account.email}}</div>
+<br>
+<div>
+    <h2>{{account.full_name.split(" ")[0]}}'s Product Reviews</h2>
+    <div class="grid">
+      {% for tuple in product_reviews%}
+      <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
+          <h3>Product ID: {{tuple.pid}}</h3>
+          <div>Date: {{tuple.dates}}</div>
+          <div>Review: {{tuple.review}}</div>
+          <div>Rating: {{tuple.rating}}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

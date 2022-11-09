@@ -84,7 +84,7 @@ where id = :id;
 ''',
                                   id=id,
                                   amount=amount)
-    
+        return rows
     
     @staticmethod
     @login.user_loader

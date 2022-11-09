@@ -6,6 +6,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Float
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
+from .models.review import Review
 
 
 from flask import Blueprint
@@ -78,14 +79,16 @@ def balance():
         #has email, name, password, address, balance
     else:
         return redirect(url_for('users.login'))
+
+    #when form is submitted, call update_balance and redirect to /balance
     if form.validate_on_submit():
-        User.update_balance(current_user.id, form.amount)
+        User.update_balance(current_user.id, form.amount.data)
         flash("Added money!")
-        return redirect(url_for('balance'))
+        return redirect(url_for('users.balance'))
     return render_template('balance.html', user = user, form = form)
 
 class UpdateBalanceForm(FlaskForm):
-    amount = FloatField('Amount')
+    amount = FloatField('Amount', validators = [])
     submit = SubmitField('Add')
 
 @bp.route('/account', methods = ['GET', 'POST'])
@@ -135,3 +138,23 @@ def edit_account():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+class SearchBarForm(FlaskForm):
+    query = StringField('', validators=[DataRequired()])
+    submit = SubmitField('Search')
+
+
+@bp.route('/view_accounts', methods = ['GET', 'POST'])
+def view_accounts():
+    if not current_user.is_authenticated:
+        redirect(url_for('users.login'))
+    form = SearchBarForm()
+    account, reviews = None, None
+    if form.validate_on_submit():
+        account = User.get(form.query.data)
+        reviews = Review.get_all_product_reviews(form.query.data)
+    
+    else:
+        account = User.get(current_user.id)
+        reviews = Review.get_all_product_reviews(current_user.id)
+    return render_template('public_account.html', form = form, account = account, reviews = reviews)
