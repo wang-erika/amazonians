@@ -48,6 +48,19 @@ ORDER BY review_time DESC
                               since=since)
         return [Review(*row) for row in rows]
 
+#get specific product review from uid and pid
+    @staticmethod
+    def get_product_review(uid, pid):
+        rows = app.db.execute('''
+SELECT *
+FROM RatesProduct 
+WHERE uid = :uid
+AND pid = :pid
+''',
+                              uid=uid,
+                              pid = pid)
+        return Review(*(rows[0])) if rows is not None else None
+
 
     @staticmethod
     def get_recent_reviews(uid):
