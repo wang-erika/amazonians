@@ -95,6 +95,7 @@ def balance():
             amount *= -1
             
         User.edit_balance(current_user.id, amount, balance)
+        user = User.get_all(current_user.id)
 
         flash("{button}{amount}".format(amount = form.amount.data, button = "Added $" if form.add.data else "Withdrew $"))
         return render_template('balance.html', user = user, form = form, showAnimation = True)
