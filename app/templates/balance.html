@@ -3,6 +3,7 @@
 {% block content %}
 
 {% if current_user.is_authenticated %}
+
 <div class = "page-content">
   <h1>Balance</h1>
   <div class="flash-notifications">
@@ -16,25 +17,39 @@
     {% endif %}
     {% endwith %}
   </div>
-  <div>
+  <br>
+  <br>
+
+
+  <div class = "balance">
     You have: <b>${{user[0].balance}}</b>
   </div>
-  <br/>
 
 
-  <form action="" method="post">
-    {{ form.hidden_tag() }}
-    
-    {{ form.amount(size=12)}}<br/><br/>
-    
-    {% for error in form.amount.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}           
-    
-    {{ form.add }}
-    {{ form.withdraw }}
-    
-  </form>
+  <div style="text-align: center; padding: 35px;">
+    <a href = "javascript:;" onclick="toggleButton()"  class = "balance-button">Add or Withdraw</a>
+  </div>
+
+  <div id="change-balance" style="text-align: center">
+    <div class = "edit-balance-div">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        
+        {{ form.amount(size=20, placeholder = "Enter amount")}}<br/><br/>
+        
+        {% for error in form.amount.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}           
+        
+        <div class="edit-balance">
+          {{ form.add(class = "edit-balance-button") }}
+          {{ form.withdraw(class = "edit-balance-button") }}      
+        </div>
+        
+      </form>
+    </div>
+  </div>
+
 </div>
 {% endif %}
 

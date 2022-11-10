@@ -13,7 +13,9 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
       </p>
-      <p>{{ form.submit() }}</p>
+      <div class = "edit-balance">
+        {{ form.submit(class = "edit-balance-button")}}
+      </div>
   </form>
 
 <h2>Account Information</h2>
