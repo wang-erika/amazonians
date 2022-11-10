@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Reviews</h1>    
+
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div class="page-form-section">
+    <h2>Write a Seller Review for {{seller}}</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+      {{ add_form.hidden_tag() }}
+      {{ add_form.csrf_token }}
+      <p>
+        {{ add_form.rating.label }}<br/>
+        {{ add_form.rating(size=32) }}<br/>
+        {% for error in add_form.rating.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ add_form.review.label }}<br/>
+        {{ add_form.review(size=32) }}<br/>
+        {% for error in add_form.review.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>{{ add_form.submit() }}</p>
+    </form>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

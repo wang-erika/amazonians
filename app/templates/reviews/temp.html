@@ -32,6 +32,20 @@
         </a>
       {% endfor %}
     </div>
+
+
+    <h2>Your Seller Reviews</h2>
+    <div class="grid">
+      {% for tuple in seller_reviews%}
+      <a href="{{ url_for('reviews.view_seller_review', sid=tuple.sid) }}" class="grid-item">
+          <h3>Seller ID: {{tuple.sid}}</h3>
+          <div>Date: {{tuple.date}}</div>
+          <div>Review: {{tuple.review}}</div>
+          <div>Rating: {{tuple.rating}}</div>
+        </a>
+      {% endfor %}
+    </div>
+
   </div>
 </div>
 
