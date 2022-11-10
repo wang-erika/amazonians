@@ -29,7 +29,6 @@
       {% for tuple in cart%}
           <a href="{{ url_for('buy.view_cart_item', pid=tuple.pid) }}" class="grid-item">
             <div>Product name: {{tuple.product_name}}</div>
-            <div>Seller ID: {{tuple.full_name}}</div>
             <div class="item-image">
               <img src={{tuple.image}} alt="Photo">
             </div> 
