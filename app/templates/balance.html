@@ -3,8 +3,15 @@
 {% block content %}
 
 {% if current_user.is_authenticated %}
-
 <div class = "page-content">
+  {% if showAnimation %}
+    <div class = "snowflakes">
+      {% for i in range(10) %}
+      <div class = "snowflake">💸</div>
+      {% endfor%}
+    </div>
+  {% endif %}
+
   <h1>Balance</h1>
   <div class="flash-notifications">
     {% with messages = get_flashed_messages() %}
@@ -27,7 +34,7 @@
 
 
   <div style="text-align: center; padding: 35px;">
-    <a href = "javascript:;" onclick="toggleButton()"  class = "balance-button">Add or Withdraw</a>
+    <a href = "javascript:;" onclick="toggleButton('change-balance')"  class = "balance-button">💸 Add or Withdraw</a>
   </div>
 
   <div id="change-balance" style="text-align: center">

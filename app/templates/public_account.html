@@ -4,31 +4,44 @@
 
 <br><br>
 <h1>Search An Account</h1>
-<form action="" method="post">
-      {{ form.hidden_tag() }}
-      <p>
+  <form action="" method="post">
+    <div style = "display: flex; flex-direction: row; align-items: center;">
+      <div class = "edit-search" style = "display: flex">
         {{ form.query.label }}<br/>
-        {{ form.query(size=32, placeholder = "Enter a User ID") }}<br/>
+        {{ form.query(size=32, placeholder = "Enter a User ID") }}
         {% for error in form.query.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
-      </p>
-      <div class = "edit-balance">
-        {{ form.submit(class = "edit-balance-button")}}
       </div>
+      <div class = "search-submit">
+        {{ form.submit()}}
+      </div>
+    </div>
+    {{ form.hidden_tag() }}
   </form>
 
-<h2>Account Information</h2>
-<div>Account ID: {{account.id}}</div>
-<div>Name: {{account.full_name}}</div>
+  <details style = "padding: 20px;">
+    <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">Account Information</summary>
+    <div style = "padding-left: 25px">
+      <div>Account ID: {{account.id}}</div>
+      <div>Name: {{account.full_name}}</div>
+    </div>
+  </details>
+
 {% if seller %}
-<h2>Seller Information</h2>
-<div>Email: {{account.email}}</div>
-<div>Address: {{account.address}}</div>
+<details style = "padding: 20px;">
+<summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">Seller Information</summary>
+<div style = "padding-left: 25px">
+  <div>Email: {{account.email}}</div>
+  <div>Address: {{account.address}}</div>
+</div>
+</details>
 {% endif %}
-<br>
-<div>
-    <h2>{{account.full_name.split(" ")[0]}}'s Product Reviews</h2>
+
+{% if reviews %}
+<details style = "padding: 20px;">
+  <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">{{account.full_name.split(" ")[0]}}'s Product Reviews</summary>
+  <div style = "padding-left: 25px">
     <div class="grid">
       {% for tuple in reviews%}
       <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
@@ -40,8 +53,13 @@
       {% endfor %}
     </div>
   </div>
-  <div>
-    <h2>{{account.full_name.split(" ")[0]}}'s Seller Reviews</h2>
+</details>
+{% endif %}
+
+{% if seller %}
+<details style = "padding: 20px;">
+  <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">{{account.full_name.split(" ")[0]}}'s Seller Reviews</summary>
+  <div style = "padding-left: 25px">
     <div class="grid">
       {% for tuple in seller%}
       <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
@@ -53,5 +71,7 @@
       {% endfor %}
     </div>
   </div>
+</details>
+{% endif %}
 
 {% endblock %}

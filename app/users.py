@@ -97,14 +97,14 @@ def balance():
         User.edit_balance(current_user.id, amount, balance)
 
         flash("{button}{amount}".format(amount = form.amount.data, button = "Added $" if form.add.data else "Withdrew $"))
-        return redirect(url_for('users.balance'))
+        return render_template('balance.html', user = user, form = form, showAnimation = True)
 
     return render_template('balance.html', user = user, form = form)
 
 class UpdateBalanceForm(FlaskForm):
     amount = DecimalField('Amount', validators = [])
-    add = SubmitField('Add')
-    withdraw = SubmitField('Withdraw')
+    add = SubmitField('➕ Add')
+    withdraw = SubmitField('➖ Withdraw')
 
 #current user's account information
 @bp.route('/account', methods = ['GET', 'POST'])
@@ -163,7 +163,7 @@ def logout():
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
-    submit = SubmitField('Search')
+    submit = SubmitField('🔍')
 
 #search account page
 @bp.route('/view_accounts', methods = ['GET', 'POST'])
