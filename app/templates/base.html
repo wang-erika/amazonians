@@ -104,6 +104,10 @@
           </div>
 
           <div class="user-nav">
+            <div>
+              <a href="{{ url_for('buy.cart_page') }}" type="button" style = "font-size:35px">🛒</a>
+            </div>
+
             <div class="dropdown">
               <a href="{{ url_for('users.account_page') }}" type = "button" style = "font-size:35px">
                 👤
@@ -116,11 +120,7 @@
                 <a href="{{ url_for('users.logout') }}" type="button">🖐️ Sign Out</a> 
               </div>
             </div>
-
-            <div>
-              <a href="{{ url_for('buy.cart_page') }}" type="button" style = "font-size:35px">🛒</a>
-            </div>
-
+            
             <!--
             <div>
               <a href="{{ url_for('users.balance') }}" type="button">My wallet</a>
