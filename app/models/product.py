@@ -12,7 +12,7 @@ class Product:
         self.quantity = quantity
         
     
-    '''@staticmethod
+    @staticmethod
     def get(pid):
         rows = app.db.execute('''
 SELECT *
@@ -20,7 +20,7 @@ FROM Products, Inventory
 WHERE pid = :pid AND Inventory.p
 ''',
                               pid=pid)
-        return Product(*(rows[0])) if rows is not None else None'''
+        return Product(*(rows[0])) if rows is not None else None
     
     
     @staticmethod
