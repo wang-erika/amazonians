@@ -43,13 +43,17 @@
       }
     </script>
   
+  <!--carousel JS-->
+  <script type = "module" src = "{{ url_for('static', filename='js/carousel.js') }}"></script>
+  
   <!-- Bootstrap styles -->
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
   
-  <!-- CSS link (unused for now) -->
+  <!-- CSS link -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel = "stylesheet" href = "{{ url_for('static', filename='css/extra_styles.css') }}"
   
   <!-- Google fonts: Syne -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

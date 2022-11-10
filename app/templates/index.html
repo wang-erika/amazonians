@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class = "page-content">
   <h1>Products</h1>
 
@@ -16,6 +15,56 @@
     {% endif %}
     {% endwith %}
   </div>
+
+  <h2>Featured products</h2>
+  <div class = "carousel-container">
+    <div id="carousel" class="carousel">
+
+      {% for i in range(8) %}
+        {% if i == 0 %}
+          <div id='iten_1' class="hideLeft">
+            <img src= {{featured_products[i].image}}>
+          </div>
+        {% elif i == 1 %}
+        <div id='iten_1' class="prevLeftSecond">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 2 %}
+        <div id='item_3' class="prev">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 3 %}
+        <div id='item_4' class="selected">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 4 %}
+        <div id='item_5' class="next">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 5 %}
+        <div id='item_6' class="nextRightSecond">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 6 %}
+        <div id='item_7' class="hideRight">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% elif i == 7 %}
+        <div id='item_8' class="hideRight">
+          <img src= {{featured_products[i].image}}>
+        </div>
+        {% endif %}
+
+      {% endfor %}
+
+    </div>
+
+  <div class="buttons">
+    <button id="prev">Prev</button>
+    <button id="next">Next</button>
+  </div>
+  </div>
+
 
   <h2>Products for sale</h2>
   <div class="grid">

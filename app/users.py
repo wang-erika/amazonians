@@ -99,7 +99,7 @@ def balance():
         flash("{button}{amount}".format(amount = form.amount.data, button = "Added $" if form.add.data else "Withdrew $"))
         return render_template('balance.html', user = user, form = form, showAnimation = True)
 
-    return render_template('balance.html', user = user, form = form)
+    return render_template('balance.html', user = user, form = form, showAnimation = False)
 
 class UpdateBalanceForm(FlaskForm):
     amount = DecimalField('Amount', validators = [])

@@ -29,8 +29,12 @@ def index():
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
     else:
         purchases = None
+    
+    featured_products = Product.get_top_k(8)
+    featured_products = update_image(featured_products)
     # render the page by adding information to the index.html file
     return render_template('index.html',
+                            featured_products = featured_products,
                            avail_products=products,
                            purchase_history=purchases)
 

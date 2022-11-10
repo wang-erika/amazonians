@@ -38,7 +38,7 @@ WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
     @staticmethod
     def get_top_k(k):
         rows = app.db.execute('''
-SELECT id, image, category, name, unit_price, description, sum(quantity) as quantity
+SELECT id, name, category, image, unit_price, description, sum(quantity) as quantity
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
 GROUP BY id
