@@ -92,12 +92,13 @@ ORDER BY date DESC
     def get_all_product_reviews(uid):
         rows = app.db.execute('''
 SELECT *
-FROM RatesProduct 
-WHERE uid = :uid
+FROM RatesProduct r, Products p
+WHERE r.uid = :uid
+AND p.id = r.pid
 ORDER BY date DESC
 ''',
                               uid = uid)
-        return [Review(*row) for row in rows]
+        return rows
 
 
 #add product review to db
@@ -148,6 +149,21 @@ AND pid = :pid
     # if there is already a product review from this user
         if len(rows) > 0:
             return True
+
+
+# get matching product name with pid
+    @staticmethod
+    def get_product_name(pid):
+        rows = app.db.execute('''
+SELECT p.name
+FROM Products p
+WHERE p.id = :pid
+''', 
+                              pid = pid)
+        if len(rows) == 0:
+            return "can't find product name"
+        return rows[0]
+
 
 
 class Seller_Review:

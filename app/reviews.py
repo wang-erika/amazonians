@@ -65,6 +65,7 @@ def add_product_review(pid):
 
     # Create form
     add_form = AddProductReviewForm()
+    productname = Review.get_product_name(pid)
 
     # Redirect to main Sell page once form completed
     if add_form.validate_on_submit():
@@ -87,7 +88,8 @@ def add_product_review(pid):
 
     # Render Add page with form
     return render_template('reviews/write_product_review.html',
-                            add_form = add_form)
+                            add_form = add_form,
+                            productname = productname)
 
 
 # add new seller review for the user
@@ -165,6 +167,7 @@ def view_product_review(pid):
 
     # Get Review Details
     review = Review.get_product_review(current_user.id, pid)
+    productname = Review.get_product_name(pid)
 
     # Re-render page if edit form is submitted
     if edit_form.validate_on_submit():
@@ -186,6 +189,7 @@ def view_product_review(pid):
     # Render Details page
     return render_template('reviews/review_details.html',
                             review= review,
+                            productname = productname,
                             edit_form = edit_form)
 
 class EditProductReviewForm(FlaskForm):

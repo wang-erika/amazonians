@@ -25,7 +25,8 @@
     <div class="grid">
       {% for tuple in product_reviews%}
       <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
-          <h3>Product ID: {{tuple.pid}}</h3>
+          <h3>Product: {{tuple.name}}</h3>
+          <!--<div>Product ID: {{tuple.pid}}</div>-->
           <div>Date: {{tuple.date}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
