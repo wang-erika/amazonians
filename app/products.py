@@ -47,7 +47,7 @@ def add_to_cart(pid):
 @bp.route('/product/<pid>', methods = ['GET', 'POST'])
 def product_page(pid):
     prod = Product.get(pid)
-    return render_template('product_page.html', product = prod)
+    return render_template('product_page.html', product = prod, stats = stats)
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])

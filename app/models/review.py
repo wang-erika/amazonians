@@ -165,6 +165,20 @@ WHERE p.id = :pid
         return rows[0]
 
 
+# get summary stats for a product
+    @staticmethod
+    def get_product_stats(pid):
+        rows = app.db.execute('''
+SELECT avg(rating) as average
+FROM RatesProduct
+WHERE pid = :pid
+''', 
+                              pid = pid)
+        if rows[0][0] is not None:
+            return round(rows[0][0],2)
+        return "no ratings yet"
+
+
 
 class Seller_Review:
 

@@ -17,6 +17,7 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.order import Order
+from .models.review import Review
 
 from flask import Blueprint
 bp = Blueprint('buy', __name__)
@@ -56,6 +57,7 @@ def cart_page():
 @bp.route('/cart/details/<pid>', methods=['GET', 'POST'])
 def view_cart_item(pid):
     #todo ADD FLASHES
+    stats = Review.get_product_stats(pid)
     edit_quantity_form = EditProductQuantityForm()
     item = Cart.get_all_in_cart_by_pid(current_user.id, pid)
     if (item.image.tobytes() == b'0'):
@@ -70,7 +72,8 @@ def view_cart_item(pid):
     
     return render_template('cart_item.html',
                             item = item,
-                            edit_quantity_form = edit_quantity_form)
+                            edit_quantity_form = edit_quantity_form,
+                            stats = stats)
 
 @bp.route('/cart/delete/<pid>', methods=['GET', 'POST'])
 def delete_cart_item(pid):
