@@ -15,9 +15,9 @@ class Product:
     @staticmethod
     def get(pid):
         rows = app.db.execute('''
-SELECT *
+SELECT id, name, category, image, unit_price, description, quantity
 FROM Products, Inventory
-WHERE pid = :pid AND Inventory.p
+WHERE pid = :pid AND Inventory.pid = Products.id
 ''',
                               pid=pid)
         return Product(*(rows[0])) if rows is not None else None

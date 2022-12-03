@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
+<div class="page-content">
+  <h1>Inventory</h1>    
+
+  <div class="flash-notifications">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="flash-message">⚠️ {{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div class="page-form-section">
+    <h2>Customer analytics</h2>
+
+    <div>
+      <h3>Average customer rating:</h3>
+      {{ avg_rating }}
+    </div>
+
+    <div>
+      <h3>Total number of customer ratings:</h3>
+      {{ rating_count }}
+    </div>
+
+    <div>
+      <h3>Your best-selling product:</h3>
+      {{ best_selling_product.id }}
+      {{ best_selling_product.name }}
+      {{ best_selling_product.image }}
+    </div>
+    
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
