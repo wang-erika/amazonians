@@ -74,7 +74,7 @@ where id = :id;
 ''',
                                   id=id,
                                   email=email)
-        return id
+        return rows
 
     #given id, balance, and amount, edit the user's balance
     @staticmethod

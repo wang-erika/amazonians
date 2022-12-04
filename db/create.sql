@@ -38,6 +38,14 @@ CREATE TABLE Cart (
     PRIMARY KEY(uid, pid)
 );
 
+CREATE TABLE Later (
+    uid INT NOT NULL REFERENCES Users(id),
+    pid INT NOT NULL REFERENCES Products(id),
+    sid INT NOT NULL REFERENCES Sellers(id),
+    quantity INT NOT NULL,
+    PRIMARY KEY(uid, pid)
+);
+
 CREATE TABLE RatesSeller (
     uid INT NOT NULL REFERENCES Users(id),
     sid INT NOT NULL REFERENCES Sellers(id),
