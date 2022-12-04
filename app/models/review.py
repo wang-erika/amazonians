@@ -179,6 +179,33 @@ WHERE pid = :pid
         return "no ratings yet"
 
 
+# get number of ratings for a product
+    @staticmethod
+    def get_number_ratings(pid):
+        rows = app.db.execute('''
+SELECT count(rating) as count
+FROM RatesProduct
+WHERE pid = :pid
+''', 
+                              pid = pid)
+        return rows[0][0]
+
+
+# get all reviews from all users for a product
+    @staticmethod
+    def get_summary_reviews(pid):
+        rows = app.db.execute('''
+SELECT *
+FROM RatesProduct
+WHERE pid = :pid
+ORDER BY date DESC
+''', 
+                              pid = pid)
+        return rows
+
+
+
+
 
 class Seller_Review:
 

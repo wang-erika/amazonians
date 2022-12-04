@@ -58,6 +58,10 @@ def cart_page():
 def view_cart_item(pid):
     #todo ADD FLASHES
     stats = Review.get_product_stats(pid)
+    num_reviews = Review.get_number_ratings(pid)
+    summary_reviews = Review.get_summary_reviews(pid)
+
+
     edit_quantity_form = EditProductQuantityForm()
     item = Cart.get_all_in_cart_by_pid(current_user.id, pid)
     if (item.image.tobytes() == b'0'):
@@ -73,7 +77,9 @@ def view_cart_item(pid):
     return render_template('cart_item.html',
                             item = item,
                             edit_quantity_form = edit_quantity_form,
-                            stats = stats)
+                            stats = stats,
+                            num_reviews = num_reviews,
+                            summary_reviews = summary_reviews)
 
 @bp.route('/cart/delete/<pid>', methods=['GET', 'POST'])
 def delete_cart_item(pid):
