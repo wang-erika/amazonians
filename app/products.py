@@ -42,8 +42,10 @@ def k_product_page():
 @bp.route('/product/<pid>', methods = ['GET', 'POST'])
 def product_page(pid):
     stats = Review.get_product_stats(pid)
+    num_reviews = Review.get_number_ratings(pid)
     prod = Product.get(pid)
     add_cart_form = AddToCartForm()
+    summary_reviews = Review.get_summary_reviews(pid)
     if (prod.image.tobytes() == b'0'):
         prod.image = '../../static/default.jpg'
     else:
@@ -54,7 +56,12 @@ def product_page(pid):
         flash('Added to Cart')
         return redirect(url_for('index.index'))
 
-    return render_template('product_page.html', item = prod, stats=stats, add_cart_form=add_cart_form)
+    return render_template('product_page.html', 
+                            item = prod, 
+                            stats=stats, 
+                            add_cart_form=add_cart_form,
+                            num_reviews = num_reviews,
+                            summary_reviews = summary_reviews)
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
