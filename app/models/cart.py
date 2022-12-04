@@ -311,5 +311,12 @@ where Purchases.oid = :oid
                               oid=oid,
                               uid=uid)
         return rows[0][0]
-
+    
+    @staticmethod
+    def get_quantity(pid,uid):
+        ret = app.db.execute('''
+ SELECT quantity from Cart
+ WHERE pid = :pid and uid=:uid
+        ''', pid=pid, uid=uid)
+        return ret
 

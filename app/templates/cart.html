@@ -40,7 +40,23 @@
             </div>
           </a>
       {% endfor %}
-
+    </div>
+    <h2>Products in your saved for later</h2>
+    <div class="grid">
+      {% for tuple in saved_for_later%}
+          <a href="{{ url_for('buy.view_later_item', pid=tuple.pid) }}" class="grid-item">
+            <div>Product name: {{tuple.product_name}}</div>
+            <div class="item-image">
+              <img src={{tuple.image}} alt="Photo">
+            </div> 
+            <h3>{{tuple.name}}</h3>
+            <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
+            <div class="item-price">${{tuple.unit_price}}</div>
+            <div class = "item-quantity">
+              <span class="bold">Qty: {{tuple.quantity}}</span>
+            </div>
+          </a>
+      {% endfor %}
     </div>
   </div>
 </div>
