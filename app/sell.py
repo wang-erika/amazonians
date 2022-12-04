@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, flash
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField, SelectField
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
@@ -71,7 +71,7 @@ def add_to_inventory_page():
 class AddProductToInventoryForm(FlaskForm):
     name = StringField('Product name', validators=[])
     image = FileField('Image', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
-    category = StringField('Category', validators=[])
+    category = SelectField('Category', choices=["Home Goods", "Food", "Electronics", "Cosmetics"])
     unit_price = DecimalField('Unit price', validators=[])
     description = StringField('Description', validators=[])
     quantity = IntegerField('Quantity in stock', validators=[])
