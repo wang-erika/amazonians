@@ -13,6 +13,7 @@
             <div><span class="bold">Description:</span> {{ item.description }}</div>
             <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
             <div><span class="bold">Average Rating:</span> {{stats}}</div>
+            <div><span class="bold">Number of Ratings:</span> {{num_reviews}}</div>
             {% if current_user.is_authenticated %}
             <div class="item-quantity">
                 <span class="bold">Qty:</span>
@@ -28,6 +29,26 @@
                 </form>
               </div>
               {% endif %}
+              <h2>Product Reviews</h2>
+
+              <table class='table table-hover table-bordered container'>
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Review Time</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Review</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for tuple in summary_reviews%}
+                  <tr>
+                    <td scope="row">{{tuple.date}}</td>
+                    <td scope="row">{{tuple.rating}}</td>
+                    <td scope="row">{{tuple.review}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
 
         </div>
 </div>
