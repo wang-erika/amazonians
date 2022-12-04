@@ -6,6 +6,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
+from app.models.inventory import Inventory
 
 from app.models.review import Review
 
@@ -44,6 +45,7 @@ def product_page(pid):
     stats = Review.get_product_stats(pid)
     num_reviews = Review.get_number_ratings(pid)
     prod = Product.get(pid)
+    stock = Inventory.get_product_quantity(pid)
     add_cart_form = AddToCartForm()
     summary_reviews = Review.get_summary_reviews(pid)
     if (prod.image.tobytes() == b'0'):
@@ -61,7 +63,8 @@ def product_page(pid):
                             stats=stats, 
                             add_cart_form=add_cart_form,
                             num_reviews = num_reviews,
-                            summary_reviews = summary_reviews)
+                            summary_reviews = summary_reviews,
+                            stock = stock)
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])

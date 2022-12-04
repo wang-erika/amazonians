@@ -70,6 +70,15 @@ RETURNING id;
             print(str(e))
             return None
 
+    @staticmethod
+    def get_product_quantity(pid):
+        rows = app.db.execute("""
+            SELECT quantity 
+            FROM Inventory
+            WHERE pid = :pid
+            """, pid = pid)
+        return rows[0][0] if rows is not None else 0
+
     # PRIVATE HELPER METHOD
     # Given user id,
     # insert this person into the Sellers table

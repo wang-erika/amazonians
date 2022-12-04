@@ -14,6 +14,7 @@
             <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
             <div><span class="bold">Average Rating:</span> {{stats}}</div>
             <div><span class="bold">Number of Ratings:</span> {{num_reviews}}</div>
+            <div><span class="bold">Amount in Stock:</span> {{stock}}</div>
             {% if current_user.is_authenticated %}
             <div class="item-quantity">
                 <span class="bold">Qty:</span>
