@@ -29,6 +29,7 @@ WHERE pid = :pid AND Inventory.pid = Products.id
 SELECT id, name, category, image, unit_price, description, quantity
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+ORDER BY unit_price ASC
 ''',
                               )
                               
@@ -49,17 +50,17 @@ LIMIT :k
 
 
     @staticmethod
-    def add_to_cart(pid, uid):
+    def add_to_cart(pid, uid, amount):
         sid = Product.get_sid_from_pid(pid)
         cart = Product.in_cart(pid, uid)
         if not cart:
             rows = app.db.execute('''
     INSERT INTO Cart(uid, pid, sid, quantity)        
-    VALUES(:uid, :pid, :sid, 1)''', uid=uid, pid=pid, sid=sid)
+    VALUES(:uid, :pid, :sid, :quantity)''', uid=uid, pid=pid, sid=sid, quantity=amount)
         else:
             rows = app.db.execute('''
-    UPDATE Cart SET quantity = quantity+1 WHERE pid=:pid         
-            ''', pid=pid)
+    UPDATE Cart SET quantity = quantity+:amount WHERE pid=:pid         
+            ''', pid=pid, amount=amount)
 
     @staticmethod
     def get_sid_from_pid(pid):
