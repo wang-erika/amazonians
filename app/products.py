@@ -7,6 +7,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
 
+from app.models.review import Review
+
 from .models.product import Product
 
 from flask import Blueprint
@@ -36,18 +38,23 @@ def k_product_page():
                             product = product, form = form)
 
 
-@bp.route('/product/addcart/<pid>', methods=['GET', 'POST'])
-def add_to_cart(pid):
-    Product.add_to_cart(pid, current_user.id)
-    flash('Added to Cart')
-
-    return redirect(url_for('index.index'))
-
 #individual product page
 @bp.route('/product/<pid>', methods = ['GET', 'POST'])
 def product_page(pid):
+    stats = Review.get_product_stats(pid)
     prod = Product.get(pid)
-    return render_template('product_page.html', product = prod, stats = stats)
+    add_cart_form = AddToCartForm()
+    if (prod.image.tobytes() == b'0'):
+        prod.image = '../../static/default.jpg'
+    else:
+        prod.image = '../../static/' + str(prod.id) + '.png'
+
+    if add_cart_form.validate_on_submit():
+        Product.add_to_cart(prod.id, current_user.id, add_cart_form.quantity.data)
+        flash('Added to Cart')
+        return redirect(url_for('index.index'))
+
+    return render_template('product_page.html', item = prod, stats=stats, add_cart_form=add_cart_form)
 
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
@@ -57,3 +64,7 @@ class SearchBarForm(FlaskForm):
 class ImageUploadForm(FlaskForm):
     image = FileField('', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Upload')
+
+class AddToCartForm(FlaskForm):
+    quantity = IntegerField('Add to Cart', validators=[])
+    submit = SubmitField('Add to Cart')
