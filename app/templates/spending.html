@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Your Spending Trends</h1>
+<div style = "display: flex;flex-direction: row; justify-content: space-between;">
+    <div>
+        <img style = "margin: auto; display: block" src="data:image/png;base64, {{ plot_url }}">
+    </div>
+    <div></div>
+    <div>
+        <img style = "margin: auto; display: block" src="data:image/png;base64, {{ plot_url2 }}">
+    </div>
+</div>
+{% endblock %}

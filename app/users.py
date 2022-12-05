@@ -4,7 +4,10 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-
+from io import BytesIO
+import base64
+import matplotlib.pyplot as plt
+from .models.purchase import Purchase
 from .models.user import User
 from .models.review import Review
 from .models.review import Seller_Review
@@ -189,3 +192,42 @@ def view_accounts():
         seller = Seller_Review.get_all_seller_reviews(current_user.id)
  
     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
+
+
+@bp.route('/spending', methods = ['GET', 'POST'])
+def spending():
+    if current_user.is_authenticated:
+        purchases = Purchase.get_purchases(current_user.id)
+        data = {}
+        for purchase in purchases:
+            if purchase.category not in data:
+                data[purchase.category] = purchase.unit_price_at_time_of_payment * purchase.quantity
+            else:
+                data[purchase.category] += purchase.unit_price_at_time_of_payment * purchase.quantity
+        img = BytesIO()
+        categories = list(data.keys())
+        values = list(data.values())
+        def addlabels(x,y):
+            for i in range(len(x)):
+                plt.text(i, y[i] + 15, '$' + str(y[i]), ha = 'center')
+
+        fig = plt.figure(figsize = (8, 5))
+        plt.bar(categories,values, color = "maroon", width = 0.4)
+        addlabels(categories, values)
+        plt.title("Your Total Spending by Category")
+        plt.xlabel('Categories')
+        plt.ylabel('$')
+        plt.savefig(img, format = "png")
+        plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+        plt.close()
+
+        img2 = BytesIO()
+        fig = plt.figure(figsize = (8, 5))
+        plt.pie(values, labels = categories, shadow = True, autopct = '%.2f%%')
+        plt.title("Your Total Spending by Category")
+        plt.savefig(img2, format = "png")
+        plot_url2 = base64.b64encode(img2.getvalue()).decode('utf8')
+        plt.close()
+        
+
+    return render_template('spending.html', plot_url=plot_url, plot_url2 = plot_url2)
