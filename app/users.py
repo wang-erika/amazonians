@@ -146,14 +146,14 @@ def edit_account():
     if form.validate_on_submit():
         #if fields are empty, use current info
         email = form.email.data if form.email.data else user[0].email
-        password = form.password.data if form.password.data else user[0].password
+        password = form.password.data if form.password.data else User.get_password(current_user.id)
         firstname = form.firstname.data if form.firstname.data else user[0].full_name.split(" ")[0]
         lastname = form.lastname.data if form.lastname.data else user[0].full_name.split(" ")[1]
         address = form.address.data if form.address.data else user[0].address
         full_name = firstname + " " + lastname
         #call update function to update user's information in the db
         if User.update(current_user.id, full_name, email, address, password):
-            flash('Successfully updated account!')
+            flash("Successfully updated information!")
             return redirect(url_for('users.account_page'))
         else:
             flash('hello')

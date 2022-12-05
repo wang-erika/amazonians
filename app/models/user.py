@@ -13,6 +13,17 @@ class User(UserMixin):
         self.balance = balance
         self.address = address
 
+
+    @staticmethod
+    def get_password(id):
+        rows = app.db.execute("""
+SELECT password
+FROM Users
+WHERE id = :id
+""",
+                        id = id)
+        return rows[0][0]
+
     #given email, password, return user data
     @staticmethod
     def get_by_auth(email, password):
@@ -73,7 +84,10 @@ set email = :email, full_name = :full_name, address = :address, password = :pass
 where id = :id;
 ''',
                                   id=id,
-                                  email=email)
+                                  email=email,
+                                  full_name = full_name,
+                                  address = address,
+                                  password = password)
         return id
 
     #given id, balance, and amount, edit the user's balance
