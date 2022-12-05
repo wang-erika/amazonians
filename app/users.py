@@ -4,7 +4,10 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-
+from io import BytesIO
+import base64
+import matplotlib.pyplot as plt
+from .models.purchase import Purchase
 from .models.user import User
 from .models.review import Review
 from .models.review import Seller_Review
@@ -121,7 +124,7 @@ def account_page():
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
-    email = StringField('Email', validators=[Email()])
+    email = StringField('Email')
     address = StringField('Address')
     password = PasswordField('Password')
     password2 = PasswordField(
@@ -137,6 +140,7 @@ class UpdateForm(FlaskForm):
 @bp.route('/account/edit', methods = ['GET', 'POST'])
 def edit_account():
     #if not logged in, redirect
+    email = ""
     if current_user.is_authenticated:
         user = User.get_all(current_user.id)
     else:
@@ -144,16 +148,18 @@ def edit_account():
     form = UpdateForm()
     if form.validate_on_submit():
         #if fields are empty, use current info
-        '''
-        email = form.email.data if len(form.email.data) > 0 else user[0].email
-        password = form.password.data if len(form.password.data) > 0 else user[0].password
-        firstname = form.firstname.data if len(form.firstname.data) > 0 else user[0].full_name.split(" ")[0]
-        lastname = form.lastname.data if len(form.lastname.data) > 0 else user[0].full_name.split(" ")[1]
-        '''
+        email = form.email.data if form.email.data else user[0].email
+        password = form.password.data if form.password.data else User.get_password(current_user.id)
+        firstname = form.firstname.data if form.firstname.data else user[0].full_name.split(" ")[0]
+        lastname = form.lastname.data if form.lastname.data else user[0].full_name.split(" ")[1]
+        address = form.address.data if form.address.data else user[0].address
+        full_name = firstname + " " + lastname
         #call update function to update user's information in the db
-        if User.update(current_user.id, email):
-            flash('Successfully updated account!')
+        if User.update(current_user.id, full_name, email, address, password):
+            flash("Successfully updated information!")
             return redirect(url_for('users.account_page'))
+        else:
+            flash('hello')
     return render_template('edit_account.html', user = user, form=form)
 
 #logout route
@@ -186,3 +192,50 @@ def view_accounts():
         seller = Seller_Review.get_all_seller_reviews(current_user.id)
  
     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
+
+
+@bp.route('/spending', methods = ['GET', 'POST'])
+def spending():
+    if current_user.is_authenticated:
+        purchases = Purchase.get_purchases(current_user.id)
+        data = {}
+        for purchase in purchases:
+            if purchase.category not in data:
+                data[purchase.category] = purchase.unit_price_at_time_of_payment * purchase.quantity
+            else:
+                data[purchase.category] += purchase.unit_price_at_time_of_payment * purchase.quantity
+        img = BytesIO()
+        categories = list(data.keys())
+        values = list(data.values())
+        total = sum(values)
+        c = ['#2c7962', '#d38541', '#2c7962', '#d38541', '#2c7962']
+        def addlabels(x,y):
+            for i in range(len(x)):
+                plt.text(i, y[i] + 15, '$' + str(y[i]), ha = 'center')
+
+        fig = plt.figure(figsize = (8, 5))
+        ax = plt.axes()
+        ax.set_facecolor('#f5f4ed')
+        fig.patch.set_facecolor('#f5f4ed')
+
+        plt.bar(categories,values, color = c, width = 0.4)
+        addlabels(categories, values)
+        plt.title("Your Total Spending by Category")
+        plt.xlabel('Categories')
+        plt.ylabel('$')
+        plt.savefig(img, format = "png")
+        plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+        plt.close()
+
+        img2 = BytesIO()
+        fig = plt.figure(figsize = (8, 5))
+        ax = plt.axes()
+        ax.set_facecolor('#f5f4ed')
+        fig.patch.set_facecolor('#f5f4ed')
+        plt.pie(values, labels = categories, colors = c, labeldistance=1.15, wedgeprops = { 'linewidth' : 1, 'edgecolor' : 'white' }, autopct = '%.2f%%')
+        plt.title("Your Total Spending by Category")
+        plt.savefig(img2, format = "png")
+        plot_url2 = base64.b64encode(img2.getvalue()).decode('utf8')
+        plt.close()
+
+    return render_template('spending.html', plot_url=plot_url, plot_url2 = plot_url2, total = total)

@@ -25,7 +25,7 @@
     <div class="sort">Date ordered ▼</div>
 
     <div class="grid">
-      {% for tuple in orders%}
+      {% for tuple in orders %}
         <a href="{{ url_for('sell.toggle_order_fulfilled', id=tuple.id) }}" class="{{'order-item-fulfilled' if tuple.fulfilled else 'order-item-unfulfilled'}}">
           <!-- <div class="item-image">
             <img src={{ tuple.p_image}} alt="Photo">

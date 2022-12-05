@@ -355,25 +355,6 @@ td {
   transition: 0.2s;
 }
 
-
-.view-button {
-  background: #f5f4ed;
-  padding: 0.675em 1em;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: 0.2s;
-  margin-top: 50px;
-
-  color: #52bde4;
-  border: 2px solid #52bde4;
-  margin-left: 5px;
-}
-.view-button:hover {
-  color: #f5f4ed;
-  background: #52bde4;
-  transition: 0.2s;
-}
-
 .add-button-container {
   display: flex;
   justify-content: center;
@@ -624,5 +605,98 @@ td {
 }
 #change-balance {
   display: none;
+}
+
+.order-item {
+  color: #252d2a;
+  width: 1000px;
+  background: #eae8df;
+  border: 2px solid #e5e1cf;
+  font-size: 1em;
+  transition: 0.2s;
+}
+
+.order-top-bar {
+  display: flex;
+  font-size: 0.8em;
+  padding: 5px 0;
+  border-bottom: 2px solid #e5e1cf;
+  justify-content: space-between;
+}
+
+.order-id-details {
+  display: flex;
+  flex-direction: row;
+}
+
+.order-id-details div {
+  padding: 0px 10px;
+}
+
+.order-status {
+  padding: 0px 10px;
+}
+
+.order-id-details > .date {
+  border-left: 1px solid #aca99b;
+}
+
+.order-subtotal {
+  padding: 10px;
+  border-bottom: 2px solid #e5e1cf;
+}
+
+.order-subtotal .number {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.order-subtotal .text {
+  font-weight: 400;
+  font-size: 1em;
+}
+
+.purchases {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  padding: 0px;
+}
+
+.purchases > div:first-child {
+  border-top: 0;
+}
+
+.purchase-item {
+  transition: 0.2s;
+  border-top: 2px solid #e5e1cf;
+}
+
+.purchase-item-upper {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px 0px 10px;
+  align-items: baseline;
+}
+
+.purchase-item-lower {
+  padding: 0px 10px 10px 10px;
+}
+
+.review-purchase {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.review-button {
+  display: inline;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.review-button:hover {
+  transition: 0.2s;
 }
 

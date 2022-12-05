@@ -4,6 +4,7 @@ from flask import flash
 from app.models.purchase import Purchase
 from app.models.user import User
 from app.models.inventory import Inventory
+from datetime import datetime
 
 class Cart:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
@@ -276,10 +277,19 @@ returning id;
             # Maps to a list where 1st element is list of purchases
             # and 2nd element is total price for this order
             map[order] = [
-                Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)),
+                Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid))),
                 Cart.get_order_total(oid, uid)
             ]
+            
+            
         return map
+
+    @staticmethod 
+    def update_dates(products):
+        for item in products:
+            if item.time_purchased:
+                item.time_purchased = item.time_purchased.strftime("%Y-%m-%d %I:%M:%S%p")
+        return products
 
     @staticmethod
     def update_image(products):

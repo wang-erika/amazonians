@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+
+<h1>Your Spending Trends</h1>
+<br>
+<br>
+<br>
+<div class = "balance">Your Total Amount Spent: <b>${{total}}</b></div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style = "display: flex;flex-direction: row; justify-content: space-between;">
+    <div>
+        <img style = "margin: auto; display: block" src="data:image/png;base64, {{ plot_url }}">
+    </div>
+    <div></div>
+    <div>
+        <img style = "margin: auto; display: block" src="data:image/png;base64, {{ plot_url2 }}">
+    </div>
+</div>
+<br>
+<br>
+<br>
+
+
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchases!</p>
+{% endif %}
+{% endblock %}
