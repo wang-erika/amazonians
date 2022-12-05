@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, flash
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
 import sys
@@ -34,7 +34,7 @@ def index():
     featured_products = Product.get_top_k(8)
     featured_products = update_image(featured_products)
     if query_form.validate_on_submit():
-        search_products = Product.query_amount(query_form.query.data)
+        search_products = Product.query_amount(query_form.query.data, query_form.category.data, query_form.price.data=="Ascending")
         search_products = update_image(search_products)
         return render_template('index.html',
                             featured_products = featured_products,
@@ -76,7 +76,9 @@ def purchases():
 
 
 class SearchBarForm(FlaskForm):
-    query = StringField('', validators=[DataRequired()])
+    query = StringField('Search Query')
+    category = SelectField('Category', choices=["", "Home Goods", "Food", "Electronics", "Cosmetics"])
+    price = SelectField('Price', choices=["Ascending", "Descending"], validators=[DataRequired()])
     submit = SubmitField('Search')
 
 

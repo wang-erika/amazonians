@@ -79,15 +79,27 @@ WHERE pid=:pid''', pid=pid)
         return len(ret) > 0
 
     @staticmethod
-    def query_amount(text):
+    def query_amount(text="", category="", sortby=True):
         text = '%' + text.lower() + '%'
-        rows = app.db.execute('''
-    SELECT id, name, category, image, unit_price, description, quantity
-    FROM Products, Inventory
-    WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
-    AND (LOWER(name) LIKE :text
-    OR LOWER(description) LIKE :text)
-    ORDER BY unit_price ASC
-        ''', text=text)
-        print(rows)
+        category = '%' + category + '%'
+        if sortby:
+            rows = app.db.execute('''
+        SELECT id, name, category, image, unit_price, description, quantity
+        FROM Products, Inventory
+        WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+        AND (LOWER(name) LIKE :text
+        OR LOWER(description) LIKE :text)
+        AND category LIKE :category
+        ORDER BY unit_price ASC
+            ''', text=text, category=category)
+        else:
+            rows = app.db.execute('''
+        SELECT id, name, category, image, unit_price, description, quantity
+        FROM Products, Inventory
+        WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+        AND (LOWER(name) LIKE :text
+        OR LOWER(description) LIKE :text)
+        AND category LIKE :category
+        ORDER BY unit_price DESC
+            ''', text=text, category=category)
         return [Product(*row) for row in rows]
