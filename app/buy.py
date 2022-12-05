@@ -156,8 +156,8 @@ def delete_cart_item(pid):
     flash('Product removed from your cart.')
     return redirect(url_for('buy.cart_page'))
 
-@bp.route('/cart/order/', methods=['GET', 'POST'])
-def orders_cart_page():
+@bp.route('/cart/checkout', methods=['GET', 'POST'])
+def orders_cart_page_checkout():
     #todo ADD FLASHES   
     cart = Cart.get_all_in_cart(current_user.id)
     total = Cart.get_total_price_in_cart(current_user.id)
@@ -194,16 +194,22 @@ def orders_cart_page():
 
         map = Cart.order_map_purchases(current_user.id, orders)
 
-        return render_template('cart_order.html', 
-                                cart = cart, 
-                                total = my_formatter.format(total),
-                                map=map)
+        return redirect(url_for('buy.orders_cart_page'))
                         
     #EDIT
     flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
     return render_template('cart.html', 
                             cart = cart, 
                             total = my_formatter.format(total)) 
+
+@bp.route('/cart/orders/', methods=['GET', 'POST'])
+def orders_cart_page():
+    orders = Order.get_orders_by_uid(current_user.id)
+    map = Cart.order_map_purchases(current_user.id, orders)
+    
+    return render_template('cart_order.html',
+                                map=map)
+    
 
     
 class EditProductQuantityForm(FlaskForm):
