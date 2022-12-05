@@ -73,11 +73,8 @@ set email = :email, full_name = :full_name, address = :address, password = :pass
 where id = :id;
 ''',
                                   id=id,
-                                  email=email,
-                                  full_name = full_name,
-                                  address = address,
-                                  password = password)
-        return rows
+                                  email=email)
+        return id
 
     #given id, balance, and amount, edit the user's balance
     @staticmethod

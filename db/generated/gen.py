@@ -4,9 +4,13 @@ from faker import Faker
 import datetime
 
 num_users = 100
-num_products = 100
+num_products = 2000
 num_purchases = 2500
-inventory = 50
+inventory = 1000
+cart=2000
+reviews=1000
+order=4000
+
 
 Faker.seed(0)
 fake = Faker()
@@ -94,16 +98,15 @@ def gen_cart(users, products, sellers):
     with open('./db/data/Cart.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Cart...', end=' ', flush=True)
-        for id in range(30):
+        for id in range(cart):
             # Update to select from sellers
             uid = fake.random_element(elements=list(users))
             pid = fake.random_element(elements=list(products))
-            sid = fake.random_element(elements=list(sellers))
-            while (uid, pid, sid) in combos:
+            while (uid, pid) in combos:
                 uid = fake.random_element(elements=list(users))
                 pid = fake.random_element(elements=list(products))
-                sid = fake.random_element(elements=list(sellers))
-            combos.add((uid, pid, sid))
+            sid = fake.random_element(elements=list(sellers))
+            combos.add((uid, pid))
             quantity = fake.random_int(max=20)
             writer.writerow([uid, pid, sid, quantity])
 
@@ -113,7 +116,7 @@ def gen_rates(filename, people, users):
     with open(filename, 'w') as f:
         writer = get_csv_writer(f)
         print(filename, end=' ', flush=True)
-        for num in range(30):
+        for num in range(reviews):
             fid = fake.random_element(elements=people)
             uid = fake.random_element(elements=users)
             while (fid, uid) in combo:
@@ -129,7 +132,7 @@ def gen_orders(users):
     with open("./db/data/Orders.csv", 'w') as f:
         writer = get_csv_writer(f)
         print("Orders...", end=' ', flush=True)
-        for oid in range(30):
+        for oid in range(order):
             orders.add(oid)
             # Update sid to select from sellers
             uid = fake.random_element(elements=users)
@@ -143,12 +146,17 @@ def gen_purchases(orders, users, products):
     with open('./db/data/Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
+        oiddict = {}
         for id in range(num_purchases):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             
             oid = fake.random_element(elements=list(orders))
-            uid = fake.random_element(elements=list(users))
+            if oid in oiddict:
+                uid = oiddict[oid]
+            else:
+                uid = fake.random_element(elements=list(users))
+                oiddict[oid] = uid
             pid = fake.random_element(elements=list(products))
             quantity = fake.random_int(min=0, max = 20)
             time_purchased = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")

@@ -1,4 +1,5 @@
 from flask import current_app as app
+from flask import flash
 
 
 class Purchase:
@@ -124,16 +125,22 @@ WHERE oid = :oid
                               uid=uid)
             return [Purchase(*row) for row in rows]
 
-    # given purchase id, toggle fulfilled status
-    @staticmethod
-    def toggle_purchase_fulfilled(id):
-        # Get current status
+    # given purchase id, check current status
+    @staticmethod 
+    def check_purchase_fulfillment(id):
         status = app.db.execute('''
 select fulfilled
 from Purchases
 where id = :id
 ''',
                               id=id)
+        return status
+
+    # given purchase id, toggle fulfilled status
+    @staticmethod
+    def toggle_purchase_fulfilled(id):
+        # Get current status
+        status = Purchase.check_purchase_fulfillment(id)
 
         # toggle
         status = 'f' if (status[0][0]) else 't'
@@ -145,6 +152,52 @@ where id = :id;
 ''',
                               id=id,
                               fulfilled=status)
+        
+        # after the update, get the order id
+        oid = Purchase.get_order_id(id)
+        
+        # check to see if order id fulfilled status can be updated
+        if Purchase.is_fulfilled(oid):
+            # Update fulfilled status to true
+            Purchase.update_order_fulfillment(oid, 't')
+        else:
+            # Update fulfilled status to false
+            Purchase.update_order_fulfillment(oid, 'f')
+    
+    # given purchase id, find order id
+    @staticmethod 
+    def get_order_id(purchase_id):
+        rows = app.db.execute('''
+select oid
+from Purchases
+where id = :id
+''',
+                              id=purchase_id)
+        return rows[0][0]
+    
+    # given order id, check to see if any purchases are still unfulfilled
+    @staticmethod 
+    def is_fulfilled(oid):        
+        rows = app.db.execute('''
+select count(*)
+from Purchases
+where oid = :oid and fulfilled = 'f'
+''',
+                              oid=oid)
+        
+        # If count == 0, then order is fulfilled
+        return True if rows[0][0] == 0 else False
+        
+    # given order id, update its fulfillment status
+    def update_order_fulfillment(oid, status):        
+        rows = app.db.execute('''
+update Orders
+set fulfilled = :fulfilled
+where id = :id;
+''',
+                              id=oid,
+                              fulfilled=status)        
+
 
     # given order id and a given user
     # return purchases

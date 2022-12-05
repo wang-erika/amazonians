@@ -67,9 +67,23 @@
 
 
   <h2>Products for sale</h2>
+  <div class="item-quantity">
+    <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.query.label }}<br/>
+      {{ form.query(size=32) }}<br/>
+      {% for error in form.query.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+</div>
   <div class="grid">
     {% for tuple in avail_products%}
-      <div class="grid-item">
+      <a href="{{ url_for('product.product_page', pid=tuple.id) }}" class="grid-item">
+        
         <div class="item-ids">
           <div class="main-id">PRODUCT ID {{tuple.id}}</div>
         </div>
@@ -78,9 +92,7 @@
           <div class="item-details-image">
             <img src={{tuple.image}} alt="Image">
             {% if current_user.is_authenticated %}
-            <div class="add-button-container">
-              <a href="{{ url_for('product.add_to_cart', pid=tuple.id) }}" class="add-button">Add to cart</a>
-            </div>
+            
             {% endif %}
           </div>
 
@@ -93,7 +105,7 @@
         </div>
 
         
-      </div>
+      </a>
     {% endfor %}
   </div>
 

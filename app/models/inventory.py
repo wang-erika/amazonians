@@ -70,6 +70,15 @@ RETURNING id;
             print(str(e))
             return None
 
+    @staticmethod
+    def get_product_quantity(pid):
+        rows = app.db.execute("""
+            SELECT quantity 
+            FROM Inventory
+            WHERE pid = :pid
+            """, pid = pid)
+        return rows[0][0] if rows is not None else 0
+
     # PRIVATE HELPER METHOD
     # Given user id,
     # insert this person into the Sellers table
@@ -181,3 +190,42 @@ where sid = :sid and pid = :pid;
         # If this seller is now no longer selling ANY products, delete them from Sellers
         if (len(Inventory.get_by_sid(sid)) == 0):
             Inventory.delete_seller(sid)
+            
+            
+    # Given sid, get average customer rating
+    @staticmethod
+    def get_avg_customer_rating(sid):
+        rows = app.db.execute('''
+select avg(rating)
+from RatesSeller
+where sid = :sid;
+''',
+                              sid=sid)
+
+        return rows[0][0]
+    
+    # Given sid, get customer rating count
+    @staticmethod
+    def get_customer_rating_count(sid):
+        rows = app.db.execute('''
+select count(*)
+from RatesSeller
+where sid = :sid;
+''',
+                              sid=sid)
+
+        return rows[0][0]
+    
+    # Given sid, get best-selling product
+    @staticmethod
+    def get_best_selling_product(sid):
+        rows = app.db.execute('''
+select pid, count(*)
+from Purchases natural join Inventory
+where sid = :sid
+group by pid
+order by count desc;
+''',
+                              sid=sid)
+
+        return rows[0][0] if rows else None

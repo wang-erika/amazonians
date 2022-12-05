@@ -77,10 +77,6 @@
             <a href="{{ url_for('users.view_accounts') }}" type="button">Search Accounts</a>
             {% endif %}
           </div>
-  
-          <div>
-            <a href="{{ url_for('product.k_product_page') }}" type="button">Browse</a>
-          </div>
 
           <div>
             {% if current_user.is_authenticated %}
@@ -115,7 +111,7 @@
               <div class="dropdown-content">
                 <a href = "{{ url_for('users.account_page')}}" type = "button">😀 My Account</a>
                 <a href="{{ url_for('users.balance') }}" type="button">💵 My Wallet</a>
-                <a href="{{ url_for('index.purchases') }}" type="button">📦 My Orders</a>
+                <a href="{{ url_for('buy.orders_cart_page') }}" type="button">📦 My Orders</a>
                 <a href="{{ url_for('reviews.reviews_page') }}" type="button">📝 My Reviews</a>
                 <a href="{{ url_for('users.logout') }}" type="button">🖐️ Sign Out</a> 
               </div>

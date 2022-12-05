@@ -92,12 +92,13 @@ ORDER BY date DESC
     def get_all_product_reviews(uid):
         rows = app.db.execute('''
 SELECT *
-FROM RatesProduct 
-WHERE uid = :uid
+FROM RatesProduct r, Products p
+WHERE r.uid = :uid
+AND p.id = r.pid
 ORDER BY date DESC
 ''',
                               uid = uid)
-        return [Review(*row) for row in rows]
+        return rows
 
 
 #add product review to db
@@ -148,6 +149,62 @@ AND pid = :pid
     # if there is already a product review from this user
         if len(rows) > 0:
             return True
+
+
+# get matching product name with pid
+    @staticmethod
+    def get_product_name(pid):
+        rows = app.db.execute('''
+SELECT p.name
+FROM Products p
+WHERE p.id = :pid
+''', 
+                              pid = pid)
+        if len(rows) == 0:
+            return "can't find product name"
+        return rows[0]
+
+
+# get summary stats for a product
+    @staticmethod
+    def get_product_stats(pid):
+        rows = app.db.execute('''
+SELECT avg(rating) as average
+FROM RatesProduct
+WHERE pid = :pid
+''', 
+                              pid = pid)
+        if rows[0][0] is not None:
+            return round(rows[0][0],2)
+        return "no ratings yet"
+
+
+# get number of ratings for a product
+    @staticmethod
+    def get_number_ratings(pid):
+        rows = app.db.execute('''
+SELECT count(rating) as count
+FROM RatesProduct
+WHERE pid = :pid
+''', 
+                              pid = pid)
+        return rows[0][0]
+
+
+# get all reviews from all users for a product
+    @staticmethod
+    def get_summary_reviews(pid):
+        rows = app.db.execute('''
+SELECT *
+FROM RatesProduct
+WHERE pid = :pid
+ORDER BY date DESC
+''', 
+                              pid = pid)
+        return rows
+
+
+
 
 
 class Seller_Review:

@@ -21,6 +21,7 @@
 
   <div class="page-form-section">
     <h2>Write a Product Review</h2>
+    <div>Product Name:</span> {{ productname.name }}</div>
     <form action="" method="post" enctype="multipart/form-data">
       {{ add_form.hidden_tag() }}
       {{ add_form.csrf_token }}

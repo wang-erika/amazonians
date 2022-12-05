@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, flash
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField, SelectField
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import datetime
@@ -15,6 +15,7 @@ from flask import current_app as app
 from .models.inventory import Inventory
 from .models.order import Order
 from .models.purchase import Purchase
+from .models.product import Product
 
 from flask import Blueprint
 bp = Blueprint('sell', __name__)
@@ -70,7 +71,7 @@ def add_to_inventory_page():
 class AddProductToInventoryForm(FlaskForm):
     name = StringField('Product name', validators=[])
     image = FileField('Image', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
-    category = StringField('Category', validators=[])
+    category = SelectField('Category', choices=["Home Goods", "Food", "Electronics", "Cosmetics"])
     unit_price = DecimalField('Unit price', validators=[])
     description = StringField('Description', validators=[])
     quantity = IntegerField('Quantity in stock', validators=[])
@@ -137,6 +138,34 @@ def toggle_order_fulfilled(id):
     Purchase.toggle_purchase_fulfilled(id)
     # Re-render Order page
     return redirect(url_for('sell.order_fulfillment_page'))
+
+
+# Customer analytics page
+@bp.route('/sell/analytics', methods=['GET', 'POST'])
+def customer_analytics_page():
+    
+    # Average customer rating
+    avg_rating = Inventory.get_avg_customer_rating(current_user.id)
+    if avg_rating:
+        avg_rating = round(avg_rating, 2)
+    else:
+        avg_rating = 'No ratings yet'
+        
+    # Number of customer ratings
+    rating_count = Inventory.get_customer_rating_count(current_user.id)
+    
+    # Best-selling product
+    best_selling_pid = Inventory.get_best_selling_product(current_user.id)
+    # Get the product's info
+    best_selling_product = Product('', 'No products purchased', '', '', '', '', '')
+    if best_selling_pid:
+        best_selling_product = Product.get(best_selling_pid)
+    
+    # Render Customer analytics page
+    return render_template('sell/customer_analytics.html',
+                           avg_rating = avg_rating,
+                           rating_count = rating_count,
+                           best_selling_product = best_selling_product)
 
 
 

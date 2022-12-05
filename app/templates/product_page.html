@@ -2,39 +2,36 @@
 
 {% block content %}
 
-{% if current_user.is_authenticated %}
 
 <div class="page-content">
-    <h1>Cart item</h1> 
+    <h1>Product</h1> 
     <div class="page-form-section">
-        <h2>Product details: {{ item.name }}</h2>
+        <h2>Product Name: {{ item.name }}</h2>
         <div class="product-details">
             <img src={{item.image }} alt="Photo">
-
             <div><span class="bold">Category:</span> {{ item.category }}</div>
             <div><span class="bold">Description:</span> {{ item.description }}</div>
             <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
             <div><span class="bold">Average Rating:</span> {{stats}}</div>
             <div><span class="bold">Number of Ratings:</span> {{num_reviews}}</div>
+            <div><span class="bold">Amount in Stock:</span> {{stock}}</div>
+            {% if current_user.is_authenticated %}
             <div class="item-quantity">
-              <span class="bold">Qty:</span>
-              <form action=""  method="post">
-                {{ edit_quantity_form.hidden_tag() }}
-                {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/><br/>
-  
-                {% for error in edit_quantity_form.quantity.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}           
-                
-                {{ edit_quantity_form.submit() }}
-              </form>
-              <a href="{{ url_for('buy.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
-              <a href="{{ url_for('buy.move_cart_item', pid=item.pid) }}" class="later-button">Save for later</a>
-            </div>
-            <br>
-            <br>
-            <h2>Product Reviews</h2>
-            <div> 
+                <span class="bold">Qty:</span>
+                <form action=""  method="post">
+                  {{ add_cart_form.hidden_tag() }}
+                  {{ add_cart_form.quantity(size=4) }}<br/><br/>
+    
+                  {% for error in add_cart_form.quantity.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}           
+                  
+                  {{ add_cart_form.submit() }}
+                </form>
+              </div>
+              {% endif %}
+              <h2>Product Reviews</h2>
+
               <table class='table table-hover table-bordered container'>
                 <thead class="thead-dark">
                   <tr>
@@ -53,10 +50,9 @@
                   {% endfor %}
                 </tbody>
               </table>
-            </div>
+
         </div>
 </div>
 
-{% endif %}
 
 {% endblock %}

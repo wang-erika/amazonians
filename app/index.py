@@ -18,11 +18,12 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 #Main route to Home Page
-@bp.route('/')
+@bp.route('/', methods = ['GET', 'POST'])
 def index():
     # get all available products for sale:
     products = Product.get_all()
     products = update_image(products)
+    query_form = SearchBarForm()
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -32,11 +33,22 @@ def index():
     
     featured_products = Product.get_top_k(8)
     featured_products = update_image(featured_products)
+    if query_form.validate_on_submit():
+        search_products = Product.query_amount(query_form.query.data)
+        search_products = update_image(search_products)
+        return render_template('index.html',
+                            featured_products = featured_products,
+                           avail_products=search_products,
+                           purchase_history=purchases,
+                           form = query_form)
+
     # render the page by adding information to the index.html file
     return render_template('index.html',
                             featured_products = featured_products,
                            avail_products=products,
-                           purchase_history=purchases)
+                           purchase_history=purchases,
+                           form=query_form)
+
 
 #adds image to each product
 def update_image(products):

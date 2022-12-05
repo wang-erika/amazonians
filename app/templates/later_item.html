@@ -15,7 +15,6 @@
             <div><span class="bold">Description:</span> {{ item.description }}</div>
             <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
             <div><span class="bold">Average Rating:</span> {{stats}}</div>
-            <div><span class="bold">Number of Ratings:</span> {{num_reviews}}</div>
             <div class="item-quantity">
               <span class="bold">Qty:</span>
               <form action=""  method="post">
@@ -28,8 +27,8 @@
                 
                 {{ edit_quantity_form.submit() }}
               </form>
-              <a href="{{ url_for('buy.delete_cart_item', pid=item.pid) }}" class="delete-button">Delete</a>
-              <a href="{{ url_for('buy.move_cart_item', pid=item.pid) }}" class="later-button">Save for later</a>
+              <a href="{{ url_for('buy.delete_later_item', pid=item.pid) }}" class="delete-button">Delete</a>
+              <a href="{{ url_for('buy.move_later_item', pid=item.pid) }}" class="later-button">Back to cart</a>
             </div>
             <br>
             <br>

@@ -15,9 +15,9 @@ class Product:
     @staticmethod
     def get(pid):
         rows = app.db.execute('''
-SELECT *
+SELECT id, name, category, image, unit_price, description, quantity
 FROM Products, Inventory
-WHERE pid = :pid AND Inventory.p
+WHERE pid = :pid AND Inventory.pid = Products.id
 ''',
                               pid=pid)
         return Product(*(rows[0])) if rows is not None else None
@@ -29,6 +29,7 @@ WHERE pid = :pid AND Inventory.p
 SELECT id, name, category, image, unit_price, description, quantity
 FROM Products, Inventory
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+ORDER BY unit_price ASC
 ''',
                               )
                               
@@ -49,17 +50,17 @@ LIMIT :k
 
 
     @staticmethod
-    def add_to_cart(pid, uid):
+    def add_to_cart(pid, uid, amount):
         sid = Product.get_sid_from_pid(pid)
         cart = Product.in_cart(pid, uid)
         if not cart:
             rows = app.db.execute('''
     INSERT INTO Cart(uid, pid, sid, quantity)        
-    VALUES(:uid, :pid, :sid, 1)''', uid=uid, pid=pid, sid=sid)
+    VALUES(:uid, :pid, :sid, :quantity)''', uid=uid, pid=pid, sid=sid, quantity=amount)
         else:
             rows = app.db.execute('''
-    UPDATE Cart SET quantity = quantity+1 WHERE pid=:pid         
-            ''', pid=pid)
+    UPDATE Cart SET quantity = quantity+:amount WHERE pid=:pid         
+            ''', pid=pid, amount=amount)
 
     @staticmethod
     def get_sid_from_pid(pid):
@@ -76,3 +77,17 @@ WHERE pid=:pid''', pid=pid)
  WHERE pid=:pid and uid=:uid      
         ''', pid=pid, uid=uid)
         return len(ret) > 0
+
+    @staticmethod
+    def query_amount(text):
+        text = '%' + text.lower() + '%'
+        rows = app.db.execute('''
+    SELECT id, name, category, image, unit_price, description, quantity
+    FROM Products, Inventory
+    WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+    AND (LOWER(name) LIKE :text
+    OR LOWER(description) LIKE :text)
+    ORDER BY unit_price ASC
+        ''', text=text)
+        print(rows)
+        return [Product(*row) for row in rows]
