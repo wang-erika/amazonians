@@ -228,4 +228,4 @@ order by count desc;
 ''',
                               sid=sid)
 
-        return rows[0][0]
+        return rows[0][0] if rows else None
