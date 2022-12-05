@@ -66,8 +66,8 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
       </p>
-
-      {{form.submit()}}
+      <p>{{ form.csrf_token }}</p>
+      <p>{{form.submit()}}</p>
   </form>
   </div>
 {% endif %}
