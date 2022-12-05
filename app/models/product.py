@@ -77,3 +77,17 @@ WHERE pid=:pid''', pid=pid)
  WHERE pid=:pid and uid=:uid      
         ''', pid=pid, uid=uid)
         return len(ret) > 0
+
+    @staticmethod
+    def query_amount(text):
+        text = '%' + text.lower() + '%'
+        rows = app.db.execute('''
+    SELECT id, name, category, image, unit_price, description, quantity
+    FROM Products, Inventory
+    WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+    AND (LOWER(name) LIKE :text
+    OR LOWER(description) LIKE :text)
+    ORDER BY unit_price ASC
+        ''', text=text)
+        print(rows)
+        return [Product(*row) for row in rows]

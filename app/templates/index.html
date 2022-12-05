@@ -67,6 +67,19 @@
 
 
   <h2>Products for sale</h2>
+  <div class="item-quantity">
+    <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.query.label }}<br/>
+      {{ form.query(size=32) }}<br/>
+      {% for error in form.query.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+</div>
   <div class="grid">
     {% for tuple in avail_products%}
       <a href="{{ url_for('product.product_page', pid=tuple.id) }}" class="grid-item">

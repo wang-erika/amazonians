@@ -16,27 +16,27 @@ from flask import Blueprint
 bp = Blueprint('product', __name__)
 
 
-@bp.route('/product', methods=['GET', 'POST'])
-def k_product_page():
-    form = SearchBarForm()
-    image_form = ImageUploadForm()
-    # if query submitted
-    product = []
-    if form.validate_on_submit():
-        print(form.query, file=sys.stderr)
+# @bp.route('/product', methods=['GET', 'POST'])
+# def k_product_page():
+#     form = SearchBarForm()
+#     image_form = ImageUploadForm()
+#     # if query submitted
+#     product = []
+#     if form.validate_on_submit():
+#         print(form.query, file=sys.stderr)
         
-        product = Product.get_top_k(form.query.data)
-        #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
+#         product = Product.get_top_k(form.query.data)
+#         #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
         
-        if not product:
-            product = []
+#         if not product:
+#             product = []
 
-        return render_template('product.html',
-                            product = product, form = form)
+#         return render_template('product.html',
+#                             product = product, form = form)
 
-    # default: render full cart
-    return render_template('product.html', 
-                            product = product, form = form)
+#     # default: render full cart
+#     return render_template('product.html', 
+#                             product = product, form = form)
 
 
 #individual product page
