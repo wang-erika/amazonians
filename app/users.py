@@ -121,7 +121,7 @@ def account_page():
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
-    email = StringField('Email', validators=[Email()])
+    email = StringField('Email')
     address = StringField('Address')
     password = PasswordField('Password')
     password2 = PasswordField(
@@ -137,6 +137,7 @@ class UpdateForm(FlaskForm):
 @bp.route('/account/edit', methods = ['GET', 'POST'])
 def edit_account():
     #if not logged in, redirect
+    email = ""
     if current_user.is_authenticated:
         user = User.get_all(current_user.id)
     else:
@@ -144,16 +145,18 @@ def edit_account():
     form = UpdateForm()
     if form.validate_on_submit():
         #if fields are empty, use current info
-        '''
-        email = form.email.data if len(form.email.data) > 0 else user[0].email
-        password = form.password.data if len(form.password.data) > 0 else user[0].password
-        firstname = form.firstname.data if len(form.firstname.data) > 0 else user[0].full_name.split(" ")[0]
-        lastname = form.lastname.data if len(form.lastname.data) > 0 else user[0].full_name.split(" ")[1]
-        '''
+        email = form.email.data if form.email.data else user[0].email
+        password = form.password.data if form.password.data else user[0].password
+        firstname = form.firstname.data if form.firstname.data else user[0].full_name.split(" ")[0]
+        lastname = form.lastname.data if form.lastname.data else user[0].full_name.split(" ")[1]
+        address = form.address.data if form.address.data else user[0].address
+        full_name = firstname + " " + lastname
         #call update function to update user's information in the db
-        if User.update(current_user.id, email):
+        if User.update(current_user.id, full_name, email, address, password):
             flash('Successfully updated account!')
             return redirect(url_for('users.account_page'))
+        else:
+            flash('hello')
     return render_template('edit_account.html', user = user, form=form)
 
 #logout route

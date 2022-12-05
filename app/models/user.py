@@ -66,15 +66,18 @@ RETURNING id
 
     #update user information
     @staticmethod
-    def update(id, email):
+    def update(id, full_name, email, address, password):
         rows = app.db.execute('''
 update Users
-set email = :email
+set email = :email, full_name = :full_name, address = :address, password = :password
 where id = :id;
 ''',
                                   id=id,
-                                  email=email)
-        return id
+                                  email=email,
+                                  full_name = full_name,
+                                  address = address,
+                                  password = password)
+        return rows
 
     #given id, balance, and amount, edit the user's balance
     @staticmethod
