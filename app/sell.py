@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField, SelectField
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-import datetime
+from datetime import datetime
 import sys
 from PIL import Image
 from io import BytesIO
@@ -126,6 +126,11 @@ def delete_inventory_item(pid):
 @bp.route('/sell/orders', methods=['GET', 'POST'])
 def order_fulfillment_page():
     orders = Purchase.get_purchases_by_sid(current_user.id)
+
+    # Format the datetime
+    for order in orders:
+        order.date_ordered = order.date_ordered.strftime("%Y-%m-%d %I:%M:%S%p")
+    
 
     # Render Order fulfillment page
     return render_template('sell/order_fulfillment.html',

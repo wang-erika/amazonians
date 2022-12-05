@@ -20,5 +20,12 @@ where uid = :uid
 order by date_ordered desc
 ''',
                               uid=uid)
-        return [Order(*row) for row in rows]
+        ans = [Order(*row) for row in rows]
+        return Order.update_order_dates(ans)
     
+    @staticmethod 
+    def update_order_dates(orders):
+        for o in orders:
+            if o.date_ordered:
+                o.date_ordered = o.date_ordered.strftime("%Y-%m-%d %I:%M:%S%p")
+        return orders
