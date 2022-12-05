@@ -207,6 +207,7 @@ def spending():
         img = BytesIO()
         categories = list(data.keys())
         values = list(data.values())
+        total = sum(values)
         c = ['#2c7962', '#d38541', '#2c7962', '#d38541', '#2c7962']
         def addlabels(x,y):
             for i in range(len(x)):
@@ -236,6 +237,5 @@ def spending():
         plt.savefig(img2, format = "png")
         plot_url2 = base64.b64encode(img2.getvalue()).decode('utf8')
         plt.close()
-        
 
-    return render_template('spending.html', plot_url=plot_url, plot_url2 = plot_url2)
+    return render_template('spending.html', plot_url=plot_url, plot_url2 = plot_url2, total = total)
