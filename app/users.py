@@ -207,12 +207,17 @@ def spending():
         img = BytesIO()
         categories = list(data.keys())
         values = list(data.values())
+        c = ['#2c7962', '#d38541', '#2c7962', '#d38541', '#2c7962']
         def addlabels(x,y):
             for i in range(len(x)):
                 plt.text(i, y[i] + 15, '$' + str(y[i]), ha = 'center')
 
         fig = plt.figure(figsize = (8, 5))
-        plt.bar(categories,values, color = "maroon", width = 0.4)
+        ax = plt.axes()
+        ax.set_facecolor('#f5f4ed')
+        fig.patch.set_facecolor('#f5f4ed')
+
+        plt.bar(categories,values, color = c, width = 0.4)
         addlabels(categories, values)
         plt.title("Your Total Spending by Category")
         plt.xlabel('Categories')
@@ -223,7 +228,10 @@ def spending():
 
         img2 = BytesIO()
         fig = plt.figure(figsize = (8, 5))
-        plt.pie(values, labels = categories, shadow = True, autopct = '%.2f%%')
+        ax = plt.axes()
+        ax.set_facecolor('#f5f4ed')
+        fig.patch.set_facecolor('#f5f4ed')
+        plt.pie(values, labels = categories, colors = c, labeldistance=1.15, wedgeprops = { 'linewidth' : 1, 'edgecolor' : 'white' }, autopct = '%.2f%%')
         plt.title("Your Total Spending by Category")
         plt.savefig(img2, format = "png")
         plot_url2 = base64.b64encode(img2.getvalue()).decode('utf8')
