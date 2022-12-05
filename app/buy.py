@@ -195,12 +195,12 @@ def orders_cart_page_checkout():
         map = Cart.order_map_purchases(current_user.id, orders)
 
         return redirect(url_for('buy.orders_cart_page'))
-                        
+    else:
     #EDIT
-    flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
-    return render_template('cart.html', 
-                            cart = cart, 
-                            total = my_formatter.format(total)) 
+        flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
+        return render_template('cart.html', 
+                                cart = cart, 
+                                total = my_formatter.format(total)) 
 
 @bp.route('/cart/orders/', methods=['GET', 'POST'])
 def orders_cart_page():
