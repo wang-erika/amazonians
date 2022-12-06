@@ -3,7 +3,7 @@ from flask import flash
 
 
 class Purchase:
-    def __init__(self, id, oid, date_ordered, uid, user_full_name, user_address, pid, product_name, category, image, description, quantity, time_purchased, unit_price_at_time_of_payment, fulfilled, sid):
+    def __init__(self, id, oid, date_ordered, uid, user_full_name, user_address, pid, product_name, category, image, description, quantity, time_purchased, unit_price_at_time_of_payment, fulfilled, sid, seller_name):
         self.id = id
 
         # From Orders
@@ -30,12 +30,13 @@ class Purchase:
         
         # FROM Inventory
         self.sid = sid
+        self.seller_name = seller_name
 
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -50,7 +51,7 @@ WHERE Purchases.id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -71,7 +72,7 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_purchases(uid):
         rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, Products.category, Products.image, Products.description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -91,7 +92,7 @@ ORDER BY time_purchased DESC
     # IN REVERSE CHRONOLOGICAL ORDER
     def get_purchases_by_sid(sid):
             rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -110,7 +111,7 @@ order by Orders.date_ordered desc
     @staticmethod
     def get_purchases_by_oid(oid, uid):
             rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users
@@ -203,7 +204,7 @@ where id = :id;
     # return purchases
     def get_purchases_by_oid_and_uid(oid, uid):
             rows = app.db.execute('''
-SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid
+SELECT Purchases.id, Purchases.oid, Orders.date_ordered, Purchases.uid, Users.full_name as user_full_name, Users.address as user_address, Purchases.pid, Products.name as product_name, category, image, description, Purchases.quantity, time_purchased, unit_price_at_time_of_payment, Purchases.fulfilled, sid, null AS seller_name
 FROM Purchases join Orders
     on Purchases.oid = Orders.id
     join Users

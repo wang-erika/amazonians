@@ -277,12 +277,21 @@ returning id;
             # Maps to a list where 1st element is list of purchases
             # and 2nd element is total price for this order
             map[order] = [
-                Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid))),
+                #updates to certain elements of purchases (inner most to format images, next inner most to update dates to be formated
+                #lastly, to update seller_name to exisit and be accessible)
+                Cart.update_seller_name(Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)))),
                 Cart.get_order_total(oid, uid)
             ]
             
             
         return map
+    
+    @staticmethod
+    def update_seller_name(products):
+        for item in products:
+            if item.sid:
+                item.seller_name = Cart.get_seller_name(item.sid)
+        return products
 
     @staticmethod 
     def update_dates(products):
@@ -329,4 +338,13 @@ where Purchases.oid = :oid
  WHERE pid = :pid and uid=:uid
         ''', pid=pid, uid=uid)
         return ret
+    
+    @staticmethod
+    def get_seller_name(sid):
+        ret = app.db.execute('''
+ SELECT full_name 
+ from Users
+ WHERE id = :sid
+        ''', sid=sid)
+        return ret[0][0]
 
