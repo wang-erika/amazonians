@@ -27,12 +27,12 @@ my_formatter = "{0:.2f}"
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
-            item.image = 'static/default.jpg'
+            item.image = '../../static/default.jpg'
         else:
             try:
-                item.image = 'static/' + str(item.id) + '.png'  
+                item.image = '../../static/' + str(item.id) + '.png'  
             except:
-                item.image = 'static/' + str(item.pid) + '.png'  
+                item.image = '../../static/' + str(item.pid) + '.png'  
     return products
 
 @bp.route('/cart', methods=['GET', 'POST'])
@@ -42,6 +42,7 @@ def cart_page():
         cart = Cart.get_all_in_cart(current_user.id)
         cart = update_image(cart)
         saved_for_later = Later.get_all_in_saved_for_later(current_user.id)
+        saved_for_later = update_image(saved_for_later)
         #total = Cart.get_total_price_in_cart(form.query.data)
         total = Cart.get_total_price_in_cart(current_user.id)
         if total[0][0]:
@@ -160,6 +161,9 @@ def delete_cart_item(pid):
 def orders_cart_page_checkout():
     #todo ADD FLASHES   
     cart = Cart.get_all_in_cart(current_user.id)
+    cart = update_image(cart)
+    saved_for_later = Later.get_all_in_saved_for_later(current_user.id)
+    saved_for_later = update_image(saved_for_later)
     total = Cart.get_total_price_in_cart(current_user.id)
     if total[0][0]:
         total = float(total[0][0])
@@ -200,6 +204,7 @@ def orders_cart_page_checkout():
         flash("You cannot afford, all cart items do not have enough quantity or your cart is empty")
         return render_template('cart.html', 
                                 cart = cart, 
+                                saved_for_later=saved_for_later,
                                 total = my_formatter.format(total)) 
 
 @bp.route('/cart/orders/', methods=['GET', 'POST'])
