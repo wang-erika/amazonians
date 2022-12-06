@@ -102,7 +102,10 @@
 </form>
 </div>
 </div>
+
+{{ pagination.links }}
   <div class="grid">
+    
     {% for tuple in avail_products%}
       <a href="{{ url_for('product.product_page', pid=tuple.id) }}" class="grid-item">
         
@@ -130,23 +133,6 @@
       </a>
     {% endfor %}
   </div>
-
-  {% if current_user.is_authenticated %}
-  <h2>Your recent purchases</h2>
-  <div class="grid">
-    {% for tuple in purchase_history%}
-      <div class="grid-item">
-        <div class="item-image">Image: {{tuple.image}}</div>
-        <div>Product ID: {{tuple.id}}</div>
-        <h3>{{tuple.name}}</h3>
-        <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
-        
-        <div class="item-price">${{tuple.unit_price}}</div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-{% endif %}
+  {{ pagination.links }}
 
 {% endblock %}

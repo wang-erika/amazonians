@@ -88,7 +88,7 @@ def gen_inventory(sellers, products):
                 pid = fake.random_element(elements=list(products))
             used_keys.add(pid)
             # print(sid, pid)
-            quantity = fake.random_int(max=30)
+            quantity = fake.random_int(min=1,max=30)
             writer.writerow([sid, pid, quantity])
         print(f'{num_products} generated')
     return
