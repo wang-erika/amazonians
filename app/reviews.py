@@ -33,7 +33,7 @@ def reviews_page():
     product_reviews = Review.get_all_product_reviews(current_user.id)
     seller_reviews = Seller_Review.get_all_seller_reviews(current_user.id)
 
-    return render_template('reviews/temp.html', 
+    return render_template('reviews/review_page.html', 
                             product_reviews = product_reviews, 
                             seller_reviews = seller_reviews)
 
@@ -67,7 +67,7 @@ def add_product_review(pid):
     add_form = AddProductReviewForm()
     productname = Review.get_product_name(pid)
 
-    # Redirect to main Sell page once form completed
+    # Redirect to review page
     if add_form.validate_on_submit():
         if add_form.rating.data > 5 or add_form.rating.data < 1:
             flash('Please Enter a Number Between 1-5')
@@ -96,7 +96,7 @@ def add_product_review(pid):
 @bp.route('/reviews/seller/<sid>', methods=['GET', 'POST'])
 def add_seller_review(sid):
 
-    # if there already is a product review
+    # if there already is a seller review
     if Seller_Review.has_seller_review(current_user.id, sid):
         flash('You already have a review for this seller')
         return redirect(url_for('reviews.reviews_page'))
@@ -109,7 +109,7 @@ def add_seller_review(sid):
     # Create form
     add_form = AddSellerReviewForm()
 
-    # Redirect to main Sell page once form completed
+    # Redirect to seller review page once form completed
     if add_form.validate_on_submit():
         if add_form.rating.data > 5 or add_form.rating.data < 1:
             flash('Please Enter a Number Between 1-5')
@@ -187,18 +187,19 @@ def view_product_review(pid):
         return redirect(url_for('reviews.reviews_page'))
 
     # Render Details page
-    return render_template('reviews/review_details.html',
+    return render_template('reviews/product_review_details.html',
                             review= review,
                             productname = productname,
                             edit_form = edit_form)
 
+# form for editing a review
 class EditProductReviewForm(FlaskForm):
     rating = IntegerField('New Rating', validators = [DataRequired()])
     review = StringField("New Review", validators = [])
     submit = SubmitField('Update')
 
 
-# Details page -- view a review's details
+# Details page -- view a seller review's details
 @bp.route('/reviews/seller/edit/<sid>', methods=['GET', 'POST'])
 def view_seller_review(sid):
     # Create edit form
@@ -229,6 +230,7 @@ def view_seller_review(sid):
                             review = seller_review,
                             edit_form = edit_form)
 
+# edit seller review form
 class EditSellerReviewForm(FlaskForm):
     rating = IntegerField('New Rating', validators = [DataRequired()])
     review = StringField("New Review", validators = [])

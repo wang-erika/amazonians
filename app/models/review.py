@@ -9,16 +9,6 @@ class Review:
         self.rating = rating
         self.review = review
 
- #*  @staticmethod
- #   def get(uid):
- #       rows = app.db.execute('''
-#SELECT uid, pid, review_time, review_content
-#FROM RatesProduct
-# WHERE id = :id
-# ''',
-  #                            id=id)
- #       return Review(*(rows[0])) if rows else None
-
  # Check if the user has purchased the product
     @staticmethod
     def user_purchased_product(uid, pid):
@@ -34,7 +24,7 @@ AND pid = :pid
         if len(rows) > 0:
             return True
 
-
+# get all product reviews since a certain time
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
@@ -48,20 +38,7 @@ ORDER BY review_time DESC
                               since=since)
         return [Review(*row) for row in rows]
 
-#get specific product review from uid and pid
-    @staticmethod
-    def get_product_review(uid, pid):
-        rows = app.db.execute('''
-SELECT *
-FROM RatesProduct 
-WHERE uid = :uid
-AND pid = :pid
-''',
-                              uid=uid,
-                              pid = pid)
-        return Review(*(rows[0])) if rows is not None else None
-
-
+# get a users recent product reviews
     @staticmethod
     def get_recent_reviews(uid):
         rows = app.db.execute('''
@@ -74,6 +51,7 @@ LIMIT 5
                               uid = uid)
         return [Review(*row) for row in rows]
 
+#get specific product review from uid and pid
     @staticmethod
     def get_product_review(uid, pid):
         rows = app.db.execute('''
@@ -87,7 +65,7 @@ ORDER BY date DESC
                               pid = pid)
         return Review(*(rows[0])) if rows is not None else None
 
-
+# get all the product reviews of a user
     @staticmethod
     def get_all_product_reviews(uid):
         rows = app.db.execute('''
@@ -135,7 +113,7 @@ where uid = :uid and pid = :pid;
                               uid=uid,
                               pid=pid)
 
-# check if there is already a product review
+# check if there is already a product review for this user
     @staticmethod
     def has_product_review(uid, pid):
         rows = app.db.execute('''
@@ -216,6 +194,7 @@ class Seller_Review:
         self.rating= rating
         self.review = review
 
+# get all seller reviews for a user since a certain time
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
@@ -230,6 +209,7 @@ ORDER BY review_time DESC
         return [Seller_Review(*row) for row in rows]
 
 
+# get 5 most recent seller reviews of a user
     @staticmethod
     def get_seller_reviews(uid):
         rows = app.db.execute('''
@@ -242,6 +222,7 @@ LIMIT 5
                               uid=uid)
         return [Seller_Review(*row) for row in rows]
 
+# get the seller review given a uid and sid
     @staticmethod
     def get_seller_review(uid, sid):
         rows = app.db.execute('''
@@ -254,6 +235,7 @@ AND sid = :sid
                               sid = sid)
         return Seller_Review(*(rows[0])) if rows is not None else None
 
+# get all seller reviews for a user
     @staticmethod
     def get_all_seller_reviews(uid):
         rows = app.db.execute('''
@@ -265,11 +247,11 @@ ORDER BY date DESC
                               uid=uid)
         return [Seller_Review(*row) for row in rows]
 
-#add product review to db
+#add seller review to db
     @staticmethod
     def add_new_seller_review(uid, sid, date, rating, review):
             
-        # then add this product into RatesProduct
+        # then add this product into RatesSeller
         try:
             rows = app.db.execute("""
 INSERT INTO RatesSeller(uid, sid, rating, review, date)
@@ -288,7 +270,7 @@ VALUES(:uid, :sid, :rating, :review, :date)
             print(str(e))
             return None
 
-# given uid and pid, delete review from Rates
+# given uid and pid, delete review from RatesSeller
     @staticmethod
     def delete_seller_review(uid, sid):
         # Delete review
@@ -299,7 +281,7 @@ where uid = :uid and sid = :sid;
                               uid=uid,
                               sid=sid)
 
-# check if there is already a product review
+# check if there is already a seller review
     @staticmethod
     def has_seller_review(uid, sid):
         rows = app.db.execute('''
@@ -310,7 +292,7 @@ AND sid = :sid
 ''',
                               uid = uid, 
                               sid = sid)
-    # if there is already a product review from this user
+    # if there is already a seller review from this user
         if len(rows) > 0:
             return True
 
@@ -327,7 +309,7 @@ AND Inventory.sid = :sid
 ''',
                               uid = uid, 
                               sid = sid)
-    # if the user has bought the product at least once
+    # if the user has bought from seller at least once
         if len(rows) > 0:
             return True
 
