@@ -25,30 +25,29 @@ PAGE_SIZE = 10
 @bp.route('/', methods = ['GET', 'POST'])
 def index():
     # get all available products for sale:
+    page = request.args.get(get_page_parameter(), type=int, default=1)
     products = Product.get_all()
     products = update_image(products)
+    pagination = Pagination(page=page, total=len(products), search=False)
     query_form = SearchBarForm()
     # find the products current user has bought:
 
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    pagination = Pagination(page=page, total=len(products), search=False)
+    
     products = products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(products))]
 
     
     featured_products = Product.get_top_k(8)
     featured_products = update_image(featured_products)
     if query_form.validate_on_submit():
-        search_products = Product.query_amount(query_form.query.data, query_form.category.data, query_form.price.data=="Ascending")
-        search_products = update_image(search_products)
-
-        pagination = None
-
-        # search_products = search_products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(search_products))]
-        return render_template('index.html',
-                            featured_products = featured_products,
-                           avail_products=search_products,
-                           form = query_form,
-                           pagination=pagination)
+        cat = query_form.category.data
+        query = query_form.query.data
+        if len(query) == 0:
+            query = "None"
+        if len(cat) == 0:
+            cat = "None"
+        return redirect(url_for('index.search', query=query, 
+                        category=cat,
+                        price=query_form.price.data))
 
     # render the page by adding information to the index.html file
 
@@ -58,16 +57,69 @@ def index():
                            form=query_form,
                            pagination=pagination)
 
+@bp.route('/search/<query>/<category>/<price>', methods = ['GET', 'POST'])
+def search(query, category, price):
+    # get all available products for sale:
+    if category == "None":
+        category = ""
+    if query == "None":
+        query = ""
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    products = Product.query_amount(query, category, price=="Ascending")
+    products = update_image(products)
+    pagination = Pagination(page=page, total=len(products), search=False)
+
+    products = products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(products))]
+
+
+    query_form = SearchBarForm()
+
+    # find the products current user has bought:  
+    featured_products = Product.get_top_k(8)
+    featured_products = update_image(featured_products)
+    if query_form.validate_on_submit():
+        # search_products = Product.query_amount(query_form.query.data, query_form.category.data, query_form.price.data=="Ascending")
+        # search_products = update_image(search_products)
+
+        # pagination = None
+
+        # # search_products = search_products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(search_products))]
+        # return render_template('index.html',
+        #                     featured_products = featured_products,
+        #                    avail_products=search_products,
+        #                    form = query_form,
+        #                    pagination=pagination)
+        cat = query_form.category.data
+        query = query_form.query.data
+        if len(query) == 0:
+            query = "None"
+        if len(cat) == 0:
+            cat = "None"
+        return redirect(url_for('index.search', query=query, 
+                        category=cat,
+                        price=query_form.price.data))
+
+    # render the page by adding information to the index.html file
+
+    return render_template('index.html',
+                        featured_products = featured_products,
+                           avail_products=products,
+                           form=query_form,
+                           pagination=pagination)
+
+
+
+
 #adds image to each product
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
-            item.image = 'static/default.jpg'
+            item.image = '../../../static/default.jpg'
         else:
             try:
-                item.image = 'static/' + str(item.id) + '.png'  
+                item.image = '../../../static/' + str(item.id) + '.png'  
             except:
-                item.image = 'static/' + str(item.pid) + '.png'  
+                item.image = '../../../static/' + str(item.pid) + '.png'  
     return products
 
 #get recent purchases
