@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, category, image, unit_price, description, quantity, full_name="Bob Jones"):
+    def __init__(self, id, name, category, image, unit_price, description, quantity, full_name="Bob Jones", sid=-1):
         self.id = id
         self.name = name
         self.category = category
@@ -11,12 +11,13 @@ class Product:
         self.description = description
         self.quantity = quantity
         self.full_name = full_name
+        self.sid = sid
         
     # this method gets a given product given the id
     @staticmethod
     def get(pid):
         rows = app.db.execute('''
-SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name
+SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name, Sellers.id
 FROM Products, Inventory, Sellers, Users
 WHERE pid = :pid AND Inventory.pid = Products.id AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
 ''',
@@ -28,7 +29,7 @@ WHERE pid = :pid AND Inventory.pid = Products.id AND Inventory.sid=Sellers.id AN
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name
+SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name, Sellers.id
 FROM Products, Inventory, Sellers, Users
 WHERE Inventory.pid = Products.id AND Inventory.quantity > 0 AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
 ORDER BY unit_price ASC
@@ -88,7 +89,7 @@ WHERE pid=:pid''', pid=pid)
         category = '%' + category + '%'
         if sortby:
             rows = app.db.execute('''
-        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name
+        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name, Sellers.id
         FROM Products, Inventory, Sellers, Users
         WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
         AND (LOWER(name) LIKE :text
@@ -99,7 +100,7 @@ WHERE pid=:pid''', pid=pid)
             ''', text=text, category=category)
         else:
             rows = app.db.execute('''
-        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name
+        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name, Sellers.id
         FROM Products, Inventory, Sellers, Users
         WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
         AND (LOWER(name) LIKE :text

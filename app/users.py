@@ -182,9 +182,33 @@ class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('🔍')
 
-#search account page
-@bp.route('/view_accounts', methods = ['GET', 'POST'])
-def view_accounts():
+
+# @bp.route('/view_accounts', methods = ['GET', 'POST'])
+# def view_accounts():
+#     if not current_user.is_authenticated:
+#         redirect(url_for('users.login'))
+#     form = SearchBarForm()
+#     account, reviews, seller = None, None, None
+#     #after submitting, use query to retrieve information
+#     if form.validate_on_submit():
+#         account = User.get(form.query.data)
+#         reviews = Review.get_all_product_reviews(form.query.data)
+#         seller = Seller_Review.get_all_seller_reviews(form.query.data)
+#         if not account and not reviews and not seller:
+#             flash('User does not exist')
+#             redirect(url_for('users.view_accounts'))
+    
+#     #initial state, use current id instead
+#     else:
+#         account = User.get(current_user.id)
+#         reviews = Review.get_all_product_reviews(current_user.id)
+#         seller = Seller_Review.get_all_seller_reviews(current_user.id)
+ 
+#     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
+
+# search account page
+@bp.route('/view_accounts/<id>', methods = ['GET', 'POST'])
+def view_accounts(id):
     if not current_user.is_authenticated:
         redirect(url_for('users.login'))
     form = SearchBarForm()
@@ -196,13 +220,13 @@ def view_accounts():
         seller = Seller_Review.get_all_seller_reviews(form.query.data)
         if not account and not reviews and not seller:
             flash('User does not exist')
-            redirect(url_for('users.view_accounts'))
+            redirect(url_for('users.view_accounts', id=current_user.id))
     
     #initial state, use current id instead
     else:
-        account = User.get(current_user.id)
-        reviews = Review.get_all_product_reviews(current_user.id)
-        seller = Seller_Review.get_all_seller_reviews(current_user.id)
+        account = User.get(id)
+        reviews = Review.get_all_product_reviews(id)
+        seller = Seller_Review.get_all_seller_reviews(id)
  
     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
 

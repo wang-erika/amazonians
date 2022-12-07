@@ -74,7 +74,7 @@
           
           <div>
             {% if current_user.is_authenticated %}
-            <a href="{{ url_for('users.view_accounts') }}" type="button">Search Accounts</a>
+            <a href="{{ url_for('users.view_accounts', id=current_user.id) }}" type="button">Search Accounts</a>
             {% endif %}
           </div>
 
