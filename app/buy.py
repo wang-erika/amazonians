@@ -24,6 +24,8 @@ from flask import Blueprint
 bp = Blueprint('buy', __name__)
 
 my_formatter = "{0:.2f}"
+
+# this method takes in the image information and determines its path to display
 def update_image(products):
     for item in products:
         if (item.image.tobytes() == b'0'):
@@ -35,15 +37,19 @@ def update_image(products):
                 item.image = '../../static/' + str(item.pid) + '.png'  
     return products
 
+# this method creates the main cart page
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart_page():
     if current_user.is_authenticated:
-        # get all products they are selling
+        # get all products that are currently in the cart and update the image
         cart = Cart.get_all_in_cart(current_user.id)
         cart = update_image(cart)
+
+        # find all products are in currently in our saved for later
         saved_for_later = Later.get_all_in_saved_for_later(current_user.id)
         saved_for_later = update_image(saved_for_later)
-        #total = Cart.get_total_price_in_cart(form.query.data)
+
+        # get the total price of the cart
         total = Cart.get_total_price_in_cart(current_user.id)
         if total[0][0]:
             total = float(total[0][0])
@@ -93,6 +99,7 @@ def move_later_item(pid):
 @bp.route('/cart/later/<pid>', methods=['GET', 'POST'])
 def view_later_item(pid):
     #todo ADD FLASHES
+    # get the stats of the prdoucts and other information
     stats = Review.get_product_stats(pid)
     num_reviews = Review.get_number_ratings(pid)
     summary_reviews = Review.get_summary_reviews(pid)
