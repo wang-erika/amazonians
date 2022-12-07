@@ -4,8 +4,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
 from flask_wtf.file import FileField, FileRequired, FileAllowed 
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-import datetime
-import sys
 from app.models.inventory import Inventory
 
 from app.models.review import Review
@@ -15,49 +13,35 @@ from .models.product import Product
 from flask import Blueprint
 bp = Blueprint('product', __name__)
 
-
-# @bp.route('/product', methods=['GET', 'POST'])
-# def k_product_page():
-#     form = SearchBarForm()
-#     image_form = ImageUploadForm()
-#     # if query submitted
-#     product = []
-#     if form.validate_on_submit():
-#         print(form.query, file=sys.stderr)
-        
-#         product = Product.get_top_k(form.query.data)
-#         #cart = Cart.get_all_in_cart_by_pid(current_user.id, form.query.data)
-        
-#         if not product:
-#             product = []
-
-#         return render_template('product.html',
-#                             product = product, form = form)
-
-#     # default: render full cart
-#     return render_template('product.html', 
-#                             product = product, form = form)
-
-
-#individual product page
+ #individual product page, which is the page shown from the main page
 @bp.route('/product/<pid>', methods = ['GET', 'POST'])
 def product_page(pid):
+    # get the stats of the product
     stats = Review.get_product_stats(pid)
     num_reviews = Review.get_number_ratings(pid)
+
+    # get more product information 
     prod = Product.get(pid)
     stock = Inventory.get_product_quantity(pid)
+
+    # the form needed to add the product to the cart (how many too)
     add_cart_form = AddToCartForm()
     summary_reviews = Review.get_summary_reviews(pid)
+
+    # image processing
     if (prod.image.tobytes() == b'0'):
         prod.image = '../../static/default.jpg'
     else:
         prod.image = '../../static/' + str(prod.id) + '.png'
 
+    # if submitted add x amount of the product to the cart
     if add_cart_form.validate_on_submit():
         Product.add_to_cart(prod.id, current_user.id, add_cart_form.quantity.data)
         flash('Added to Cart')
+        # go to the main page
         return redirect(url_for('index.index'))
 
+    # render product page
     return render_template('product_page.html', 
                             item = prod, 
                             stats=stats, 
@@ -66,15 +50,7 @@ def product_page(pid):
                             summary_reviews = summary_reviews,
                             stock = stock)
 
-class SearchBarForm(FlaskForm):
-    query = StringField('', validators=[DataRequired()])
-    submit = SubmitField('Search')
-
-
-class ImageUploadForm(FlaskForm):
-    image = FileField('', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
-    submit = SubmitField('Upload')
-
+# form for adding to the cart and how much to add
 class AddToCartForm(FlaskForm):
     quantity = IntegerField('Add to Cart', validators=[])
     submit = SubmitField('Add to Cart')

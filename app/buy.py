@@ -99,46 +99,57 @@ def move_later_item(pid):
 @bp.route('/cart/later/<pid>', methods=['GET', 'POST'])
 def view_later_item(pid):
     #todo ADD FLASHES
-    # get the stats of the prdoucts and other information
+    # get the stats of the products and other information
     stats = Review.get_product_stats(pid)
     num_reviews = Review.get_number_ratings(pid)
     summary_reviews = Review.get_summary_reviews(pid)
     
+    # changing how much we want in our cart
     edit_quantity_form = EditProductQuantityForm()
     item = Later.get_all_in_later_by_pid(current_user.id, pid)
+
+    # image info
     if (item.image.tobytes() == b'0'):
         item.image = '../../static/default.jpg'
     else:
         item.image = '../../static/' + str(item.pid) + '.png'
     print(item.image)
     
+    # checking if you change quantity
     if edit_quantity_form.validate_on_submit():
+        # update quantity
         Later.edit_later_item(current_user.id, pid, edit_quantity_form.quantity.data)
         return redirect(url_for('buy.cart_page'))
     
+    # later item view page
     return render_template('later_item.html',
                             item = item,
                             edit_quantity_form = edit_quantity_form,
                             stats = stats,
                             num_reviews = num_reviews,
                             summary_reviews = summary_reviews)
-    
+
+# view the cart item and its information
 @bp.route('/cart/details/<pid>', methods=['GET', 'POST'])
 def view_cart_item(pid):
     #todo ADD FLASHES
+    # get the stats of the product
     stats = Review.get_product_stats(pid)
     num_reviews = Review.get_number_ratings(pid)
     summary_reviews = Review.get_summary_reviews(pid)
 
-
+    # form for changing quanity of the product
     edit_quantity_form = EditProductQuantityForm()
     item = Cart.get_all_in_cart_by_pid(current_user.id, pid)
+
+    # changing image info
     if (item.image.tobytes() == b'0'):
         item.image = '../../static/default.jpg'
     else:
         item.image = '../../static/' + str(item.pid) + '.png'
     print(item.image)
     
+    # edit the cart item if quantity has changed
     if edit_quantity_form.validate_on_submit():
         Cart.edit_cart_item(current_user.id, pid, edit_quantity_form.quantity.data)
         return redirect(url_for('buy.cart_page'))

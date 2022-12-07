@@ -11,7 +11,7 @@ class Product:
         self.description = description
         self.quantity = quantity
         
-    
+    # this method gets a given product given the id
     @staticmethod
     def get(pid):
         rows = app.db.execute('''
@@ -23,6 +23,7 @@ WHERE pid = :pid AND Inventory.pid = Products.id
         return Product(*(rows[0])) if rows is not None else None
     
     
+    # this method gets all products in inventory 
     @staticmethod
     def get_all():
         rows = app.db.execute('''
@@ -35,7 +36,7 @@ ORDER BY unit_price ASC
                               
         return [Product(*row) for row in rows]
 
-        
+    # this method gets the top k most expensive products 
     @staticmethod
     def get_top_k(k):
         rows = app.db.execute('''
@@ -48,7 +49,7 @@ LIMIT :k
 ''', k = k)
         return [Product(*row) for row in rows]
 
-
+    # this method adds the product to the cart
     @staticmethod
     def add_to_cart(pid, uid, amount):
         sid = Product.get_sid_from_pid(pid)
@@ -62,6 +63,7 @@ LIMIT :k
     UPDATE Cart SET quantity = quantity+:amount WHERE pid=:pid         
             ''', pid=pid, amount=amount)
 
+    # this method helps find the seller id of the product given the product id
     @staticmethod
     def get_sid_from_pid(pid):
         sid = app.db.execute('''
@@ -69,7 +71,7 @@ SELECT sid FROM Inventory
 WHERE pid=:pid''', pid=pid)
         return sid[0][0]
 
-
+    # this method tells if the product is in the cart or not
     @staticmethod
     def in_cart(pid, uid):
         ret = app.db.execute(''' 
@@ -78,6 +80,7 @@ WHERE pid=:pid''', pid=pid)
         ''', pid=pid, uid=uid)
         return len(ret) > 0
 
+    # this method is like get_all(), but instead queries the database with the given constraints to find all matches
     @staticmethod
     def query_amount(text="", category="", sortby=True):
         text = '%' + text.lower() + '%'

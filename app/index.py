@@ -3,10 +3,6 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-import datetime
-import sys
-import os
-from io import BytesIO
 
 from flask import current_app as app
 from flask import request
@@ -24,71 +20,69 @@ PAGE_SIZE = 30
 #Main route to Home Page
 @bp.route('/', methods = ['GET', 'POST'])
 def index():
-    # get all available products for sale:
+    # get all avaliable products 
     page = request.args.get(get_page_parameter(), type=int, default=1)
     products = Product.get_all()
+    # update the image
     products = update_image(products)
+    # create the pagination
     pagination = Pagination(page=page, total=len(products), search=False, per_page=PAGE_SIZE)
+    # form for queries
     query_form = SearchBarForm()
-    # find the products current user has bought:
-
-    
     products = products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(products))]
 
-    
+    # get the top 8 most expensive products to feature in the carosel
     featured_products = Product.get_top_k(8)
     featured_products = update_image(featured_products)
+
+    # processing a query
     if query_form.validate_on_submit():
         cat = query_form.category.data
         query = query_form.query.data
+        # if certain fields are not filled
         if len(query) == 0:
             query = "None"
         if len(cat) == 0:
             cat = "None"
+        # go to the search endpoint
         return redirect(url_for('index.search', query=query, 
                         category=cat,
                         price=query_form.price.data))
 
     # render the page by adding information to the index.html file
-
     return render_template('index.html',
                             featured_products = featured_products,
                            avail_products=products,
                            form=query_form,
                            pagination=pagination)
 
+# this page is the same as index.html, just with the results from the search
 @bp.route('/search/<query>/<category>/<price>', methods = ['GET', 'POST'])
 def search(query, category, price):
-    # get all available products for sale:
+    # handling fields that are not given
     if category == "None":
         category = ""
     if query == "None":
         query = ""
+    
+    # get the curent page and create the pagination, along with querying
     page = request.args.get(get_page_parameter(), type=int, default=1)
     products = Product.query_amount(query, category, price=="Ascending")
     products = update_image(products)
     pagination = Pagination(page=page, total=len(products), search=False, per_page=PAGE_SIZE)
 
+    # get only the necessary products
     products = products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(products))]
 
-
+    # query form if you want to query again
     query_form = SearchBarForm()
 
-    # find the products current user has bought:  
+    # get the top 8 most expensive products  
     featured_products = Product.get_top_k(8)
     featured_products = update_image(featured_products)
+
     if query_form.validate_on_submit():
-        # search_products = Product.query_amount(query_form.query.data, query_form.category.data, query_form.price.data=="Ascending")
-        # search_products = update_image(search_products)
-
-        # pagination = None
-
-        # # search_products = search_products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(search_products))]
-        # return render_template('index.html',
-        #                     featured_products = featured_products,
-        #                    avail_products=search_products,
-        #                    form = query_form,
-        #                    pagination=pagination)
+        # process another query request
         cat = query_form.category.data
         query = query_form.query.data
         if len(query) == 0:
@@ -100,7 +94,6 @@ def search(query, category, price):
                         price=query_form.price.data))
 
     # render the page by adding information to the index.html file
-
     return render_template('index.html',
                         featured_products = featured_products,
                            avail_products=products,
@@ -134,7 +127,7 @@ def purchases():
 
     return render_template('purchase.html', purchases = purchases)
 
-
+# this form is used for queries of products
 class SearchBarForm(FlaskForm):
     query = StringField('Search Query')
     category = SelectField('Category', choices=["", "Home Goods", "Food", "Electronics", "Cosmetics"])
