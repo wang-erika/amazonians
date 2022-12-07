@@ -130,7 +130,9 @@ def purchases():
 # this form is used for queries of products
 class SearchBarForm(FlaskForm):
     query = StringField('Search Query')
-    category = SelectField('Category', choices=["", "Home Goods", "Food", "Electronics", "Cosmetics"])
+    category = SelectField('Category', choices=["", "Clothing & Accessories", "Books", "Electronics", 
+                                                "Home Goods", "Food & Grocery", "Beauty & Health", "Toys",
+                                                "Pet Supplies", "Sports & Outdoors", "Automotive"])
     price = SelectField('Price', choices=["Ascending", "Descending"], validators=[DataRequired()])
     submit = SubmitField('Search')
 

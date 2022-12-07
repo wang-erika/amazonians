@@ -81,7 +81,7 @@
     </p>
     <p>
       {{ form.category.label }}<br/>
-      {{ form.category(size=5) }}<br/>
+      {{ form.category }}<br/>
       {% for error in form.category.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
@@ -91,7 +91,7 @@
 
     <p>
       {{ form.price.label }}<br/>
-      {{ form.price(size=2) }}<br/>
+      {{ form.price }}<br/>
       {% for error in form.price.errors %}
       <span style="color: red;">[{{ error }}]</span>
       {% endfor %}

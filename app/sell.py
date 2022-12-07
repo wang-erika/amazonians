@@ -71,7 +71,9 @@ def add_to_inventory_page():
 class AddProductToInventoryForm(FlaskForm):
     name = StringField('Product name', validators=[])
     image = FileField('Image', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
-    category = SelectField('Category', choices=["Home Goods", "Food", "Electronics", "Cosmetics"])
+    category = SelectField('Category', choices=["Clothing & Accessories", "Books", "Electronics", 
+                                                "Home Goods", "Food & Grocery", "Beauty & Health", "Toys",
+                                                "Pet Supplies", "Sports & Outdoors", "Automotive"])
     unit_price = DecimalField('Unit price', validators=[])
     description = StringField('Description', validators=[])
     quantity = IntegerField('Quantity in stock', validators=[])

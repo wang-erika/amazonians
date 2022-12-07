@@ -52,7 +52,9 @@ def gen_products():
                 print(f'{pid}', end=' ', flush=True)
             name = fake.sentence(nb_words=4)[:-1]
             image = 0
-            category = fake.random_element(elements=('Cosmetics', 'Electronics', 'Home Goods', 'Food'))
+            category = fake.random_element(elements=("Clothing & Accessories", "Books", "Electronics", 
+                                                "Home Goods", "Food & Grocery", "Beauty & Health", "Toys",
+                                                "Pet Supplies", "Sports & Outdoors", "Automotive"))
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             description = fake.sentence(nb_words=10)[:-1]
             writer.writerow([pid, name, category, image, price, description])
