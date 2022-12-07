@@ -111,7 +111,9 @@ def view_inventory_item(pid):
                             item = item,
                             edit_quantity_form = edit_quantity_form)
 
+# this method handles the situation where the inputs might be empty (they haven't changed) 
 def get_values(item, form):
+    # processing each method and taking care of the output
     name = form.name.data
     if len(name) == 0:
         name = item.name

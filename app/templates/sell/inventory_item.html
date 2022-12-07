@@ -58,10 +58,11 @@
           <span style="color: red;">[{{ error }}]</span>
           {% endfor %}
         </p>
-        {{ edit_quantity_form.submit() }} <br/>
+        {{ edit_quantity_form.submit() }}
 
-        </form>
         <a href="{{ url_for('sell.delete_inventory_item', pid=item.pid) }}" class="delete-button">Delete</a>
+        </form>
+        
       </div>
       </div>
     </div>
