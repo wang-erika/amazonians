@@ -136,7 +136,18 @@ RETURNING sid, pid;
 
     # Given sid and pid, edit product quantity
     @staticmethod
-    def edit_inventory_item(sid, pid, quantity):
+    def edit_inventory_item(sid, pid, name, category, description, unit_price, quantity, image):
+        rows = app.db.execute('''
+update Products
+set name=:name, category=:category, description=:description, unit_price=:unit_price, image=:image
+where id = :pid;
+''',
+                              pid=pid,
+                              name=name,
+                              category=category,
+                              description=description,
+                              unit_price=unit_price,
+                              image=image)
         rows = app.db.execute('''
 update Inventory
 set quantity = :quantity
@@ -147,7 +158,6 @@ where sid = :sid and pid = :pid;
                               quantity=quantity)
         
         return rows
-
 
     # PRIVATE HELPER METHOD
     # Given product id, delete product from Products

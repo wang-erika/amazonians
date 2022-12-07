@@ -84,31 +84,68 @@ class AddProductToInventoryForm(FlaskForm):
 @bp.route('/sell/details/<pid>', methods=['GET', 'POST'])
 def view_inventory_item(pid):
     # Create edit form
-    edit_quantity_form = EditProductQuantityForm()
+    
 
     # Get product details
     item = Inventory.get_by_sid_and_pid(current_user.id, pid)
 
+    edit_quantity_form = EditProductQuantityForm()
+
     # Format image path
-    item.image = 'static/' + str(item.pid) + '.png'
 
     # Re-render page if edit form is submitted
     if edit_quantity_form.validate_on_submit():
+        values = get_values(item, edit_quantity_form)
         Inventory.edit_inventory_item(current_user.id,
                                     pid,
-                                    edit_quantity_form.quantity.data)
+                                    values[0],values[1], values[2], values[3],
+                                    values[4], values[5])
         
-        msg = 'Product quantity updated to {q}.'.format(q = edit_quantity_form.quantity.data)
+        msg = 'Product updated'
         flash(msg)
         return redirect(url_for('sell.inventory_page'))
 
     # Render Details page
+    item.image = 'static/' + str(item.pid) + '.png'
     return render_template('sell/inventory_item.html',
                             item = item,
                             edit_quantity_form = edit_quantity_form)
 
+# this method handles the situation where the inputs might be empty (they haven't changed) 
+def get_values(item, form):
+    # processing each method and taking care of the output
+    name = form.name.data
+    if len(name) == 0:
+        name = item.name
+    category = form.category.data
+    if len(category) == 0:
+        category = item.category
+    description = form.description.data
+    if len(description) == 0:
+        description = item.description
+    quantity = form.quantity.data
+    if quantity < 0:
+        quantity = item.quantity
+    unit_price = form.unit_price.data
+    if unit_price < 0:
+        unit_price = item.unit_price
+    image = form.image.data
+    if image is None:
+        image = item.image
+    else:
+        image = image.read()
+    return [name, category, description, unit_price,quantity, image]
+    
+
 class EditProductQuantityForm(FlaskForm):
-    quantity = IntegerField('New quantity', validators=[])
+    name = StringField('Name', validators=[])
+    category = SelectField('Category', choices=["", "Clothing & Accessories", "Books", "Electronics", 
+                                                "Home Goods", "Food & Grocery", "Beauty & Health", "Toys",
+                                                "Pet Supplies", "Sports & Outdoors", "Automotive"])
+    description = StringField('Description', validators=[])
+    quantity = IntegerField('Qty', validators=[])
+    unit_price = DecimalField('Unit price', validators=[])
+    image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')], default=None)
     submit = SubmitField('Update')
 
 # Delete route (no page) -- delete product from inventory

@@ -106,3 +106,26 @@ WHERE pid=:pid''', pid=pid)
         ORDER BY unit_price DESC
             ''', text=text, category=category)
         return [Product(*row) for row in rows]
+
+
+# this method helps find the seller id of the product given the product id
+    @staticmethod
+    def get_sid_from_pid(pid):
+        sid = app.db.execute('''
+SELECT sid FROM Inventory
+WHERE pid=:pid''', pid=pid)
+        return sid[0][0]
+
+
+ # Get the seller name from the pid
+    @staticmethod
+    def get_seller_name_from_pid(pid):
+        rows = app.db.execute('''
+SELECT Users.full_name
+FROM Sellers, Users, Inventory
+WHERE Inventory.pid = :pid
+AND Inventory.sid = Sellers.id
+AND Sellers.id = Users.id
+''',
+                              pid = pid)
+        return rows[0][0]

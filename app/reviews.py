@@ -26,16 +26,33 @@ from flask import Blueprint
 bp = Blueprint('reviews', __name__)
 
 
-# shows product and seller reviews of that user
-@bp.route('/reviews', methods = ['GET', 'POST'])
+# shows product and seller reviews of that user (with confetti animation)
+@bp.route('/reviews/true', methods = ['GET', 'POST'])
 def reviews_page():
+
+    product_reviews = Review.get_all_product_reviews(current_user.id)
+    seller_reviews = Seller_Review.get_all_seller_reviews(current_user.id)
+    
+
+    return render_template('reviews/review_page.html',
+                            product_reviews = product_reviews, 
+                            seller_reviews = seller_reviews,
+                            showAnimation = True
+                            )
+
+
+# shows product and seller reviews of that user (without confetti animation)
+@bp.route('/reviews', methods = ['GET', 'POST'])
+def reviews_page_false():
 
     product_reviews = Review.get_all_product_reviews(current_user.id)
     seller_reviews = Seller_Review.get_all_seller_reviews(current_user.id)
 
     return render_template('reviews/review_page.html', 
                             product_reviews = product_reviews, 
-                            seller_reviews = seller_reviews)
+                            seller_reviews = seller_reviews,
+                            showAnimation = False
+                            )
 
 # create product review form
 class AddProductReviewForm(FlaskForm):
@@ -57,11 +74,11 @@ def add_product_review(pid):
     # if there already is a product review
     if Review.has_product_review(current_user.id, pid):
         flash('You have already reviews for this product')
-        return redirect(url_for('reviews.reviews_page'))
+        return redirect(url_for('reviews.reviews_page_false'))
     
     if not Review.user_purchased_product(current_user.id, pid):
         flash('You have not purchased this product')
-        return redirect(url_for('reviews.reviews_page'))
+        return redirect(url_for('reviews.reviews_page_false'))
 
     # Create form
     add_form = AddProductReviewForm()
@@ -89,7 +106,8 @@ def add_product_review(pid):
     # Render Add page with form
     return render_template('reviews/write_product_review.html',
                             add_form = add_form,
-                            productname = productname)
+                            productname = productname
+                            )
 
 
 # add new seller review for the user
@@ -99,15 +117,16 @@ def add_seller_review(sid):
     # if there already is a seller review
     if Seller_Review.has_seller_review(current_user.id, sid):
         flash('You already have a review for this seller')
-        return redirect(url_for('reviews.reviews_page'))
+        return redirect(url_for('reviews.reviews_page_false'))
 
     if not Seller_Review.user_purchased_seller(current_user.id, sid):
         flash('You have not purchased a product from this seller')
-        return redirect(url_for('reviews.reviews_page'))
+        return redirect(url_for('reviews.reviews_page_false'))
     
 
     # Create form
     add_form = AddSellerReviewForm()
+    name = Seller_Review.get_seller_name(sid)
 
     # Redirect to seller review page once form completed
     if add_form.validate_on_submit():
@@ -131,7 +150,9 @@ def add_seller_review(sid):
     # Render Add page with form
     return render_template('reviews/write_seller_review.html',
                             add_form = add_form, 
-                            seller = sid)
+                            seller = sid,
+                            name = name
+                            )
 
 
 # delete a product review
@@ -207,6 +228,7 @@ def view_seller_review(sid):
 
     # Get Review Details
     seller_review = Seller_Review.get_seller_review(current_user.id, sid)
+    name = Seller_Review.get_seller_name(sid)
 
     # Re-render page if edit form is submitted
     if edit_form.validate_on_submit():
@@ -228,6 +250,7 @@ def view_seller_review(sid):
     # Render Details page
     return render_template('reviews/seller_review_details.html',
                             review = seller_review,
+                            name = name,
                             edit_form = edit_form)
 
 # edit seller review form
