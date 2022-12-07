@@ -33,7 +33,7 @@
               <img src={{tuple.image}} alt="Photo">
             </div> 
             <h3>{{tuple.name}}</h3>
-            <div class="item-seller"><span class="bold">Seller: </span><a href="{{ url_for('users.view_accounts', id=item.sid) }}">{{ item.full_name }}</a></div>
+            <div class="item-seller"><span class="bold">Seller: </span>{{ tuple.full_name }}</div>
             <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
             <div class="item-price">${{tuple.unit_price}}</div>
             <div class = "item-quantity">
@@ -50,7 +50,7 @@
             <div class="item-image">
               <img src={{tuple.image}} alt="Photo">
             </div> 
-            <div class="item-seller"><span class="bold">Seller: </span><a href="{{ url_for('users.view_accounts', id=item.sid) }}">{{ item.full_name }}</a></div>
+            <div class="item-seller"><span class="bold">Seller: </span>{{ tuple.full_name }}</div>
             <h3>{{tuple.name}}</h3>
             <div class="item-description"><span class="item-category">{{tuple.category}}</span>{{tuple.description}}</div>
             <div class="item-price">${{tuple.unit_price}}</div>
