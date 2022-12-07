@@ -117,7 +117,7 @@ WHERE pid=:pid''', pid=pid)
         return sid[0][0]
 
 
- # Get the seller from the pid
+ # Get the seller name from the pid
     @staticmethod
     def get_seller_name_from_pid(pid):
         rows = app.db.execute('''

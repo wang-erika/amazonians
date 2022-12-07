@@ -249,6 +249,7 @@ def orders_cart_page():
     return render_template('cart_order.html',
                                 map=map2, form=search_item_form, pagination=pagination)
 
+# search for orders in the cart page given a query
 @bp.route('/cart/orders/<query>', methods=['GET', 'POST'])
 def orders_cart_page_search(query):
     search_item_form = SearchBarForm()
