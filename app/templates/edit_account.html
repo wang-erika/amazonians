@@ -16,7 +16,7 @@
     {% endif %}
     {% endwith %}
   </div>
-
+  <div class="page-form-section">
   <form action = "", method = "post">
     <p>
         <h2>{{ form.firstname.label }}</h2>
@@ -69,6 +69,7 @@
       <p>{{ form.csrf_token }}</p>
       <p>{{form.submit()}}</p>
   </form>
+</div>
   </div>
 {% endif %}
 
