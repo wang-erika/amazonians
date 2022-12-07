@@ -241,12 +241,13 @@ AND sid = :sid
     def get_all_seller_reviews(uid):
         rows = app.db.execute('''
 SELECT *
-FROM RatesSeller
-WHERE uid = :uid
+FROM RatesSeller r, Users u
+WHERE r.uid = :uid
+AND r.sid = u.id
 ORDER BY date DESC
 ''',
                               uid=uid)
-        return [Seller_Review(*row) for row in rows]
+        return rows
 
 #add seller review to db
     @staticmethod

@@ -32,8 +32,9 @@ def reviews_page():
 
     product_reviews = Review.get_all_product_reviews(current_user.id)
     seller_reviews = Seller_Review.get_all_seller_reviews(current_user.id)
+    
 
-    return render_template('reviews/review_page.html', 
+    return render_template('reviews/review_page.html',
                             product_reviews = product_reviews, 
                             seller_reviews = seller_reviews,
                             showAnimation = True
