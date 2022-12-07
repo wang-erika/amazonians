@@ -244,10 +244,11 @@ returning id;
     def order_map_purchases(uid, orders, text):
         map = {}
         
+        if text:
+            sorted_orders = Purchase.get_oid_purchases_by_uid_and_search(uid, text)
         for order in orders:
             oid = order.id
             if text:
-                sorted_orders = Purchase.get_oid_purchases_by_uid_and_search(uid, text)
                 if oid not in sorted_orders:
                     continue
                 else:

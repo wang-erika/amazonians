@@ -230,6 +230,7 @@ where Purchases.oid = :oid
     # given order id and given text
     # return list of oids that contain purchases with that specific text
     def get_oid_purchases_by_uid_and_search(uid, text):
+            text = "%" + text + "%"
             rows = app.db.execute('''
 SELECT Purchases.oid
 FROM Purchases join Orders
