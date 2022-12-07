@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, category, image, unit_price, description, quantity):
+    def __init__(self, id, name, category, image, unit_price, description, quantity, full_name="Bob Jones"):
         self.id = id
         self.name = name
         self.category = category
@@ -10,14 +10,15 @@ class Product:
         self.unit_price = unit_price
         self.description = description
         self.quantity = quantity
+        self.full_name = full_name
         
     # this method gets a given product given the id
     @staticmethod
     def get(pid):
         rows = app.db.execute('''
-SELECT id, name, category, image, unit_price, description, quantity
-FROM Products, Inventory
-WHERE pid = :pid AND Inventory.pid = Products.id
+SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name
+FROM Products, Inventory, Sellers, Users
+WHERE pid = :pid AND Inventory.pid = Products.id AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
 ''',
                               pid=pid)
         return Product(*(rows[0])) if rows is not None else None
@@ -27,9 +28,9 @@ WHERE pid = :pid AND Inventory.pid = Products.id
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT id, name, category, image, unit_price, description, quantity
-FROM Products, Inventory
-WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
+SELECT Products.id, name, category, image, unit_price, description, quantity, Users.full_name
+FROM Products, Inventory, Sellers, Users
+WHERE Inventory.pid = Products.id AND Inventory.quantity > 0 AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
 ORDER BY unit_price ASC
 ''',
                               )
@@ -40,10 +41,10 @@ ORDER BY unit_price ASC
     @staticmethod
     def get_top_k(k):
         rows = app.db.execute('''
-SELECT id, name, category, image, unit_price, description, sum(quantity) as quantity
-FROM Products, Inventory
-WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
-GROUP BY id
+SELECT Products.id, name, category, image, unit_price, description, sum(quantity) as quantity
+FROM Products, Inventory, Sellers, Users
+WHERE Inventory.pid = Products.id AND Inventory.quantity > 0 AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
+GROUP BY Products.id
 ORDER BY unit_price DESC
 LIMIT :k
 ''', k = k)
@@ -87,22 +88,24 @@ WHERE pid=:pid''', pid=pid)
         category = '%' + category + '%'
         if sortby:
             rows = app.db.execute('''
-        SELECT id, name, category, image, unit_price, description, quantity
-        FROM Products, Inventory
+        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name
+        FROM Products, Inventory, Sellers, Users
         WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
         AND (LOWER(name) LIKE :text
         OR LOWER(description) LIKE :text)
         AND category LIKE :category
+        AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
         ORDER BY unit_price ASC
             ''', text=text, category=category)
         else:
             rows = app.db.execute('''
-        SELECT id, name, category, image, unit_price, description, quantity
-        FROM Products, Inventory
+        SELECT Products.id, name, category, image, unit_price, description, quantity, full_name
+        FROM Products, Inventory, Sellers, Users
         WHERE Inventory.pid = Products.id AND Inventory.quantity > 0
         AND (LOWER(name) LIKE :text
         OR LOWER(description) LIKE :text)
         AND category LIKE :category
+        AND Inventory.sid=Sellers.id AND Sellers.id=Users.id
         ORDER BY unit_price DESC
             ''', text=text, category=category)
         return [Product(*row) for row in rows]

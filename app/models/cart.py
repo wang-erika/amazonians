@@ -200,7 +200,7 @@ from Inventory
 where pid = :pid;
 ''',
                               pid=item.pid)[0][0]
-            Inventory.edit_inventory_item(item.sid, item.pid, in_stock_quantity - item.quantity)
+            Inventory.edit_inventory_quantity(item.sid, item.pid, in_stock_quantity - item.quantity)
 
     #Given uid
     #adds user's order into Orders and sets fulfilment for order to be false (default)
