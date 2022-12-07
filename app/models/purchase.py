@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask import flash
 
-
+# class for purchases, which is the indiviual item we buy
 class Purchase:
     def __init__(self, id, oid, date_ordered, uid, user_full_name, user_address, pid, product_name, category, image, description, quantity, time_purchased, unit_price_at_time_of_payment, fulfilled, sid, seller_name):
         self.id = id

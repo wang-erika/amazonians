@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-
+# class for hte product itself and its information
 class Product:
     def __init__(self, id, name, category, image, unit_price, description, quantity, full_name="Bob Jones", sid=-1):
         self.id = id

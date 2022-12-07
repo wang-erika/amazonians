@@ -5,6 +5,7 @@ from app.models.purchase import Purchase
 from app.models.user import User
 from app.models.inventory import Inventory
 
+# class for storing a cart item in the later section
 class Later:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
         self.uid = uid

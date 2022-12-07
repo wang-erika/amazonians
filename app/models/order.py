@@ -2,7 +2,7 @@ import os
 from flask import current_app as app
 from werkzeug.utils import secure_filename
 
-
+# class for the orders of products 
 class Order:
     def __init__(self, id, uid, date_ordered, fulfilled):
         self.id = id

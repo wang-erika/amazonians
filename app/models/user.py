@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import login
 
-
+# class for the user and their info
 class User(UserMixin):
     def __init__(self, id, full_name, email, balance, address):
         self.id = id

@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.inventory import Inventory
 from datetime import datetime
 
+# the class for the cart, allowing us to use this class for requests
 class Cart:
     def __init__(self, uid, pid, sid, quantity, full_name, product_name, category, image, unit_price, description):
         self.uid = uid

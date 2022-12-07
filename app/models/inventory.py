@@ -2,7 +2,7 @@ import os
 from flask import current_app as app
 from werkzeug.utils import secure_filename
 
-
+# the inventory class, which defines products in our inventory and their info
 class Inventory:
     def __init__(self, sid, pid, name, category, image, unit_price, description, quantity):
         self.sid = sid
@@ -70,6 +70,7 @@ RETURNING id;
             print(str(e))
             return None
 
+    # returns the amount of the product in the inteventory
     @staticmethod
     def get_product_quantity(pid):
         rows = app.db.execute("""
