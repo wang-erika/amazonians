@@ -32,7 +32,8 @@ class Purchase:
         self.sid = sid
         self.seller_name = seller_name
 
-
+    #Given purchase id
+    #Return the purchase and assocated purchase information  
     @staticmethod
     def get(id):
         rows = app.db.execute('''
@@ -48,6 +49,8 @@ WHERE Purchases.id = :id
                               id=id)
         return Purchase(*(rows[0])) if rows else None
 
+    #Given uid and time purchased 
+    #reeturn purchases from the time purchased
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
@@ -68,7 +71,8 @@ ORDER BY time_purchased DESC
                               since=since)
         return [Purchase(*row) for row in rows]
 
-
+    #Given uid
+    #return purchases (and associated information) for a specific user
     @staticmethod
     def get_purchases(uid):
         rows = app.db.execute('''
@@ -107,7 +111,9 @@ order by Orders.date_ordered desc
                               sid=sid)
         
             return [Purchase(*row) for row in rows]
-        
+    
+    # given order id and user id
+    # get purchases (and associated information) for a select user and select order
     @staticmethod
     def get_purchases_by_oid(oid, uid):
             rows = app.db.execute('''

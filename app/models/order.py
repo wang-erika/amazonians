@@ -10,7 +10,8 @@ class Order:
         self.date_ordered = date_ordered 
         self.fulfilled = fulfilled
 
-
+    #Given id of user
+    #Return the orders (and associated information) to that user
     @staticmethod
     def get_orders_by_uid(uid):
         rows = app.db.execute('''
@@ -23,6 +24,9 @@ order by date_ordered desc
         ans = [Order(*row) for row in rows]
         return Order.update_order_dates(ans)
     
+    #Given orders
+    #update the timestamp to be formatted to standard time 
+    #return orders
     @staticmethod 
     def update_order_dates(orders):
         for o in orders:

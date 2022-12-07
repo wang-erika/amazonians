@@ -160,21 +160,23 @@ def view_cart_item(pid):
                             stats = stats,
                             num_reviews = num_reviews,
                             summary_reviews = summary_reviews)
-    
+
+#given a product id, delete it from the saved for later
 @bp.route('/cart/laterdelete/<pid>', methods=['GET', 'POST'])
-def delete_later_item(pid):
-    #todo ADD FLASHES   
+def delete_later_item(pid):  
     Later.delete_later_item(current_user.id, pid)
     flash('Product removed from your cart.')
     return redirect(url_for('buy.cart_page'))
 
+#given a product id, delete it from the cart
 @bp.route('/cart/delete/<pid>', methods=['GET', 'POST'])
-def delete_cart_item(pid):
-    #todo ADD FLASHES   
+def delete_cart_item(pid): 
     Cart.delete_cart_item(current_user.id, pid)
     flash('Product removed from your cart.')
     return redirect(url_for('buy.cart_page'))
 
+#function to fascilitate orders submission
+#does checks for order processing, processes order, saves cart information, and returns html
 @bp.route('/cart/checkout', methods=['GET', 'POST'])
 def orders_cart_page_checkout():
     #todo ADD FLASHES   
@@ -225,6 +227,7 @@ def orders_cart_page_checkout():
                                 saved_for_later=saved_for_later,
                                 total = my_formatter.format(total)) 
 
+#sets orders and map that stores associated information 
 @bp.route('/cart/orders/', methods=['GET', 'POST'])
 def orders_cart_page():
     orders = Order.get_orders_by_uid(current_user.id)
@@ -233,12 +236,12 @@ def orders_cart_page():
     return render_template('cart_order.html',
                                 map=map)
     
-
-    
+#edit quantity flaskform
 class EditProductQuantityForm(FlaskForm):
     quantity = IntegerField('New quantity', validators=[])
     submit = SubmitField('Update')
 
+#search flaskform
 class SearchBarForm(FlaskForm):
     query = StringField('', validators=[DataRequired()])
     submit = SubmitField('Search')
