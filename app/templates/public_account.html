@@ -45,9 +45,9 @@
   <div style = "padding-left: 25px">
     <div class="grid">
       {% for tuple in reviews%}
-      <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
+      <a class="grid-item">
           <h3>Product ID: {{tuple.pid}}</h3>
-          <div>Date: {{tuple.dates}}</div>
+          <div>Date: {{tuple.date}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>
@@ -63,9 +63,9 @@
   <div style = "padding-left: 25px">
     <div class="grid">
       {% for tuple in seller%}
-      <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
+      <a class="grid-item">
           <h3>Product ID: {{tuple.pid}}</h3>
-          <div>Date: {{tuple.dates}}</div>
+          <div>Date: {{tuple.date}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>
