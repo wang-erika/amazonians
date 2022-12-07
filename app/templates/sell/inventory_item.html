@@ -11,26 +11,58 @@
     <h2>Product details: {{ item.name }}</h2>
 
     <div class="product-details">
+      
       <img src={{ '../../' + item.image }} alt="Photo">
-
-      <div><span class="bold">Category:</span> {{ item.category }}</div>
-      <div><span class="bold">Description:</span> {{ item.description }}</div>
-      <div><span class="bold">Unit price:</span> ${{item.unit_price}}</div>
-      <div class="item-quantity">
-        <span class="bold">Quantity in stock:</span>
-        <form action="" method="post">
-          {{ edit_quantity_form.hidden_tag() }}
-          
-          {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/><br/>
-          
+      <div class="item-quality">
+      <form action="" method="post" enctype="multipart/form-data">
+        {{ edit_quantity_form.hidden_tag() }}
+        {{ edit_quantity_form.csrf_token }}
+        <p>
+          {{ edit_quantity_form.name.label }}
+          {{ edit_quantity_form.name(size=32, placeholder=item.name) }}<br/>
+          {% for error in edit_quantity_form.name.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ edit_quantity_form.category.label }}
+          {{ edit_quantity_form.category(placeholder=item.category) }}<br/>
+          {% for error in edit_quantity_form.category.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ edit_quantity_form.description.label }}
+          {{ edit_quantity_form.description(size=32, placeholder=item.description) }}<br/>
+          {% for error in edit_quantity_form.description.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ edit_quantity_form.unit_price.label }}
+          {{ edit_quantity_form.unit_price(size=6, placeholder=item.unit_price) }}<br/>
+          {% for error in edit_quantity_form.unit_price.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ edit_quantity_form.quantity.label }}
+          {{ edit_quantity_form.quantity(size=4, placeholder=item.quantity) }}<br/>
           {% for error in edit_quantity_form.quantity.errors %}
           <span style="color: red;">[{{ error }}]</span>
-          {% endfor %}           
-          
-          {{ edit_quantity_form.submit() }}
-          
+          {% endfor %}
+        </p>
+        <p>
+          {{ edit_quantity_form.image }}
+          {% for error in edit_quantity_form.image.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        {{ edit_quantity_form.submit() }} <br/>
+
         </form>
         <a href="{{ url_for('sell.delete_inventory_item', pid=item.pid) }}" class="delete-button">Delete</a>
+      </div>
       </div>
     </div>
   </div>
