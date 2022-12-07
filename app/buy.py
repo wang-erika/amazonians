@@ -216,8 +216,6 @@ def orders_cart_page_checkout():
 
         orders = Order.get_orders_by_uid(current_user.id)
 
-        map = Cart.order_map_purchases(current_user.id, orders)
-
         return redirect(url_for('buy.orders_cart_page'))
     else:
     #EDIT
@@ -227,14 +225,16 @@ def orders_cart_page_checkout():
                                 saved_for_later=saved_for_later,
                                 total = my_formatter.format(total)) 
 
-#sets orders and map that stores associated information 
+#sets orders and map that stores associated information
+#also queries search submission and passes it into the map
 @bp.route('/cart/orders/', methods=['GET', 'POST'])
 def orders_cart_page():
+    search_item_form = SearchBarForm()
     orders = Order.get_orders_by_uid(current_user.id)
-    map = Cart.order_map_purchases(current_user.id, orders)
+    map = Cart.order_map_purchases(current_user.id, orders, search_item_form.query.data.lower() if search_item_form.validate_on_submit() else False)
     
     return render_template('cart_order.html',
-                                map=map)
+                                map=map, form=search_item_form)
     
 #edit quantity flaskform
 class EditProductQuantityForm(FlaskForm):

@@ -23,7 +23,22 @@
       <h2>Your previous orders</h2>
 
       <div class="sort">Date ordered ▼</div>
+      <div>Search query by products</div>
+      <div class="item-quantity">
+        <form action="" method="post">
+          {{ form.hidden_tag() }}
+          <p>
+            {{ form.query.label }}<br/>
+            {{ form.query(size=32) }}<br/>
+            {% for error in form.query.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>{{ form.submit() }}</p>
+        </form>
+      </div>
 
+      
       <div class="grid">
         {% for tuple in map %}
           <div class="order-item">

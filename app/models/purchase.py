@@ -226,3 +226,28 @@ where Purchases.oid = :oid
                               uid=uid)
         
             return [Purchase(*row) for row in rows]
+    
+    # given order id and given text
+    # return list of oids that contain purchases with that specific text
+    def get_oid_purchases_by_uid_and_search(uid, text):
+            rows = app.db.execute('''
+SELECT Purchases.oid
+FROM Purchases join Orders
+    on Purchases.oid = Orders.id
+    join Users
+    on Purchases.uid = Users.id
+    join Products
+    on Purchases.pid = Products.id
+    join Inventory
+    on Purchases.pid = Inventory.pid
+where Purchases.uid = :uid
+    and LOWER(Products.name) LIKE :text
+''',    
+                              uid=uid,
+                              text=text)
+            lst = []
+            for row in rows:
+                lst.append(row[0])
+            return lst
+        
+        

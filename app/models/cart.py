@@ -241,21 +241,33 @@ returning id;
     # and the value is an array of purchases for that order
     # AS WELL AS the cart total for that order
     @staticmethod 
-    def order_map_purchases(uid, orders):
+    def order_map_purchases(uid, orders, text):
         map = {}
         
         for order in orders:
             oid = order.id
-            # Maps to a list where 1st element is list of purchases
-            # and 2nd element is total price for this order
-            map[order] = [
-                #updates to certain elements of purchases (inner most to format images, next inner most to update dates to be formated
-                #lastly, to update seller_name to exisit and be accessible)
-                Cart.update_seller_name(Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)))),
-                Cart.get_order_total(oid, uid)
-            ]
-            
-            
+            if text:
+                sorted_orders = Purchase.get_oid_purchases_by_uid_and_search(uid, text)
+                if oid not in sorted_orders:
+                    continue
+                else:
+                    # Maps to a list where 1st element is list of purchases
+                    # and 2nd element is total price for this order
+                    map[order] = [
+                        #updates to certain elements of purchases (inner most to format images, next inner most to update dates to be formated
+                        #lastly, to update seller_name to exisit and be accessible)
+                        
+                        Cart.update_seller_name(Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)))),
+                        Cart.get_order_total(oid, uid)
+                    ]
+            else:
+                map[order] = [
+                        #updates to certain elements of purchases (inner most to format images, next inner most to update dates to be formated
+                        #lastly, to update seller_name to exisit and be accessible)
+                        
+                        Cart.update_seller_name(Cart.update_dates(Cart.update_image(Purchase.get_purchases_by_oid_and_uid(oid, uid)))),
+                        Cart.get_order_total(oid, uid)
+                    ]
         return map
     
     #Given products, updates seller's name for all products
