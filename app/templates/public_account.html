@@ -3,6 +3,17 @@
 {% block content %}
 
 <br><br>
+<div class="flash-notifications">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div>
+    {% for message in messages %}
+    <div class="flash-message">⚠️ {{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+</div>
 <h1>Search An Account</h1>
   <form action="" method="post">
     <div style = "display: flex; flex-direction: row; align-items: center;">
@@ -21,6 +32,7 @@
   </form>
   <br>
 
+{% if account %}
   <details style = "padding: 20px;">
     <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">Account Information</summary>
     <div style = "padding-left: 25px">
@@ -28,6 +40,7 @@
       <div>Name: {{account.full_name}}</div>
     </div>
   </details>
+{% endif %}
 
 {% if seller %}
 <details style = "padding: 20px;">

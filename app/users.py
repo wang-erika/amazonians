@@ -194,6 +194,9 @@ def view_accounts():
         account = User.get(form.query.data)
         reviews = Review.get_all_product_reviews(form.query.data)
         seller = Seller_Review.get_all_seller_reviews(form.query.data)
+        if not account and not reviews and not seller:
+            flash('User does not exist')
+            redirect(url_for('users.view_accounts'))
     
     #initial state, use current id instead
     else:
