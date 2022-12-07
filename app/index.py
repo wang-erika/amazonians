@@ -19,7 +19,7 @@ from .models.cart import Cart
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-PAGE_SIZE = 10
+PAGE_SIZE = 30
 
 #Main route to Home Page
 @bp.route('/', methods = ['GET', 'POST'])
@@ -28,7 +28,7 @@ def index():
     page = request.args.get(get_page_parameter(), type=int, default=1)
     products = Product.get_all()
     products = update_image(products)
-    pagination = Pagination(page=page, total=len(products), search=False)
+    pagination = Pagination(page=page, total=len(products), search=False, per_page=PAGE_SIZE)
     query_form = SearchBarForm()
     # find the products current user has bought:
 
@@ -67,7 +67,7 @@ def search(query, category, price):
     page = request.args.get(get_page_parameter(), type=int, default=1)
     products = Product.query_amount(query, category, price=="Ascending")
     products = update_image(products)
-    pagination = Pagination(page=page, total=len(products), search=False)
+    pagination = Pagination(page=page, total=len(products), search=False, per_page=PAGE_SIZE)
 
     products = products[(page-1)*PAGE_SIZE:min(page*PAGE_SIZE, len(products))]
 
