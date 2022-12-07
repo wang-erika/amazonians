@@ -6,9 +6,9 @@ import datetime
 num_users = 100
 num_products = 2000
 num_purchases = 2500
-inventory = 1000
+inventory = 2000
 cart=2000
-reviews=1000
+reviews=5000
 order=4000
 
 
@@ -79,18 +79,15 @@ def gen_inventory(sellers, products):
         writer = get_csv_writer(f)
         used_keys = set()
         print('Inventory...', end=' ', flush=True)
-        for id in range(inventory):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
+        for pid in range(inventory):
+            if pid % 100 == 0:
+                print(f'{pid}', end=' ', flush=True)
             sid = fake.random_element(elements=list(sellers))
-            pid = fake.random_element(elements=list(products))
-            while (pid) in used_keys:
-                pid = fake.random_element(elements=list(products))
             used_keys.add(pid)
             # print(sid, pid)
             quantity = fake.random_int(min=1,max=30)
             writer.writerow([sid, pid, quantity])
-        print(f'{num_products} generated')
+        print(f'{inventory} generated')
     return
 
 def gen_cart(users, products, sellers):
