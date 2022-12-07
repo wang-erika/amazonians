@@ -64,7 +64,7 @@ def gen_sellers():
     with open("./db/data/Sellers.csv", "w") as f:
         writer = get_csv_writer(f)
         print('Seller...', end=' ', flush=True)
-        for id in range(20):
+        for id in range(100):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             sid = fake.random_int(max=num_users-1)
@@ -122,8 +122,7 @@ def gen_rates(filename, people, users):
             date = fake.date_time_this_month().strftime("%Y-%m-%d %H:%M:%S")
             rating = fake.random_int(min=1, max=5)
             review = fake.sentence(nb_words=40)[:-1]
-            image = 0
-            writer.writerow([uid, fid, rating, review, date, image])
+            writer.writerow([uid, fid, rating, review, date])
 
 def gen_orders(users):
     orders = set()
