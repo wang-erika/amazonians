@@ -134,7 +134,7 @@ RETURNING sid, pid;
             return None
 
 
-    # Given sid and pid, edit product quantity
+    # Given sid and pid, edit product with the given information
     @staticmethod
     def edit_inventory_item(sid, pid, name, category, description, unit_price, quantity, image):
         rows = app.db.execute('''
@@ -148,6 +148,11 @@ where id = :pid;
                               description=description,
                               unit_price=unit_price,
                               image=image)
+        return Inventory.edit_inventory_quantity(sid, pid, quantity)
+
+    # Given sid and pid, edit the quantity of a product
+    @staticmethod
+    def edit_inventory_quantity(sid, pid, quantity):
         rows = app.db.execute('''
 update Inventory
 set quantity = :quantity

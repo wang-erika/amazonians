@@ -3,6 +3,9 @@ import csv
 from faker import Faker
 import datetime
 
+# this file is used for generating the data for the database
+
+# the number of each category we want in our tables
 num_users = 100
 num_products = 2000
 num_purchases = 2500
@@ -19,7 +22,7 @@ fake = Faker()
 def get_csv_writer(f):
     return csv.writer(f, dialect='unix')
 
-
+# generate the users
 def gen_users():
     users = set()
     with open('./db/data/Users.csv', 'w') as f:
@@ -28,6 +31,7 @@ def gen_users():
         for uid in range(num_users):
             if uid % 10 == 0:
                 print(f'{uid}', end=' ', flush=True)
+            # their information
             profile = fake.profile()
             email = profile['mail']
             plain_password = f'pass{uid}'
@@ -36,11 +40,12 @@ def gen_users():
             address = fake.address()
             balance = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             users.add(uid)
+            # write to file
             writer.writerow([uid, name, email, balance, address, password])
         print(f'{num_users} generated')
     return users
 
-
+# generate the products
 def gen_products():
     products = set()
     with open('./db/data/Products.csv', 'w') as f:
@@ -50,6 +55,7 @@ def gen_products():
             products.add(pid)
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
+            # create the information for the table
             name = fake.sentence(nb_words=4)[:-1]
             image = 0
             category = fake.random_element(elements=("Clothing & Accessories", "Books", "Electronics", 
@@ -57,10 +63,12 @@ def gen_products():
                                                 "Pet Supplies", "Sports & Outdoors", "Automotive"))
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             description = fake.sentence(nb_words=10)[:-1]
+            # write to the file
             writer.writerow([pid, name, category, image, price, description])
         print(f'{num_products} generated;')
     return products
 
+# generate the random seller ids
 def gen_sellers():
     sellers = set()
     with open("./db/data/Sellers.csv", "w") as f:
