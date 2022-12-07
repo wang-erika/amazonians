@@ -31,13 +31,16 @@ def login():
         return redirect(url_for('index.index'))
 
     form = LoginForm()
+    #on for submission, check to see if credentials are valid
     if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
+        #if no user is returned, invalid credentials and redirect to login again
         if user is None:
             flash('Invalid email or password')
             return redirect(url_for('users.login'))
         login_user(user)
         next_page = request.args.get('next')
+        #if authenticated, redirect to index
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index.index')
 
@@ -62,10 +65,13 @@ class RegistrationForm(FlaskForm):
 #Register route
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    #if already authenticated, redirect to home
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
         
     form = RegistrationForm()
+    
+    #on submission, register User on db, flash notification, and redirect to login page
     if form.validate_on_submit():
         if User.register(form.firstname.data,
                          form.lastname.data,
@@ -97,6 +103,7 @@ def balance():
                 return redirect(url_for('users.balance'))
             amount *= -1
             
+        #calls edit_balance method, flashes notification to user, and re-renders the page
         User.edit_balance(current_user.id, amount, balance)
         user = User.get_all(current_user.id)
 
@@ -105,6 +112,7 @@ def balance():
 
     return render_template('balance.html', user = user, form = form, showAnimation = False)
 
+#flask form to update a user's balance
 class UpdateBalanceForm(FlaskForm):
     amount = DecimalField('Amount', validators = [])
     add = SubmitField('➕ Add')
@@ -121,6 +129,7 @@ def account_page():
     
     return render_template('account.html', user = user)
 
+#flask form to update user information
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
@@ -131,6 +140,7 @@ class UpdateForm(FlaskForm):
         'Repeat Password', validators=[EqualTo('password')])
     submit = SubmitField('Update')
 
+    #check to see if email exists by calling email_exists
     def validate_email(self, email):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
@@ -194,11 +204,13 @@ def view_accounts():
     return render_template('public_account.html', form = form, account = account, reviews = reviews, seller = seller)
 
 
+#spending page, creates and downloads figure images and gives as inputs for render template html
 @bp.route('/spending', methods = ['GET', 'POST'])
 def spending():
     if current_user.is_authenticated:
         purchases = Purchase.get_purchases(current_user.id)
         data = {}
+        #populate data with Purchase methods
         for purchase in purchases:
             if purchase.category not in data:
                 data[purchase.category] = purchase.unit_price_at_time_of_payment * purchase.quantity
@@ -213,6 +225,7 @@ def spending():
             for i in range(len(x)):
                 plt.text(i, y[i] + 15, '$' + str(y[i]), ha = 'center')
 
+        #create figures and save into b64 encoded images
         fig = plt.figure(figsize = (8, 5))
         ax = plt.axes()
         ax.set_facecolor('#f5f4ed')

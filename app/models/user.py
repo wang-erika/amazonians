@@ -14,6 +14,7 @@ class User(UserMixin):
         self.address = address
 
 
+    #get password of a given user
     @staticmethod
     def get_password(id):
         rows = app.db.execute("""

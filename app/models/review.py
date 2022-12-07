@@ -1,5 +1,6 @@
 from flask import current_app as app
 
+# review class
 class Review:
 
     def __init__(self, uid, pid, rating, review, date):
@@ -184,7 +185,7 @@ ORDER BY date DESC
 
 
 
-
+# our seller review class
 class Seller_Review:
 
     def __init__(self, uid, sid, rating, review, date):
@@ -312,6 +313,19 @@ AND Inventory.sid = :sid
     # if the user has bought from seller at least once
         if len(rows) > 0:
             return True
+
+ # Get the seller from the sid
+    @staticmethod
+    def get_seller_name(sid):
+        rows = app.db.execute('''
+SELECT Users.full_name
+FROM Sellers, Users
+WHERE Sellers.id = :sid
+AND Sellers.id = Users.id
+''',
+                              sid = sid)
+        return rows[0][0]
+
 
 
 
