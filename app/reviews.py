@@ -26,7 +26,7 @@ from flask import Blueprint
 bp = Blueprint('reviews', __name__)
 
 
-# shows product and seller reviews of that user
+# shows product and seller reviews of that user (with confetti animation)
 @bp.route('/reviews/true', methods = ['GET', 'POST'])
 def reviews_page():
 
@@ -39,6 +39,8 @@ def reviews_page():
                             showAnimation = True
                             )
 
+
+# shows product and seller reviews of that user (without confetti animation)
 @bp.route('/reviews', methods = ['GET', 'POST'])
 def reviews_page_false():
 

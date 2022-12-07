@@ -1,5 +1,6 @@
 from flask import current_app as app
 
+# review class
 class Review:
 
     def __init__(self, uid, pid, rating, review, date):
@@ -184,7 +185,7 @@ ORDER BY date DESC
 
 
 
-
+# our seller review class
 class Seller_Review:
 
     def __init__(self, uid, sid, rating, review, date):
