@@ -11,6 +11,8 @@ from io import BytesIO
 import os
 
 from flask import current_app as app
+from flask import request
+from flask_paginate import Pagination, get_page_parameter
 
 
 from .models.product import Product
@@ -24,6 +26,8 @@ from flask import Blueprint
 bp = Blueprint('buy', __name__)
 
 my_formatter = "{0:.2f}"
+
+PAGE_SIZE = 3
 
 # this method takes in the image information and determines its path to display
 def update_image(products):
@@ -230,11 +234,38 @@ def orders_cart_page_checkout():
 @bp.route('/cart/orders/', methods=['GET', 'POST'])
 def orders_cart_page():
     search_item_form = SearchBarForm()
+    page = request.args.get(get_page_parameter(), type=int, default=1)
     orders = Order.get_orders_by_uid(current_user.id)
-    map = Cart.order_map_purchases(current_user.id, orders, search_item_form.query.data.lower() if search_item_form.validate_on_submit() else False)
-    
+    if search_item_form.validate_on_submit():
+        return redirect(url_for('buy.orders_cart_page_search', query=search_item_form.query.data))
+    map = Cart.order_map_purchases(current_user.id, orders, False)
+    pagination = Pagination(page=page, total=len(map), search=False, per_page=PAGE_SIZE)
+    map2 = {}
+    i = 0
+    for tuple in map:
+        if i >= (page-1)*PAGE_SIZE and i < min(page*PAGE_SIZE, len(map)):
+            map2[tuple] = map[tuple]
+        i += 1
     return render_template('cart_order.html',
-                                map=map, form=search_item_form)
+                                map=map2, form=search_item_form, pagination=pagination)
+
+@bp.route('/cart/orders/<query>', methods=['GET', 'POST'])
+def orders_cart_page_search(query):
+    search_item_form = SearchBarForm()
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    orders = Order.get_orders_by_uid(current_user.id)
+    if search_item_form.validate_on_submit():
+        return redirect(url_for('buy.orders_cart_page_search', query=search_item_form.query.data))
+    map = Cart.order_map_purchases(current_user.id, orders, query)
+    pagination = Pagination(page=page, total=len(map), search=False, per_page=PAGE_SIZE)
+    map2 = {}
+    i = 0
+    for tuple in map:
+        if i >= (page-1)*PAGE_SIZE and i < min(page*PAGE_SIZE, len(map)):
+            map2[tuple] = map[tuple]
+        i += 1
+    return render_template('cart_order.html',
+                                map=map2, form=search_item_form, pagination=pagination)
     
 #edit quantity flaskform
 class EditProductQuantityForm(FlaskForm):

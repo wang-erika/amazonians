@@ -24,7 +24,7 @@
 
       <div class="sort">Date ordered ▼</div>
       <div>Search query by products</div>
-      <div class="item-quantity">
+      <div class="item-quantity page-form-section">
         <form action="" method="post">
           {{ form.hidden_tag() }}
           <p>
@@ -38,7 +38,7 @@
         </form>
       </div>
 
-      
+      {{ pagination.links }}
       <div class="grid">
         {% for tuple in map %}
           <div class="order-item">
@@ -84,6 +84,7 @@
           </div>
         {% endfor %}
       </div>
+      {{ pagination.links }}
     </div>
 
 </div>
