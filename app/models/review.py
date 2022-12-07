@@ -313,6 +313,19 @@ AND Inventory.sid = :sid
         if len(rows) > 0:
             return True
 
+ # Get the seller from the sid
+    @staticmethod
+    def get_seller_name(sid):
+        rows = app.db.execute('''
+SELECT Users.full_name
+FROM Sellers, Users
+WHERE Sellers.id = :sid
+AND Sellers.id = Users.id
+''',
+                              sid = sid)
+        return rows[0][0]
+
+
 
 
 
