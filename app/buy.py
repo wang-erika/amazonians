@@ -182,8 +182,7 @@ def delete_cart_item(pid):
 #function to fascilitate orders submission
 #does checks for order processing, processes order, saves cart information, and returns html
 @bp.route('/cart/checkout', methods=['GET', 'POST'])
-def orders_cart_page_checkout():
-    #todo ADD FLASHES   
+def orders_cart_page_checkout():  
     cart = Cart.get_all_in_cart(current_user.id)
     cart = update_image(cart)
     saved_for_later = Later.get_all_in_saved_for_later(current_user.id)
@@ -219,6 +218,7 @@ def orders_cart_page_checkout():
         Cart.delete_all_cart_items(cart)
 
         orders = Order.get_orders_by_uid(current_user.id)
+        flash('Order Placed!')
 
         return redirect(url_for('buy.orders_cart_page'))
     else:
