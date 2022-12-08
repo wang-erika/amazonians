@@ -3,7 +3,7 @@ from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
@@ -133,7 +133,7 @@ def account_page():
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
-    email = StringField('Email')
+    email = StringField('Email', validators = [Optional(), Email()])
     address = StringField('Address')
     password = PasswordField('Password')
     password2 = PasswordField(
