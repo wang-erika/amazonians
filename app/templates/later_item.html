@@ -45,7 +45,7 @@
                 <tbody>
                   {% for tuple in summary_reviews%}
                   <tr>
-                    <td scope="row">{{tuple.date}}</td>
+                    <td scope="row">{{tuple.date.strftime("%Y-%m-%d %I:%M:%S%p")}}</td>
                     <td scope="row">{{tuple.rating}}</td>
                     <td scope="row">{{tuple.review}}</td>
                   </tr>

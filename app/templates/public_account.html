@@ -60,7 +60,7 @@
       {% for tuple in reviews%}
       <a class="grid-item">
           <h3>Product ID: {{tuple.pid}}</h3>
-          <div>Date: {{tuple.date}}</div>
+          <div>Date: {{tuple.date.strftime("%Y-%m-%d %I:%M:%S%p")}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>
@@ -78,7 +78,7 @@
       {% for tuple in seller%}
       <a class="grid-item">
           <h3>Product ID: {{tuple.pid}}</h3>
-          <div>Date: {{tuple.date}}</div>
+          <div>Date: {{tuple.date.strftime("%Y-%m-%d %I:%M:%S%p")}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>

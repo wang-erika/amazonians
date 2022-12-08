@@ -36,7 +36,7 @@
       <a href="{{ url_for('reviews.view_product_review', pid=tuple.pid) }}" class="grid-item">
           <h3>Product: {{tuple.name}}</h3>
           <!--<div>Product ID: {{tuple.pid}}</div>-->
-          <div>Date: {{tuple.date}}</div>
+          <div>Date: {{tuple.date.strftime("%Y-%m-%d %I:%M:%S%p")}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>
@@ -49,7 +49,7 @@
       {% for tuple in seller_reviews%}
       <a href="{{ url_for('reviews.view_seller_review', sid=tuple.sid) }}" class="grid-item">
           <h3>Seller Name: {{tuple.full_name}}</h3>
-          <div>Date: {{tuple.date}}</div>
+          <div>Date: {{tuple.date.strftime("%Y-%m-%d %I:%M:%S%p")}}</div>
           <div>Review: {{tuple.review}}</div>
           <div>Rating: {{tuple.rating}}</div>
         </a>
