@@ -36,8 +36,6 @@ The first command will activate a specialized Python environment for running Fla
 While the environment is activated, you should see a `(env)` prefix in the command prompt in your VM shell.
 You should only run Flask while inside this environment; otherwise it will produce an error.
 
-An example website will be avaliable at [http://152.3.65.85:5000/](http://152.3.65.85:5000/)
-
 To stop your website, simply press <kbd>Ctrl</kbd><kbd>C</kbd> in the VM shell where flask is running.
 You can then deactivate the environment using
 ```
