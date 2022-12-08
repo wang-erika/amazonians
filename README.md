@@ -8,7 +8,7 @@ Amended for Fall 2022.
 
 ## Goals
 
-Our goal with this project was to create a replica of the famous [Amazon](https://www:amazon.com) website. Some of our functionalities, include but are not limited to - allowing users to create an account and login; allowing sellers to sell products; allowing users to add products to a cart and checkout; allowing sellers to process and fufill orders; and allowing users to write reviews. We used HTML/CSS to write the front and and used a Python Flask API that accessed a PostgreSQL Database for the backend. 
+Our goal with this project was to create a replica of the famous [Amazon](https://www.amazon.com/) website. Some of our functionalities, include but are not limited to - allowing users to create an account and login; allowing sellers to sell products; allowing users to add products to a cart and checkout; allowing sellers to process and fufill orders; and allowing users to write reviews. We used HTML/CSS to write the front and and used a Python Flask API that accessed a PostgreSQL Database for the backend. 
 
 ## Project Structure
 
