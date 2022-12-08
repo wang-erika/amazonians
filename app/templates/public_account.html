@@ -34,7 +34,7 @@
 
 {% if account %}
   <details style = "padding: 20px;">
-    <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">Account Information</summary>
+    <summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">{{account.full_name.split(" ")[0]}}'s Account Information</summary>
     <div style = "padding-left: 25px">
       <div>Account ID: {{account.id}}</div>
       <div>Name: {{account.full_name}}</div>
@@ -44,7 +44,7 @@
 
 {% if seller %}
 <details style = "padding: 20px;">
-<summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">Seller Information</summary>
+<summary style = "color: #4b6b86; font-size: 30px; font-weight: 500; margin-bottom: 0.5em;">{{account.full_name.split(" ")[0]}}'s Seller Information</summary>
 <div style = "padding-left: 25px">
   <div>Email: {{account.email}}</div>
   <div>Address: {{account.address}}</div>
