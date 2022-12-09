@@ -4,6 +4,7 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
+from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
@@ -159,7 +160,7 @@ def edit_account():
     if form.validate_on_submit():
         #if fields are empty, use current info
         email = form.email.data if form.email.data else user[0].email
-        password = form.password.data if form.password.data else User.get_password(current_user.id)
+        password = generate_password_hash(form.password.data) if form.password.data else User.get_password(current_user.id)
         firstname = form.firstname.data if form.firstname.data else user[0].full_name.split(" ")[0]
         lastname = form.lastname.data if form.lastname.data else user[0].full_name.split(" ")[1]
         address = form.address.data if form.address.data else user[0].address
